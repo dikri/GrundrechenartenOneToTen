@@ -1,8 +1,15 @@
-const CACHE_NAME = 'leo-einmaleins-v1';
+const CACHE_NAME = 'leo-einmaleins-v2';
 const ASSETS = [
   './',
   './index.html',
   './manifest.json',
+  './data/pokemon.json',
+  './data/brawlstars.json',
+  './data/minecraft.json',
+  './data/autos.json',
+  './data/tiere.json',
+  './data/mario.json',
+  './bg.jpg',
   'https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap'
 ];
 
@@ -24,7 +31,7 @@ self.addEventListener('activate', event => {
   self.clients.claim();
 });
 
-// Fetch: Network-first für API-Calls, Cache-first für statische Assets
+// Fetch: Network-first für API/Bilder, Cache-first für statische Assets
 self.addEventListener('fetch', event => {
   const url = new URL(event.request.url);
 
@@ -32,7 +39,11 @@ self.addEventListener('fetch', event => {
   if (url.hostname === 'pokeapi.co' ||
       url.hostname === 'raw.githubusercontent.com' ||
       url.hostname === 'cdn.brawlify.com' ||
-      url.hostname === 'api.brawlapi.com') {
+      url.hostname === 'api.brawlapi.com' ||
+      url.hostname === 'minecraft.wiki' ||
+      url.hostname === 'mario.wiki.gallery' ||
+      url.hostname === 'upload.wikimedia.org' ||
+      url.hostname === 'en.wikipedia.org') {
     event.respondWith(
       fetch(event.request)
         .then(resp => {

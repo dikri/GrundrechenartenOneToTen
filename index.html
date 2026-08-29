@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de">
 <head>
     <meta charset="UTF-8">
@@ -198,6 +198,37 @@
         }
 
         #name-dialog.active { display: flex; }
+
+        #theme-dialog {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 8500;
+        }
+        #theme-dialog.active { display: flex; }
+
+        .theme-checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            margin: 6px 0;
+            background: rgba(255,255,255,0.06);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .theme-checkbox-item:hover { border-color: var(--primary); }
+        .theme-checkbox-item.selected { border-color: var(--primary); background: rgba(108,92,231,0.2); }
+        .theme-checkbox-item .theme-emoji { font-size: 1.5em; }
+        .theme-checkbox-item .theme-info { flex: 1; }
+        .theme-checkbox-item .theme-name { font-weight: 700; }
+        .theme-checkbox-item .theme-count { font-size: 0.8em; color: rgba(255,255,255,0.4); }
 
         .name-dialog-box {
             background: rgba(255,255,255,0.08);
@@ -1282,6 +1313,16 @@
         </div>
     </div>
 
+    <!-- ===== THEME SELECTION DIALOG ===== -->
+    <div id="theme-dialog">
+        <div class="name-dialog-box" style="max-width:500px">
+            <h2>🃏 Welche Karten möchtest du sammeln?</h2>
+            <p>Wähle mindestens ein Album:</p>
+            <div id="theme-checkboxes" style="text-align:left; margin:15px 0;"></div>
+            <button class="btn-primary" id="theme-save-btn">Weiter!</button>
+        </div>
+    </div>
+
     <!-- ===== START SCREEN ===== -->
     <div id="start-screen" class="screen active">
         <div class="glass-panel" style="position:relative">
@@ -1423,11 +1464,7 @@
                 <h2 id="album-title">📖 Sammelalbum</h2>
                 <button class="back-btn" id="album-back-btn">← Zurück</button>
             </div>
-            <div class="album-tabs">
-                <button class="album-tab active" data-theme="pokemon">Pokémon</button>
-                <button class="album-tab" data-theme="brawlstars">💥 Brawl Stars</button>
-                <button class="album-tab" data-theme="minecraft">⛏️ Minecraft</button>
-            </div>
+            <div class="album-tabs" id="album-tabs-container"></div>
             <div class="album-counter" id="album-counter">0 / 100 Karten</div>
             <div class="album-grid" id="album-grid"></div>
         </div>
@@ -1483,293 +1520,21 @@
     <div class="confetti-container" id="confetti-container"></div>
 
     <script>
-    // ===== POKEMON DATENBANK (251 Karten: Gen 1 Kanto + Gen 2 Johto, PokeAPI IDs) =====
-    const pokemonCards = [
-        { id:1, name:"Bisasam", type:"Pflanze/Gift", hp:45, atk:49, emoji:"🌱", color:"#00b894" },
-        { id:2, name:"Bisaknosp", type:"Pflanze/Gift", hp:60, atk:62, emoji:"🌿", color:"#00b894" },
-        { id:3, name:"Bisaflor", type:"Pflanze/Gift", hp:100, atk:82, emoji:"🌿", color:"#27ae60" },
-        { id:4, name:"Glumanda", type:"Feuer", hp:39, atk:52, emoji:"🔥", color:"#ff7675" },
-        { id:5, name:"Glutexo", type:"Feuer", hp:58, atk:64, emoji:"🔥", color:"#e17055" },
-        { id:6, name:"Glurak", type:"Feuer/Flug", hp:120, atk:84, emoji:"🔥", color:"#e74c3c" },
-        { id:7, name:"Schiggy", type:"Wasser", hp:44, atk:48, emoji:"💧", color:"#74b9ff" },
-        { id:8, name:"Schillok", type:"Wasser", hp:59, atk:63, emoji:"💧", color:"#0984e3" },
-        { id:9, name:"Turtok", type:"Wasser", hp:109, atk:83, emoji:"💧", color:"#3498db" },
-        { id:10, name:"Raupy", type:"Käfer", hp:45, atk:30, emoji:"🐛", color:"#27ae60" },
-        { id:11, name:"Safcon", type:"Käfer", hp:50, atk:20, emoji:"🐛", color:"#27ae60" },
-        { id:12, name:"Smettbo", type:"Käfer/Flug", hp:60, atk:45, emoji:"🦋", color:"#a29bfe" },
-        { id:13, name:"Hornliu", type:"Käfer/Gift", hp:40, atk:35, emoji:"🐛", color:"#6c5ce7" },
-        { id:14, name:"Kokuna", type:"Käfer/Gift", hp:45, atk:25, emoji:"🐛", color:"#f1c40f" },
-        { id:15, name:"Bibor", type:"Käfer/Gift", hp:65, atk:90, emoji:"🐝", color:"#f1c40f" },
-        { id:16, name:"Taubsi", type:"Normal/Flug", hp:40, atk:45, emoji:"🐦", color:"#d35400" },
-        { id:17, name:"Tauboga", type:"Normal/Flug", hp:63, atk:60, emoji:"🐦", color:"#d35400" },
-        { id:18, name:"Tauboss", type:"Normal/Flug", hp:83, atk:80, emoji:"🦅", color:"#d35400" },
-        { id:19, name:"Rattfratz", type:"Normal", hp:30, atk:56, emoji:"🐀", color:"#636e72" },
-        { id:20, name:"Rattikarl", type:"Normal", hp:55, atk:81, emoji:"🐀", color:"#636e72" },
-        { id:21, name:"Habitak", type:"Normal/Flug", hp:40, atk:60, emoji:"🐦", color:"#795548" },
-        { id:22, name:"Ibitak", type:"Normal/Flug", hp:65, atk:90, emoji:"🦅", color:"#795548" },
-        { id:23, name:"Rettan", type:"Gift", hp:35, atk:60, emoji:"🐍", color:"#6c5ce7" },
-        { id:24, name:"Arbok", type:"Gift", hp:60, atk:95, emoji:"🐍", color:"#6c5ce7" },
-        { id:25, name:"Pikachu", type:"Elektro", hp:60, atk:55, emoji:"⚡", color:"#f1c40f" },
-        { id:26, name:"Raichu", type:"Elektro", hp:60, atk:90, emoji:"⚡", color:"#f39c12" },
-        { id:27, name:"Sandan", type:"Boden", hp:50, atk:75, emoji:"🦔", color:"#d35400" },
-        { id:28, name:"Sandamer", type:"Boden", hp:75, atk:100, emoji:"🦔", color:"#d35400" },
-        { id:29, name:"Nidoran♀", type:"Gift", hp:55, atk:47, emoji:"🦔", color:"#00cec9" },
-        { id:30, name:"Nidorina", type:"Gift", hp:70, atk:62, emoji:"🦔", color:"#00cec9" },
-        { id:31, name:"Nidoqueen", type:"Gift/Boden", hp:90, atk:92, emoji:"👑", color:"#00b894" },
-        { id:32, name:"Nidoran♂", type:"Gift", hp:46, atk:57, emoji:"🦔", color:"#6c5ce7" },
-        { id:33, name:"Nidorino", type:"Gift", hp:61, atk:72, emoji:"🦔", color:"#6c5ce7" },
-        { id:34, name:"Nidoking", type:"Gift/Boden", hp:81, atk:102, emoji:"👑", color:"#6c5ce7" },
-        { id:35, name:"Piepi", type:"Fee", hp:70, atk:45, emoji:"🌙", color:"#fd79a8" },
-        { id:36, name:"Pixi", type:"Fee", hp:95, atk:70, emoji:"🌙", color:"#fd79a8" },
-        { id:37, name:"Vulpix", type:"Feuer", hp:38, atk:41, emoji:"🦊", color:"#e17055" },
-        { id:38, name:"Vulnona", type:"Feuer", hp:73, atk:76, emoji:"🦊", color:"#e17055" },
-        { id:39, name:"Pummeluff", type:"Fee", hp:115, atk:45, emoji:"🎤", color:"#fd79a8" },
-        { id:40, name:"Knuddeluff", type:"Fee", hp:140, atk:70, emoji:"🎤", color:"#fd79a8" },
-        { id:41, name:"Zubat", type:"Gift/Flug", hp:40, atk:45, emoji:"🦇", color:"#6c5ce7" },
-        { id:42, name:"Golbat", type:"Gift/Flug", hp:75, atk:80, emoji:"🦇", color:"#6c5ce7" },
-        { id:43, name:"Myrapla", type:"Pflanze/Gift", hp:45, atk:50, emoji:"🌿", color:"#27ae60" },
-        { id:44, name:"Duflor", type:"Pflanze/Gift", hp:60, atk:65, emoji:"🌸", color:"#27ae60" },
-        { id:45, name:"Giflor", type:"Pflanze/Gift", hp:75, atk:80, emoji:"🌺", color:"#e74c3c" },
-        { id:46, name:"Paras", type:"Käfer/Pflanze", hp:35, atk:70, emoji:"🍄", color:"#e74c3c" },
-        { id:47, name:"Parasek", type:"Käfer/Pflanze", hp:60, atk:95, emoji:"🍄", color:"#e74c3c" },
-        { id:48, name:"Bluzuk", type:"Käfer/Gift", hp:60, atk:55, emoji:"🐛", color:"#6c5ce7" },
-        { id:49, name:"Omot", type:"Käfer/Gift", hp:70, atk:65, emoji:"🦋", color:"#6c5ce7" },
-        { id:50, name:"Digda", type:"Boden", hp:10, atk:55, emoji:"🕳️", color:"#d35400" },
-        { id:51, name:"Digdri", type:"Boden", hp:35, atk:100, emoji:"🕳️", color:"#d35400" },
-        { id:52, name:"Mauzi", type:"Normal", hp:40, atk:45, emoji:"🐱", color:"#f1c40f" },
-        { id:53, name:"Snobilikat", type:"Normal", hp:65, atk:70, emoji:"🐱", color:"#f1c40f" },
-        { id:54, name:"Enton", type:"Wasser", hp:50, atk:52, emoji:"🦆", color:"#fdcb6e" },
-        { id:55, name:"Entoron", type:"Wasser", hp:80, atk:82, emoji:"🦆", color:"#3498db" },
-        { id:56, name:"Menki", type:"Kampf", hp:40, atk:80, emoji:"🐒", color:"#d35400" },
-        { id:57, name:"Rasaff", type:"Kampf", hp:65, atk:105, emoji:"🐒", color:"#d35400" },
-        { id:58, name:"Fukano", type:"Feuer", hp:55, atk:70, emoji:"🐕", color:"#e17055" },
-        { id:59, name:"Arkani", type:"Feuer", hp:90, atk:110, emoji:"🐕", color:"#e74c3c" },
-        { id:60, name:"Quapsel", type:"Wasser", hp:40, atk:50, emoji:"💧", color:"#74b9ff" },
-        { id:61, name:"Quaputzi", type:"Wasser", hp:65, atk:65, emoji:"💧", color:"#0984e3" },
-        { id:62, name:"Quappo", type:"Wasser/Kampf", hp:90, atk:95, emoji:"💧", color:"#2980b9" },
-        { id:63, name:"Abra", type:"Psycho", hp:25, atk:20, emoji:"🧠", color:"#fdcb6e" },
-        { id:64, name:"Kadabra", type:"Psycho", hp:40, atk:35, emoji:"🧠", color:"#a29bfe" },
-        { id:65, name:"Simsala", type:"Psycho", hp:55, atk:50, emoji:"🥄", color:"#a29bfe" },
-        { id:66, name:"Machollo", type:"Kampf", hp:70, atk:80, emoji:"💪", color:"#636e72" },
-        { id:67, name:"Maschock", type:"Kampf", hp:80, atk:100, emoji:"💪", color:"#636e72" },
-        { id:68, name:"Machomei", type:"Kampf", hp:90, atk:130, emoji:"💪", color:"#636e72" },
-        { id:69, name:"Knofensa", type:"Pflanze/Gift", hp:50, atk:75, emoji:"🌱", color:"#27ae60" },
-        { id:70, name:"Ultrigaria", type:"Pflanze/Gift", hp:65, atk:90, emoji:"🌿", color:"#27ae60" },
-        { id:71, name:"Sarzenia", type:"Pflanze/Gift", hp:80, atk:105, emoji:"🌿", color:"#27ae60" },
-        { id:72, name:"Tentacha", type:"Wasser/Gift", hp:40, atk:40, emoji:"🐙", color:"#74b9ff" },
-        { id:73, name:"Tentoxa", type:"Wasser/Gift", hp:80, atk:70, emoji:"🐙", color:"#0984e3" },
-        { id:74, name:"Kleinstein", type:"Gestein/Boden", hp:40, atk:80, emoji:"🪨", color:"#795548" },
-        { id:75, name:"Georok", type:"Gestein/Boden", hp:55, atk:95, emoji:"🪨", color:"#795548" },
-        { id:76, name:"Geowaz", type:"Gestein/Boden", hp:80, atk:120, emoji:"🪨", color:"#795548" },
-        { id:77, name:"Ponita", type:"Feuer", hp:50, atk:85, emoji:"🐴", color:"#e74c3c" },
-        { id:78, name:"Gallopa", type:"Feuer", hp:65, atk:100, emoji:"🐴", color:"#e74c3c" },
-        { id:79, name:"Flegmon", type:"Wasser/Psycho", hp:90, atk:65, emoji:"🐚", color:"#fd79a8" },
-        { id:80, name:"Lahmus", type:"Wasser/Psycho", hp:95, atk:75, emoji:"🐚", color:"#fd79a8" },
-        { id:81, name:"Magnetilo", type:"Elektro", hp:25, atk:35, emoji:"🧲", color:"#636e72" },
-        { id:82, name:"Magneton", type:"Elektro/Stahl", hp:50, atk:60, emoji:"🧲", color:"#636e72" },
-        { id:83, name:"Porenta", type:"Normal", hp:52, atk:90, emoji:"🦆", color:"#d35400" },
-        { id:84, name:"Dodu", type:"Normal/Flug", hp:35, atk:85, emoji:"🐦", color:"#d35400" },
-        { id:85, name:"Dodri", type:"Normal/Flug", hp:60, atk:110, emoji:"🐦", color:"#d35400" },
-        { id:86, name:"Jurob", type:"Wasser", hp:65, atk:45, emoji:"🦭", color:"#dfe6e9" },
-        { id:87, name:"Jugong", type:"Wasser/Eis", hp:90, atk:70, emoji:"🦭", color:"#dfe6e9" },
-        { id:88, name:"Sleima", type:"Gift", hp:80, atk:80, emoji:"💜", color:"#6c5ce7" },
-        { id:89, name:"Sleimok", type:"Gift", hp:105, atk:105, emoji:"💜", color:"#6c5ce7" },
-        { id:90, name:"Muschas", type:"Wasser", hp:30, atk:65, emoji:"🐚", color:"#636e72" },
-        { id:91, name:"Austos", type:"Wasser/Eis", hp:50, atk:95, emoji:"🐚", color:"#636e72" },
-        { id:92, name:"Nebulak", type:"Geist/Gift", hp:30, atk:35, emoji:"👻", color:"#8e44ad" },
-        { id:93, name:"Alpollo", type:"Geist/Gift", hp:45, atk:50, emoji:"👻", color:"#8e44ad" },
-        { id:94, name:"Gengar", type:"Geist/Gift", hp:60, atk:65, emoji:"👻", color:"#8e44ad" },
-        { id:95, name:"Onix", type:"Gestein/Boden", hp:35, atk:45, emoji:"🐍", color:"#636e72" },
-        { id:96, name:"Traumato", type:"Psycho", hp:60, atk:48, emoji:"💤", color:"#fdcb6e" },
-        { id:97, name:"Hypno", type:"Psycho", hp:85, atk:73, emoji:"💤", color:"#fdcb6e" },
-        { id:98, name:"Krabby", type:"Wasser", hp:30, atk:105, emoji:"🦀", color:"#e74c3c" },
-        { id:99, name:"Kingler", type:"Wasser", hp:55, atk:130, emoji:"🦀", color:"#e74c3c" },
-        { id:100, name:"Voltobal", type:"Elektro", hp:40, atk:30, emoji:"⚡", color:"#e74c3c" },
-        { id:101, name:"Lektrobal", type:"Elektro", hp:60, atk:50, emoji:"💣", color:"#e74c3c" },
-        { id:102, name:"Owei", type:"Pflanze/Psycho", hp:60, atk:40, emoji:"🥚", color:"#fd79a8" },
-        { id:103, name:"Kokowei", type:"Pflanze/Psycho", hp:95, atk:95, emoji:"🌴", color:"#27ae60" },
-        { id:104, name:"Tragosso", type:"Boden", hp:50, atk:50, emoji:"🦴", color:"#d35400" },
-        { id:105, name:"Knogga", type:"Boden", hp:60, atk:80, emoji:"🦴", color:"#d35400" },
-        { id:106, name:"Kicklee", type:"Kampf", hp:50, atk:120, emoji:"🦵", color:"#795548" },
-        { id:107, name:"Nockchan", type:"Kampf", hp:50, atk:105, emoji:"🥊", color:"#795548" },
-        { id:108, name:"Schlurp", type:"Normal", hp:90, atk:55, emoji:"👅", color:"#fd79a8" },
-        { id:109, name:"Smogon", type:"Gift", hp:40, atk:65, emoji:"💨", color:"#636e72" },
-        { id:110, name:"Smogmog", type:"Gift", hp:65, atk:90, emoji:"💨", color:"#636e72" },
-        { id:111, name:"Rihorn", type:"Boden/Gestein", hp:80, atk:85, emoji:"🦏", color:"#636e72" },
-        { id:112, name:"Rizeros", type:"Boden/Gestein", hp:105, atk:130, emoji:"🦏", color:"#636e72" },
-        { id:113, name:"Chaneira", type:"Normal", hp:250, atk:5, emoji:"💗", color:"#fd79a8" },
-        { id:114, name:"Tangela", type:"Pflanze", hp:65, atk:55, emoji:"🌿", color:"#2980b9" },
-        { id:115, name:"Kangama", type:"Normal", hp:105, atk:95, emoji:"🦘", color:"#795548" },
-        { id:116, name:"Seeper", type:"Wasser", hp:30, atk:40, emoji:"🐴", color:"#74b9ff" },
-        { id:117, name:"Seemon", type:"Wasser", hp:55, atk:65, emoji:"🐴", color:"#0984e3" },
-        { id:118, name:"Goldini", type:"Wasser", hp:45, atk:67, emoji:"🐟", color:"#e74c3c" },
-        { id:119, name:"Golking", type:"Wasser", hp:80, atk:92, emoji:"🐟", color:"#e74c3c" },
-        { id:120, name:"Sterndu", type:"Wasser", hp:30, atk:45, emoji:"⭐", color:"#795548" },
-        { id:121, name:"Starmie", type:"Wasser/Psycho", hp:60, atk:75, emoji:"⭐", color:"#6c5ce7" },
-        { id:122, name:"Pantimos", type:"Psycho", hp:40, atk:45, emoji:"🤹", color:"#e91e63" },
-        { id:123, name:"Sichlor", type:"Käfer", hp:70, atk:110, emoji:"🦗", color:"#27ae60" },
-        { id:124, name:"Rossana", type:"Eis/Psycho", hp:65, atk:50, emoji:"💋", color:"#e74c3c" },
-        { id:125, name:"Elektek", type:"Elektro", hp:65, atk:83, emoji:"⚡", color:"#f1c40f" },
-        { id:126, name:"Magmar", type:"Feuer", hp:65, atk:95, emoji:"🔥", color:"#e74c3c" },
-        { id:127, name:"Pinsir", type:"Käfer", hp:65, atk:125, emoji:"🦗", color:"#795548" },
-        { id:128, name:"Tauros", type:"Normal", hp:75, atk:100, emoji:"🐂", color:"#d35400" },
-        { id:129, name:"Karpador", type:"Wasser", hp:20, atk:10, emoji:"🐟", color:"#e74c3c" },
-        { id:130, name:"Garados", type:"Wasser/Flug", hp:95, atk:125, emoji:"🌊", color:"#0984e3" },
-        { id:131, name:"Lapras", type:"Wasser/Eis", hp:130, atk:85, emoji:"🐢", color:"#00cec9" },
-        { id:132, name:"Ditto", type:"Normal", hp:48, atk:48, emoji:"🟣", color:"#a29bfe" },
-        { id:133, name:"Evoli", type:"Normal", hp:55, atk:55, emoji:"🦊", color:"#a0522d" },
-        { id:134, name:"Aquana", type:"Wasser", hp:130, atk:65, emoji:"💧", color:"#0984e3" },
-        { id:135, name:"Blitza", type:"Elektro", hp:65, atk:65, emoji:"⚡", color:"#f1c40f" },
-        { id:136, name:"Flamara", type:"Feuer", hp:65, atk:130, emoji:"🔥", color:"#e74c3c" },
-        { id:137, name:"Porygon", type:"Normal", hp:65, atk:60, emoji:"💻", color:"#e91e63" },
-        { id:138, name:"Amonitas", type:"Gestein", hp:35, atk:40, emoji:"🐚", color:"#74b9ff" },
-        { id:139, name:"Amoroso", type:"Gestein", hp:70, atk:60, emoji:"🐚", color:"#74b9ff" },
-        { id:140, name:"Kabuto", type:"Gestein", hp:30, atk:80, emoji:"🪨", color:"#795548" },
-        { id:141, name:"Kabutops", type:"Gestein", hp:60, atk:115, emoji:"🪨", color:"#795548" },
-        { id:142, name:"Aerodactyl", type:"Gestein/Flug", hp:80, atk:105, emoji:"🦅", color:"#636e72" },
-        { id:143, name:"Relaxo", type:"Normal", hp:160, atk:110, emoji:"😴", color:"#2c3e50" },
-        { id:144, name:"Arktos", type:"Eis/Flug", hp:90, atk:85, emoji:"❄️", color:"#74b9ff" },
-        { id:145, name:"Zapdos", type:"Elektro/Flug", hp:90, atk:90, emoji:"⚡", color:"#fdcb6e" },
-        { id:146, name:"Lavados", type:"Feuer/Flug", hp:90, atk:100, emoji:"🔥", color:"#e17055" },
-        { id:147, name:"Dratini", type:"Drache", hp:41, atk:64, emoji:"🐉", color:"#74b9ff" },
-        { id:148, name:"Dragonir", type:"Drache", hp:61, atk:84, emoji:"🐉", color:"#3498db" },
-        { id:149, name:"Dragoran", type:"Drache/Flug", hp:91, atk:134, emoji:"🐉", color:"#f39c12" },
-        { id:150, name:"Mewtu", type:"Psycho", hp:106, atk:110, emoji:"🔮", color:"#9b59b6" },
-        { id:151, name:"Mew", type:"Psycho", hp:100, atk:100, emoji:"✨", color:"#e91e63" },
-        { id:152, name:"Endivie", type:"Pflanze", hp:45, atk:49, emoji:"🌱", color:"#27ae60" },
-        { id:153, name:"Lorblatt", type:"Pflanze", hp:60, atk:62, emoji:"🌿", color:"#27ae60" },
-        { id:154, name:"Meganie", type:"Pflanze", hp:80, atk:82, emoji:"🌸", color:"#27ae60" },
-        { id:155, name:"Feurigel", type:"Feuer", hp:39, atk:52, emoji:"🔥", color:"#e74c3c" },
-        { id:156, name:"Igelavar", type:"Feuer", hp:58, atk:64, emoji:"🔥", color:"#e17055" },
-        { id:157, name:"Tornupto", type:"Feuer", hp:78, atk:84, emoji:"🔥", color:"#e74c3c" },
-        { id:158, name:"Karnimani", type:"Wasser", hp:50, atk:65, emoji:"🐊", color:"#0984e3" },
-        { id:159, name:"Tyracroc", type:"Wasser", hp:65, atk:80, emoji:"🐊", color:"#0984e3" },
-        { id:160, name:"Impergator", type:"Wasser", hp:85, atk:105, emoji:"🐊", color:"#0984e3" },
-        { id:161, name:"Wiesor", type:"Normal", hp:35, atk:46, emoji:"🦝", color:"#795548" },
-        { id:162, name:"Wiesenior", type:"Normal", hp:75, atk:76, emoji:"🦝", color:"#795548" },
-        { id:163, name:"Hoothoot", type:"Normal/Flug", hp:60, atk:30, emoji:"🦉", color:"#795548" },
-        { id:164, name:"Noctuh", type:"Normal/Flug", hp:100, atk:50, emoji:"🦉", color:"#795548" },
-        { id:165, name:"Ledyba", type:"Käfer/Flug", hp:40, atk:20, emoji:"🐞", color:"#e74c3c" },
-        { id:166, name:"Ledian", type:"Käfer/Flug", hp:55, atk:35, emoji:"🐞", color:"#e74c3c" },
-        { id:167, name:"Webarak", type:"Käfer/Gift", hp:40, atk:60, emoji:"🕷️", color:"#27ae60" },
-        { id:168, name:"Ariados", type:"Käfer/Gift", hp:70, atk:90, emoji:"🕷️", color:"#e74c3c" },
-        { id:169, name:"Iksbat", type:"Gift/Flug", hp:85, atk:90, emoji:"🦇", color:"#6c5ce7" },
-        { id:170, name:"Lampi", type:"Wasser/Elektro", hp:75, atk:38, emoji:"💡", color:"#74b9ff" },
-        { id:171, name:"Lanturn", type:"Wasser/Elektro", hp:125, atk:58, emoji:"💡", color:"#0984e3" },
-        { id:172, name:"Pichu", type:"Elektro", hp:20, atk:40, emoji:"⚡", color:"#f1c40f" },
-        { id:173, name:"Pii", type:"Fee", hp:50, atk:25, emoji:"⭐", color:"#fd79a8" },
-        { id:174, name:"Fluffeluff", type:"Fee", hp:90, atk:30, emoji:"🎤", color:"#fd79a8" },
-        { id:175, name:"Togepi", type:"Fee", hp:35, atk:20, emoji:"🥚", color:"#dfe6e9" },
-        { id:176, name:"Togetic", type:"Fee", hp:55, atk:40, emoji:"🕊️", color:"#dfe6e9" },
-        { id:177, name:"Natu", type:"Psycho/Flug", hp:40, atk:50, emoji:"🐦", color:"#27ae60" },
-        { id:178, name:"Xatu", type:"Psycho/Flug", hp:65, atk:75, emoji:"🐦", color:"#27ae60" },
-        { id:179, name:"Voltilamm", type:"Elektro", hp:55, atk:40, emoji:"🐑", color:"#f1c40f" },
-        { id:180, name:"Waaty", type:"Elektro", hp:70, atk:55, emoji:"🐑", color:"#fd79a8" },
-        { id:181, name:"Ampharos", type:"Elektro", hp:90, atk:75, emoji:"⚡", color:"#f1c40f" },
-        { id:182, name:"Blubella", type:"Pflanze", hp:75, atk:80, emoji:"🌺", color:"#27ae60" },
-        { id:183, name:"Marill", type:"Wasser", hp:70, atk:20, emoji:"💧", color:"#74b9ff" },
-        { id:184, name:"Azumarill", type:"Wasser", hp:100, atk:50, emoji:"💧", color:"#3498db" },
-        { id:185, name:"Mogelbaum", type:"Gestein", hp:70, atk:100, emoji:"🌳", color:"#27ae60" },
-        { id:186, name:"Quaxo", type:"Wasser", hp:90, atk:75, emoji:"🐸", color:"#27ae60" },
-        { id:187, name:"Hoppspross", type:"Pflanze/Flug", hp:35, atk:35, emoji:"🌱", color:"#27ae60" },
-        { id:188, name:"Hubelupf", type:"Pflanze/Flug", hp:55, atk:45, emoji:"🌸", color:"#27ae60" },
-        { id:189, name:"Papungha", type:"Pflanze/Flug", hp:75, atk:55, emoji:"🌸", color:"#74b9ff" },
-        { id:190, name:"Griffel", type:"Normal", hp:55, atk:60, emoji:"🐒", color:"#6c5ce7" },
-        { id:191, name:"Sonnkern", type:"Pflanze", hp:30, atk:30, emoji:"🌻", color:"#f1c40f" },
-        { id:192, name:"Sonnflora", type:"Pflanze", hp:75, atk:75, emoji:"🌻", color:"#f1c40f" },
-        { id:193, name:"Yanma", type:"Käfer/Flug", hp:65, atk:65, emoji:"🪰", color:"#27ae60" },
-        { id:194, name:"Felino", type:"Wasser/Boden", hp:55, atk:45, emoji:"💧", color:"#74b9ff" },
-        { id:195, name:"Morlord", type:"Wasser/Boden", hp:95, atk:75, emoji:"💧", color:"#3498db" },
-        { id:196, name:"Psiana", type:"Psycho", hp:65, atk:65, emoji:"☀️", color:"#a29bfe" },
-        { id:197, name:"Nachtara", type:"Unlicht", hp:95, atk:65, emoji:"🌙", color:"#2c3e50" },
-        { id:198, name:"Kramurx", type:"Unlicht/Flug", hp:60, atk:85, emoji:"🐦", color:"#2c3e50" },
-        { id:199, name:"Laschoking", type:"Wasser/Psycho", hp:95, atk:75, emoji:"👑", color:"#fd79a8" },
-        { id:200, name:"Traunfugil", type:"Geist", hp:60, atk:60, emoji:"👻", color:"#6c5ce7" },
-        { id:201, name:"Icognito", type:"Psycho", hp:48, atk:72, emoji:"🔤", color:"#2c3e50" },
-        { id:202, name:"Woingenau", type:"Psycho", hp:190, atk:33, emoji:"💙", color:"#74b9ff" },
-        { id:203, name:"Girafarig", type:"Normal/Psycho", hp:70, atk:80, emoji:"🦒", color:"#f1c40f" },
-        { id:204, name:"Tannza", type:"Käfer", hp:50, atk:65, emoji:"🌲", color:"#636e72" },
-        { id:205, name:"Forstellka", type:"Käfer/Stahl", hp:75, atk:90, emoji:"🌲", color:"#636e72" },
-        { id:206, name:"Dummisel", type:"Normal", hp:100, atk:70, emoji:"🐍", color:"#f1c40f" },
-        { id:207, name:"Skorgla", type:"Boden/Flug", hp:65, atk:75, emoji:"🦂", color:"#6c5ce7" },
-        { id:208, name:"Stahlos", type:"Stahl/Boden", hp:75, atk:85, emoji:"⛓️", color:"#636e72" },
-        { id:209, name:"Snubbull", type:"Fee", hp:60, atk:80, emoji:"🐕", color:"#fd79a8" },
-        { id:210, name:"Granbull", type:"Fee", hp:90, atk:120, emoji:"🐕", color:"#6c5ce7" },
-        { id:211, name:"Baldorfish", type:"Wasser/Gift", hp:65, atk:95, emoji:"🐡", color:"#0984e3" },
-        { id:212, name:"Scherox", type:"Käfer/Stahl", hp:70, atk:130, emoji:"✂️", color:"#c0392b" },
-        { id:213, name:"Pottrott", type:"Käfer", hp:20, atk:10, emoji:"🐛", color:"#f1c40f" },
-        { id:214, name:"Skaraborn", type:"Käfer/Kampf", hp:80, atk:125, emoji:"🪲", color:"#2980b9" },
-        { id:215, name:"Sniebel", type:"Unlicht/Eis", hp:55, atk:95, emoji:"❄️", color:"#2c3e50" },
-        { id:216, name:"Teddiursa", type:"Normal", hp:60, atk:80, emoji:"🧸", color:"#d35400" },
-        { id:217, name:"Ursaring", type:"Normal", hp:90, atk:130, emoji:"🐻", color:"#795548" },
-        { id:218, name:"Schneckmag", type:"Feuer", hp:40, atk:40, emoji:"🐌", color:"#e74c3c" },
-        { id:219, name:"Magcargo", type:"Feuer/Gestein", hp:60, atk:50, emoji:"🐌", color:"#e74c3c" },
-        { id:220, name:"Quiekel", type:"Eis/Boden", hp:50, atk:50, emoji:"🐷", color:"#d35400" },
-        { id:221, name:"Keifel", type:"Eis/Boden", hp:100, atk:100, emoji:"🐷", color:"#795548" },
-        { id:222, name:"Corasonn", type:"Wasser/Gestein", hp:65, atk:55, emoji:"🪸", color:"#fd79a8" },
-        { id:223, name:"Remoraid", type:"Wasser", hp:35, atk:65, emoji:"🐟", color:"#74b9ff" },
-        { id:224, name:"Octillery", type:"Wasser", hp:75, atk:105, emoji:"🐙", color:"#e74c3c" },
-        { id:225, name:"Botogel", type:"Eis/Flug", hp:45, atk:55, emoji:"🐧", color:"#e74c3c" },
-        { id:226, name:"Mantax", type:"Wasser/Flug", hp:85, atk:40, emoji:"🐟", color:"#0984e3" },
-        { id:227, name:"Panzaeron", type:"Stahl/Flug", hp:65, atk:80, emoji:"🦅", color:"#636e72" },
-        { id:228, name:"Hunduster", type:"Unlicht/Feuer", hp:45, atk:60, emoji:"🐕", color:"#2c3e50" },
-        { id:229, name:"Hundemon", type:"Unlicht/Feuer", hp:75, atk:90, emoji:"🐕‍🦺", color:"#2c3e50" },
-        { id:230, name:"Seedraking", type:"Wasser/Drache", hp:75, atk:95, emoji:"🐴", color:"#0984e3" },
-        { id:231, name:"Phanpy", type:"Boden", hp:90, atk:60, emoji:"🐘", color:"#74b9ff" },
-        { id:232, name:"Donphan", type:"Boden", hp:90, atk:120, emoji:"🐘", color:"#636e72" },
-        { id:233, name:"Porygon2", type:"Normal", hp:85, atk:80, emoji:"💻", color:"#e74c3c" },
-        { id:234, name:"Damhirplex", type:"Normal", hp:73, atk:95, emoji:"🦌", color:"#795548" },
-        { id:235, name:"Farbeagle", type:"Normal", hp:55, atk:20, emoji:"🎨", color:"#dfe6e9" },
-        { id:236, name:"Rabauz", type:"Kampf", hp:35, atk:35, emoji:"👶", color:"#795548" },
-        { id:237, name:"Kapoera", type:"Kampf", hp:50, atk:95, emoji:"🤸", color:"#795548" },
-        { id:238, name:"Kussilla", type:"Eis", hp:45, atk:30, emoji:"💋", color:"#fd79a8" },
-        { id:239, name:"Elekid", type:"Elektro", hp:45, atk:63, emoji:"⚡", color:"#f1c40f" },
-        { id:240, name:"Magby", type:"Feuer", hp:45, atk:75, emoji:"🔥", color:"#e74c3c" },
-        { id:241, name:"Miltank", type:"Normal", hp:95, atk:80, emoji:"🐄", color:"#fd79a8" },
-        { id:242, name:"Heiteira", type:"Normal", hp:255, atk:10, emoji:"💗", color:"#fd79a8" },
-        { id:243, name:"Raikou", type:"Elektro", hp:90, atk:85, emoji:"⚡", color:"#f1c40f" },
-        { id:244, name:"Entei", type:"Feuer", hp:115, atk:115, emoji:"🔥", color:"#d35400" },
-        { id:245, name:"Suicune", type:"Wasser", hp:100, atk:75, emoji:"💎", color:"#00cec9" },
-        { id:246, name:"Larvitar", type:"Gestein/Boden", hp:50, atk:64, emoji:"🦎", color:"#27ae60" },
-        { id:247, name:"Pupitar", type:"Gestein/Boden", hp:70, atk:84, emoji:"🦎", color:"#636e72" },
-        { id:248, name:"Despotar", type:"Gestein/Unlicht", hp:100, atk:134, emoji:"🦖", color:"#27ae60" },
-        { id:249, name:"Lugia", type:"Psycho/Flug", hp:106, atk:90, emoji:"🌊", color:"#dfe6e9" },
-        { id:250, name:"Ho-Oh", type:"Feuer/Flug", hp:106, atk:130, emoji:"🌈", color:"#e74c3c" },
-        { id:251, name:"Celebi", type:"Pflanze/Psycho", hp:100, atk:100, emoji:"🌳", color:"#27ae60" }
-    ];
-
-    // ===== (Fußball entfernt – ohne Bilder kein Spaß) =====
-
-    // ===== BRAWL STARS CDN MAPPING =====
-    // Name -> offizielle Brawler-ID für cdn.brawlify.com
-    const brawlIdMap = {
-        "Shelly":16000000,"Colt":16000001,"Bull":16000002,"Brock":16000003,"Rico":16000004,
-        "Spike":16000005,"Barley":16000006,"Jessie":16000007,"Nita":16000008,"Dynamike":16000009,
-        "El Primo":16000010,"Mortis":16000011,"Crow":16000012,"Poco":16000013,"Bo":16000014,
-        "Piper":16000015,"Pam":16000016,"Tara":16000017,"Darryl":16000018,"Penny":16000019,
-        "Frank":16000020,"Gene":16000021,"Tick":16000022,"Leon":16000023,"Rosa":16000024,
-        "Carl":16000025,"Bibi":16000026,"8-Bit":16000027,"Sandy":16000028,"Bea":16000029,
-        "Emz":16000030,"Mr. P":16000031,"Max":16000032,"Jacky":16000034,
-        "Gale":16000035,"Nani":16000036,"Sprout":16000037,"Surge":16000038,
-        "Colette":16000039,"Amber":16000040,"Lou":16000041,"Byron":16000042,
-        "Edgar":16000043,"Ruffs":16000044,"Stu":16000045,"Belle":16000046,
-        "Squeak":16000047,"Grom":16000048,"Buzz":16000049,"Griff":16000050,
-        "Ash":16000051,"Meg":16000052,"Lola":16000053,"Fang":16000054,
-        "Eve":16000056,"Janet":16000057,"Bonnie":16000058,"Otis":16000059,
-        "Sam":16000060,"Gus":16000061,"Buster":16000062,"Chester":16000063,
-        "Gray":16000064,"Mandy":16000065,"R-T":16000066,"Willow":16000067,
-        "Maisie":16000068,"Hank":16000069,"Cordelius":16000070,"Doug":16000071,
-        "Pearl":16000072,"Chuck":16000073,"Charlie":16000074,"Mico":16000075,
-        "Kit":16000076,"Larry & Lawrie":16000077,"Melodie":16000078,"Angelo":16000079,
-        "Draco":16000080,"Lily":16000081,"Berry":16000082,"Clancy":16000083,
-        "Moe":16000084,"Kenji":16000085,"Shade":16000086,"Juju":16000087,
-        "Meeple":16000089,"Ollie":16000090,"Lumi":16000091,"Finx":16000092,
-        "Jae-Yong":16000093,"Kaze":16000094,"Alli":16000095,"Trunk":16000096,
-        "Mina":16000097,"Ziggy":16000098,"Pierce":16000099,"Gigi":16000100,
-        "Glowy":16000101,"Sirius":16000102,"Najia":16000103,"Damian":16000104,
-        "Starr Nova":16000105,"Bolt":16000106,"Nori":16000107,"Wendy":16000108
+    // ===== THEME-KONFIGURATION =====
+    const ALL_THEMES = {
+        pokemon:    { label: 'Pokémon',      emoji: '⚡',  file: 'data/pokemon.json',    cards: [] },
+        brawlstars: { label: 'Brawl Stars',  emoji: '💥',  file: 'data/brawlstars.json', cards: [] },
+        minecraft:  { label: 'Minecraft',    emoji: '⛏️',  file: 'data/minecraft.json',  cards: [] },
+        autos:      { label: 'Autos',        emoji: '🏎️',  file: 'data/autos.json',      cards: [] },
+        tiere:      { label: 'Tiere',        emoji: '🐾',  file: 'data/tiere.json',      cards: [] },
+        mario:      { label: 'Super Mario',  emoji: '🍄',  file: 'data/mario.json',      cards: [] }
     };
 
+    let activeThemes = JSON.parse(localStorage.getItem('leo_active_themes') || 'null') || ['pokemon','brawlstars','minecraft'];
+    let themesLoaded = false;
+
+    // Brawl Stars CDN helper (kept for brawlstars theme)
+    const brawlIdMap = {};
     function getBrawlCdnUrl(name, type) {
         const bid = brawlIdMap[name];
         if (!bid) return null;
@@ -1778,216 +1543,38 @@
         return null;
     }
 
-    // ===== BRAWL STARS DATENBANK =====
-    const brawlstarsCards = [
-        { id:1, name:"Shelly", cls:"Kämpfer", rar:"Starter", pw:7, emoji:"💥", color:"#b9eaff" },
-        { id:2, name:"Colt", cls:"Kämpfer", rar:"Starter", pw:7, emoji:"�", color:"#b9eaff" },
-        { id:3, name:"Bull", cls:"Tank", rar:"Starter", pw:7, emoji:"�", color:"#b9eaff" },
-        { id:4, name:"Brock", cls:"Scharfschütze", rar:"Starter", pw:7, emoji:"�", color:"#b9eaff" },
-        { id:5, name:"Rico", cls:"Kämpfer", rar:"Starter", pw:7, emoji:"🎯", color:"#b9eaff" },
-        { id:6, name:"Spike", cls:"Kämpfer", rar:"Starter", pw:7, emoji:"🌵", color:"#b9eaff" },
-        { id:7, name:"Barley", cls:"Werfer", rar:"Starter", pw:7, emoji:"🍺", color:"#b9eaff" },
-        { id:8, name:"Jessie", cls:"Kämpfer", rar:"Starter", pw:7, emoji:"🔧", color:"#b9eaff" },
-        { id:9, name:"Nita", cls:"Kämpfer", rar:"Starter", pw:7, emoji:"🐻", color:"#b9eaff" },
-        { id:10, name:"Dynamike", cls:"Werfer", rar:"Starter", pw:7, emoji:"�", color:"#b9eaff" },
-        { id:11, name:"El Primo", cls:"Tank", rar:"Starter", pw:7, emoji:"🤼", color:"#b9eaff" },
-        { id:12, name:"Mortis", cls:"Assassine", rar:"Starter", pw:7, emoji:"🦇", color:"#b9eaff" },
-        { id:13, name:"Crow", cls:"Assassine", rar:"Starter", pw:7, emoji:"�‍⬛", color:"#b9eaff" },
-        { id:14, name:"Poco", cls:"Heiler", rar:"Starter", pw:7, emoji:"�", color:"#b9eaff" },
-        { id:15, name:"Bo", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"🏹", color:"#68c73c" },
-        { id:16, name:"Piper", cls:"Scharfschütze", rar:"Selten", pw:7, emoji:"☂️", color:"#fd79a8" },
-        { id:17, name:"Pam", cls:"Heiler", rar:"Selten", pw:7, emoji:"🔩", color:"#1abc9c" },
-        { id:18, name:"Tara", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"�", color:"#6c5ce7" },
-        { id:19, name:"Darryl", cls:"Tank", rar:"Selten", pw:7, emoji:"🛢️", color:"#e74c3c" },
-        { id:20, name:"Penny", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"�", color:"#f39c12" },
-        { id:21, name:"Frank", cls:"Tank", rar:"Selten", pw:7, emoji:"🔨", color:"#2c3e50" },
-        { id:22, name:"Gene", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"�", color:"#6c5ce7" },
-        { id:23, name:"Tick", cls:"Werfer", rar:"Selten", pw:7, emoji:"⏰", color:"#3498db" },
-        { id:24, name:"Leon", cls:"Assassine", rar:"Selten", pw:7, emoji:"�", color:"#27ae60" },
-        { id:25, name:"Rosa", cls:"Tank", rar:"Selten", pw:7, emoji:"🌹", color:"#27ae60" },
-        { id:26, name:"Carl", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"⛏️", color:"#3498db" },
-        { id:27, name:"Bibi", cls:"Tank", rar:"Selten", pw:7, emoji:"🫧", color:"#fd79a8" },
-        { id:28, name:"8-Bit", cls:"Scharfschütze", rar:"Selten", pw:7, emoji:"🕹️", color:"#2ecc71" },
-        { id:29, name:"Sandy", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"💤", color:"#f1c40f" },
-        { id:30, name:"Bea", cls:"Scharfschütze", rar:"Selten", pw:7, emoji:"�", color:"#f1c40f" },
-        { id:31, name:"Emz", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"📱", color:"#6c5ce7" },
-        { id:32, name:"Mr. P", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"�", color:"#3498db" },
-        { id:33, name:"Max", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"⚡", color:"#f1c40f" },
-        { id:34, name:"Jacky", cls:"Tank", rar:"Selten", pw:7, emoji:"🔨", color:"#f39c12" },
-        { id:35, name:"Gale", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"❄️", color:"#74b9ff" },
-        { id:36, name:"Nani", cls:"Scharfschütze", rar:"Episch", pw:8, emoji:"🤖", color:"#3498db" },
-        { id:37, name:"Sprout", cls:"Werfer", rar:"Episch", pw:8, emoji:"🌱", color:"#27ae60" },
-        { id:38, name:"Surge", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"⚡", color:"#6c5ce7" },
-        { id:39, name:"Colette", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"📒", color:"#fd79a8" },
-        { id:40, name:"Amber", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"�", color:"#e74c3c" },
-        { id:41, name:"Lou", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"🧊", color:"#74b9ff" },
-        { id:42, name:"Byron", cls:"Heiler", rar:"Episch", pw:8, emoji:"�", color:"#6c5ce7" },
-        { id:43, name:"Edgar", cls:"Assassine", rar:"Episch", pw:8, emoji:"🧣", color:"#2c3e50" },
-        { id:44, name:"Ruffs", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"�", color:"#f39c12" },
-        { id:45, name:"Stu", cls:"Assassine", rar:"Episch", pw:8, emoji:"🏍️", color:"#e74c3c" },
-        { id:46, name:"Belle", cls:"Scharfschütze", rar:"Episch", pw:8, emoji:"⚡", color:"#f1c40f" },
-        { id:47, name:"Squeak", cls:"Werfer", rar:"Episch", pw:8, emoji:"💦", color:"#f1c40f" },
-        { id:48, name:"Grom", cls:"Werfer", rar:"Episch", pw:8, emoji:"📋", color:"#636e72" },
-        { id:49, name:"Buzz", cls:"Tank", rar:"Episch", pw:8, emoji:"🦈", color:"#3498db" },
-        { id:50, name:"Griff", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"💵", color:"#27ae60" },
-        { id:51, name:"Ash", cls:"Tank", rar:"Episch", pw:8, emoji:"🗑️", color:"#636e72" },
-        { id:52, name:"Meg", cls:"Episch", rar:"Episch", pw:8, emoji:"🤖", color:"#6c5ce7" },
-        { id:53, name:"Lola", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"💎", color:"#fd79a8" },
-        { id:54, name:"Fang", cls:"Assassine", rar:"Episch", pw:8, emoji:"�", color:"#e74c3c" },
-        { id:55, name:"Eve", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"🥚", color:"#fe5e72" },
-        { id:56, name:"Janet", cls:"Scharfschütze", rar:"Mythisch", pw:8, emoji:"🎤", color:"#fe5e72" },
-        { id:57, name:"Bonnie", cls:"Scharfschütze", rar:"Mythisch", pw:8, emoji:"�", color:"#fd79a8" },
-        { id:58, name:"Otis", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"�", color:"#3498db" },
-        { id:59, name:"Sam", cls:"Tank", rar:"Mythisch", pw:8, emoji:"🥊", color:"#2c3e50" },
-        { id:60, name:"Gus", cls:"Heiler", rar:"Mythisch", pw:8, emoji:"�", color:"#a29bfe" },
-        { id:61, name:"Buster", cls:"Tank", rar:"Mythisch", pw:8, emoji:"🛡️", color:"#2c3e50" },
-        { id:62, name:"Chester", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"🃏", color:"#f39c12" },
-        { id:63, name:"Gray", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"�", color:"#636e72" },
-        { id:64, name:"Mandy", cls:"Scharfschütze", rar:"Mythisch", pw:8, emoji:"�", color:"#fd79a8" },
-        { id:65, name:"R-T", cls:"Tank", rar:"Mythisch", pw:8, emoji:"�", color:"#636e72" },
-        { id:66, name:"Willow", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"�", color:"#6c5ce7" },
-        { id:67, name:"Maisie", cls:"Scharfschütze", rar:"Mythisch", pw:8, emoji:"🎯", color:"#e74c3c" },
-        { id:68, name:"Hank", cls:"Tank", rar:"Mythisch", pw:8, emoji:"�", color:"#3498db" },
-        { id:69, name:"Cordelius", cls:"Assassine", rar:"Mythisch", pw:8, emoji:"�", color:"#6c5ce7" },
-        { id:70, name:"Doug", cls:"Heiler", rar:"Mythisch", pw:8, emoji:"🌭", color:"#f39c12" },
-        { id:71, name:"Pearl", cls:"Scharfschütze", rar:"Mythisch", pw:8, emoji:"🫧", color:"#74b9ff" },
-        { id:72, name:"Chuck", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"�", color:"#f1c40f" },
-        { id:73, name:"Charlie", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"🕷️", color:"#6c5ce7" },
-        { id:74, name:"Mico", cls:"Assassine", rar:"Mythisch", pw:8, emoji:"🐒", color:"#f39c12" },
-        { id:75, name:"Kit", cls:"Heiler", rar:"Mythisch", pw:8, emoji:"🐱", color:"#dfe6e9" },
-        { id:76, name:"Larry & Lawrie", cls:"Werfer", rar:"Mythisch", pw:8, emoji:"�", color:"#636e72" },
-        { id:77, name:"Melodie", cls:"Assassine", rar:"Mythisch", pw:8, emoji:"�", color:"#fd79a8" },
-        { id:78, name:"Angelo", cls:"Scharfschütze", rar:"Mythisch", pw:8, emoji:"😈", color:"#2c3e50" },
-        { id:79, name:"Draco", cls:"Tank", rar:"Legendär", pw:9, emoji:"🐲", color:"#e74c3c" },
-        { id:80, name:"Lily", cls:"Assassine", rar:"Legendär", pw:9, emoji:"🌸", color:"#27ae60" },
-        { id:81, name:"Berry", cls:"Kämpfer", rar:"Legendär", pw:9, emoji:"🫐", color:"#6c5ce7" },
-        { id:82, name:"Clancy", cls:"Kämpfer", rar:"Legendär", pw:9, emoji:"🦞", color:"#e74c3c" },
-        { id:83, name:"Moe", cls:"Assassine", rar:"Legendär", pw:9, emoji:"🐛", color:"#27ae60" },
-        { id:84, name:"Kenji", cls:"Assassine", rar:"Legendär", pw:9, emoji:"⚔️", color:"#c0392b" },
-        { id:85, name:"Shade", cls:"Assassine", rar:"Legendär", pw:9, emoji:"🌑", color:"#2c3e50" },
-        { id:86, name:"Juju", cls:"Kämpfer", rar:"Legendär", pw:9, emoji:"🎃", color:"#6c5ce7" },
-        { id:87, name:"Meeple", cls:"Kämpfer", rar:"Legendär", pw:9, emoji:"🧩", color:"#f39c12" },
-        { id:88, name:"Ollie", cls:"Tank", rar:"Legendär", pw:9, emoji:"🧸", color:"#27ae60" },
-        { id:89, name:"Lumi", cls:"Heiler", rar:"Legendär", pw:9, emoji:"✨", color:"#74b9ff" },
-        { id:90, name:"Finx", cls:"Assassine", rar:"Legendär", pw:9, emoji:"🦊", color:"#e74c3c" },
-        { id:91, name:"Jae-Yong", cls:"Tank", rar:"Legendär", pw:9, emoji:"�", color:"#e74c3c" },
-        { id:92, name:"Kaze", cls:"Assassine", rar:"Legendär", pw:9, emoji:"�️", color:"#74b9ff" },
-        { id:93, name:"Alli", cls:"Kämpfer", rar:"Legendär", pw:9, emoji:"🐊", color:"#27ae60" },
-        { id:94, name:"Trunk", cls:"Tank", rar:"Legendär", pw:9, emoji:"🐘", color:"#636e72" },
-        { id:95, name:"Mina", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"�", color:"#e1fb2a" },
-        { id:96, name:"Ziggy", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"⭐", color:"#e1fb2a" },
-        { id:97, name:"Pierce", cls:"Scharfschütze", rar:"Ultra Legendär", pw:10, emoji:"🎯", color:"#e1fb2a" },
-        { id:98, name:"Gigi", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"💃", color:"#e1fb2a" },
-        { id:99, name:"Glowy", cls:"Heiler", rar:"Ultra Legendär", pw:10, emoji:"�", color:"#e1fb2a" },
-        { id:100, name:"Sirius", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"🐺", color:"#e1fb2a" },
-        { id:101, name:"Najia", cls:"Assassine", rar:"Ultra Legendär", pw:10, emoji:"�", color:"#e1fb2a" },
-        { id:102, name:"Damian", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"�", color:"#e1fb2a" },
-        { id:103, name:"Starr Nova", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"🌟", color:"#e1fb2a" },
-        { id:104, name:"Bolt", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"⚡", color:"#e1fb2a" },
-        { id:105, name:"Nori", cls:"Heiler", rar:"Ultra Legendär", pw:10, emoji:"🍣", color:"#e1fb2a" },
-        { id:106, name:"Wendy", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"🧚", color:"#e1fb2a" }
-    ];
+    async function loadThemes() {
+        const promises = Object.entries(ALL_THEMES).map(async ([key, theme]) => {
+            try {
+                const resp = await fetch(theme.file);
+                theme.cards = await resp.json();
+                // Brawl Stars: ID-Map aufbauen
+                if (key === 'brawlstars') {
+                    theme.cards.forEach(c => { if (c.name) brawlIdMap[c.name] = 16000000 + (c.id - 1); });
+                }
+            } catch (e) {
+                console.warn(`Failed to load ${theme.file}:`, e);
+                theme.cards = [];
+            }
+        });
+        await Promise.all(promises);
+        themesLoaded = true;
+        // Fix brawl IDs more accurately from the data
+        if (ALL_THEMES.brawlstars.cards.length > 0) {
+            // The brawlIdMap needs the exact mapping - rebuild from known data
+            buildBrawlIdMap();
+        }
+    }
 
-    // ===== MINECRAFT DATENBANK (90 Mobs) =====
-    const minecraftCards = [
-        // Hostile Mobs
-        { id:1, name:"Creeper", mob:"Feindlich", hp:20, atk:49, emoji:"💥", color:"#2ecc71", img:"Creeper" },
-        { id:2, name:"Zombie", mob:"Feindlich", hp:20, atk:3, emoji:"🧟", color:"#2ecc71", img:"Zombie" },
-        { id:3, name:"Skelett", mob:"Feindlich", hp:20, atk:4, emoji:"💀", color:"#dfe6e9", img:"Skeleton" },
-        { id:4, name:"Spinne", mob:"Feindlich", hp:16, atk:2, emoji:"🕷️", color:"#2c3e50", img:"Spider" },
-        { id:5, name:"Enderman", mob:"Neutral", hp:40, atk:7, emoji:"🟣", color:"#6c5ce7", img:"Enderman" },
-        { id:6, name:"Schleicher", mob:"Feindlich", hp:20, atk:3, emoji:"🧊", color:"#636e72", img:"Stray" },
-        { id:7, name:"Wüstenzombie", mob:"Feindlich", hp:20, atk:3, emoji:"🏜️", color:"#d35400", img:"Husk" },
-        { id:8, name:"Ertrunkener", mob:"Feindlich", hp:20, atk:3, emoji:"🌊", color:"#0984e3", img:"Drowned" },
-        { id:9, name:"Hexe", mob:"Feindlich", hp:26, atk:6, emoji:"🧙‍♀️", color:"#6c5ce7", img:"Witch" },
-        { id:10, name:"Schleim", mob:"Feindlich", hp:16, atk:4, emoji:"🟢", color:"#27ae60", img:"Slime" },
-        { id:11, name:"Magmawürfel", mob:"Feindlich", hp:16, atk:6, emoji:"🔥", color:"#e74c3c", img:"Magma_Cube" },
-        { id:12, name:"Phantom", mob:"Feindlich", hp:20, atk:6, emoji:"👻", color:"#74b9ff", img:"Phantom" },
-        { id:13, name:"Silberfischchen", mob:"Feindlich", hp:8, atk:1, emoji:"🐛", color:"#636e72", img:"Silverfish" },
-        { id:14, name:"Endermilbe", mob:"Feindlich", hp:8, atk:2, emoji:"🐜", color:"#6c5ce7", img:"Endermite" },
-        { id:15, name:"Höhlenspinne", mob:"Feindlich", hp:12, atk:2, emoji:"🕸️", color:"#0984e3", img:"Cave_Spider" },
-        { id:16, name:"Lohe", mob:"Feindlich", hp:20, atk:5, emoji:"🔥", color:"#f39c12", img:"Blaze" },
-        { id:17, name:"Ghast", mob:"Feindlich", hp:10, atk:6, emoji:"😭", color:"#dfe6e9", img:"Ghast" },
-        { id:18, name:"Witherskelett", mob:"Feindlich", hp:20, atk:10, emoji:"🖤", color:"#2c3e50", img:"Wither_Skeleton" },
-        { id:19, name:"Wächter", mob:"Feindlich", hp:30, atk:6, emoji:"🐡", color:"#00cec9", img:"Guardian" },
-        { id:20, name:"Großer Wächter", mob:"Feindlich", hp:80, atk:8, emoji:"🐡", color:"#00b894", img:"Elder_Guardian" },
-        { id:21, name:"Shulker", mob:"Feindlich", hp:30, atk:4, emoji:"📦", color:"#6c5ce7", img:"Shulker" },
-        { id:22, name:"Plünderer", mob:"Feindlich", hp:24, atk:4, emoji:"🏹", color:"#636e72", img:"Pillager" },
-        { id:23, name:"Diener", mob:"Feindlich", hp:24, atk:5, emoji:"🪓", color:"#636e72", img:"Vindicator" },
-        { id:24, name:"Magier", mob:"Feindlich", hp:24, atk:6, emoji:"✨", color:"#636e72", img:"Evoker" },
-        { id:25, name:"Vex", mob:"Feindlich", hp:14, atk:9, emoji:"👼", color:"#74b9ff", img:"Vex" },
-        { id:26, name:"Verwüster", mob:"Feindlich", hp:100, atk:12, emoji:"🐂", color:"#636e72", img:"Ravager" },
-        { id:27, name:"Piglin", mob:"Neutral", hp:16, atk:5, emoji:"🐷", color:"#f39c12", img:"Piglin" },
-        { id:28, name:"Piglin-Barbar", mob:"Feindlich", hp:50, atk:7, emoji:"🐷", color:"#2c3e50", img:"Piglin_Brute" },
-        { id:29, name:"Hoglin", mob:"Feindlich", hp:40, atk:6, emoji:"🐗", color:"#795548", img:"Hoglin" },
-        { id:30, name:"Zoglin", mob:"Feindlich", hp:40, atk:8, emoji:"🧟", color:"#27ae60", img:"Zoglin" },
-        { id:31, name:"Warden", mob:"Feindlich", hp:500, atk:30, emoji:"👂", color:"#00cec9", img:"Warden" },
-        { id:32, name:"Breeze", mob:"Feindlich", hp:30, atk:3, emoji:"💨", color:"#74b9ff", img:"Breeze" },
-        { id:33, name:"Bogged", mob:"Feindlich", hp:16, atk:4, emoji:"🍄", color:"#27ae60", img:"Bogged" },
-        { id:34, name:"Creaking", mob:"Feindlich", hp:1, atk:3, emoji:"🌳", color:"#795548", img:"Creaking" },
-        // Passive Mobs
-        { id:35, name:"Schwein", mob:"Passiv", hp:10, atk:0, emoji:"🐷", color:"#fd79a8", img:"Pig" },
-        { id:36, name:"Kuh", mob:"Passiv", hp:10, atk:0, emoji:"🐄", color:"#795548", img:"Cow" },
-        { id:37, name:"Schaf", mob:"Passiv", hp:8, atk:0, emoji:"🐑", color:"#dfe6e9", img:"Sheep" },
-        { id:38, name:"Huhn", mob:"Passiv", hp:4, atk:0, emoji:"🐔", color:"#dfe6e9", img:"Chicken" },
-        { id:39, name:"Wolf", mob:"Neutral", hp:8, atk:4, emoji:"🐺", color:"#636e72", img:"Wolf" },
-        { id:40, name:"Katze", mob:"Passiv", hp:10, atk:0, emoji:"🐱", color:"#f39c12", img:"Cat" },
-        { id:41, name:"Pferd", mob:"Passiv", hp:26, atk:0, emoji:"🐴", color:"#795548", img:"Horse" },
-        { id:42, name:"Esel", mob:"Passiv", hp:26, atk:0, emoji:"🫏", color:"#636e72", img:"Donkey" },
-        { id:43, name:"Lama", mob:"Neutral", hp:22, atk:1, emoji:"🦙", color:"#d35400", img:"Llama" },
-        { id:44, name:"Fuchs", mob:"Passiv", hp:10, atk:2, emoji:"🦊", color:"#e17055", img:"Fox" },
-        { id:45, name:"Biene", mob:"Neutral", hp:10, atk:2, emoji:"🐝", color:"#f1c40f", img:"Bee" },
-        { id:46, name:"Delfin", mob:"Neutral", hp:10, atk:3, emoji:"🐬", color:"#74b9ff", img:"Dolphin" },
-        { id:47, name:"Schildkröte", mob:"Passiv", hp:30, atk:0, emoji:"🐢", color:"#27ae60", img:"Turtle" },
-        { id:48, name:"Panda", mob:"Neutral", hp:20, atk:6, emoji:"🐼", color:"#2c3e50", img:"Panda" },
-        { id:49, name:"Papagei", mob:"Passiv", hp:6, atk:0, emoji:"🦜", color:"#e74c3c", img:"Parrot" },
-        { id:50, name:"Axolotl", mob:"Passiv", hp:14, atk:2, emoji:"🩷", color:"#fd79a8", img:"Axolotl" },
-        { id:51, name:"Frosch", mob:"Passiv", hp:10, atk:0, emoji:"🐸", color:"#27ae60", img:"Frog" },
-        { id:52, name:"Kaulquappe", mob:"Passiv", hp:6, atk:0, emoji:"💧", color:"#2c3e50", img:"Tadpole" },
-        { id:53, name:"Allay", mob:"Passiv", hp:20, atk:0, emoji:"💙", color:"#74b9ff", img:"Allay" },
-        { id:54, name:"Schnüffler", mob:"Passiv", hp:14, atk:0, emoji:"🦕", color:"#27ae60", img:"Sniffer" },
-        { id:55, name:"Kamel", mob:"Passiv", hp:32, atk:0, emoji:"🐪", color:"#d35400", img:"Camel" },
-        { id:56, name:"Gürteltier", mob:"Passiv", hp:12, atk:0, emoji:"🦔", color:"#d35400", img:"Armadillo" },
-        { id:57, name:"Tintenfisch", mob:"Passiv", hp:10, atk:0, emoji:"🦑", color:"#2c3e50", img:"Squid" },
-        { id:58, name:"Leucht-Tintenfisch", mob:"Passiv", hp:10, atk:0, emoji:"✨", color:"#00cec9", img:"Glow_Squid" },
-        { id:59, name:"Fledermaus", mob:"Passiv", hp:6, atk:0, emoji:"🦇", color:"#636e72", img:"Bat" },
-        { id:60, name:"Ozelot", mob:"Passiv", hp:10, atk:0, emoji:"🐆", color:"#f1c40f", img:"Ocelot" },
-        { id:61, name:"Kaninchen", mob:"Passiv", hp:3, atk:0, emoji:"🐰", color:"#d35400", img:"Rabbit" },
-        { id:62, name:"Eisbär", mob:"Neutral", hp:30, atk:6, emoji:"🐻‍❄️", color:"#dfe6e9", img:"Polar_Bear" },
-        { id:63, name:"Mooshroom", mob:"Passiv", hp:10, atk:0, emoji:"🍄", color:"#e74c3c", img:"Mooshroom" },
-        { id:64, name:"Streuner", mob:"Neutral", hp:30, atk:4, emoji:"🐐", color:"#636e72", img:"Goat" },
-        // NPCs & Golems
-        { id:65, name:"Dorfbewohner", mob:"Passiv", hp:20, atk:0, emoji:"👨‍🌾", color:"#795548", img:"Villager" },
-        { id:66, name:"Eisengolem", mob:"Neutral", hp:100, atk:21, emoji:"🤖", color:"#636e72", img:"Iron_Golem" },
-        { id:67, name:"Schneegolem", mob:"Passiv", hp:4, atk:0, emoji:"⛄", color:"#dfe6e9", img:"Snow_Golem" },
-        { id:68, name:"Fahrender Händler", mob:"Passiv", hp:20, atk:0, emoji:"🧳", color:"#0984e3", img:"Wandering_Trader" },
-        // Nether Mobs
-        { id:69, name:"Zombifizierter Piglin", mob:"Neutral", hp:20, atk:5, emoji:"🧟", color:"#27ae60", img:"Zombified_Piglin" },
-        { id:70, name:"Strider", mob:"Passiv", hp:20, atk:0, emoji:"🦶", color:"#e74c3c", img:"Strider" },
-        // End Mobs
-        { id:71, name:"Enddrache", mob:"Boss", hp:200, atk:10, emoji:"🐲", color:"#2c3e50", img:"Ender_Dragon" },
-        { id:72, name:"Wither", mob:"Boss", hp:300, atk:12, emoji:"💀", color:"#2c3e50", img:"Wither" },
-        // Wasserkreaturen
-        { id:73, name:"Kabeljau", mob:"Passiv", hp:3, atk:0, emoji:"🐟", color:"#d35400", img:"Cod" },
-        { id:74, name:"Lachs", mob:"Passiv", hp:3, atk:0, emoji:"🐟", color:"#e74c3c", img:"Salmon" },
-        { id:75, name:"Kugelfisch", mob:"Passiv", hp:3, atk:0, emoji:"🐡", color:"#f1c40f", img:"Pufferfish" },
-        { id:76, name:"Tropenfisch", mob:"Passiv", hp:3, atk:0, emoji:"🐠", color:"#e17055", img:"Tropical_Fish" },
-        // Weitere
-        { id:77, name:"Zombie-Dorfbewohner", mob:"Feindlich", hp:20, atk:3, emoji:"🧟", color:"#27ae60", img:"Zombie_Villager" },
-        { id:78, name:"Plagegeist", mob:"Feindlich", hp:20, atk:3, emoji:"🌀", color:"#636e72", img:"Husk" },
-        { id:79, name:"Wüstenräuber", mob:"Feindlich", hp:24, atk:5, emoji:"⚔️", color:"#d35400", img:"Pillager" },
-        { id:80, name:"Skelett-Pferd", mob:"Passiv", hp:15, atk:0, emoji:"💀", color:"#dfe6e9", img:"Skeleton_Horse" },
-        { id:81, name:"Zombie-Pferd", mob:"Passiv", hp:15, atk:0, emoji:"🧟", color:"#27ae60", img:"Zombie_Horse" },
-        { id:82, name:"Wander-Händler-Lama", mob:"Neutral", hp:22, atk:1, emoji:"🦙", color:"#0984e3", img:"Trader_Llama" },
-        { id:83, name:"Maultier", mob:"Passiv", hp:26, atk:0, emoji:"🫏", color:"#795548", img:"Mule" },
-        { id:84, name:"Hexenbiest", mob:"Feindlich", hp:24, atk:5, emoji:"🧙", color:"#636e72", img:"Illusioner" },
-        { id:85, name:"Wither-Rose", mob:"Feindlich", hp:1, atk:1, emoji:"🥀", color:"#2c3e50", img:"Wither" },
-        { id:86, name:"Schneefuchs", mob:"Passiv", hp:10, atk:2, emoji:"🦊", color:"#dfe6e9", img:"Fox" },
-        { id:87, name:"Braune Mooshroom", mob:"Passiv", hp:10, atk:0, emoji:"🍄", color:"#795548", img:"Brown_Mooshroom" },
-        { id:88, name:"Bienen-Nest", mob:"Neutral", hp:10, atk:2, emoji:"🐝", color:"#f1c40f", img:"Bee" },
-        { id:89, name:"Killer-Kaninchen", mob:"Feindlich", hp:8, atk:8, emoji:"🐰", color:"#e74c3c", img:"Rabbit" },
-        { id:90, name:"Steve", mob:"Spieler", hp:20, atk:1, emoji:"🧑", color:"#74b9ff", img:"Steve" }
-    ];
+    function buildBrawlIdMap() {
+        // Known Brawl Stars ID mapping (name -> CDN id)
+        const knownIds = {"Shelly":16000000,"Colt":16000001,"Bull":16000002,"Brock":16000003,"Rico":16000004,"Spike":16000005,"Barley":16000006,"Jessie":16000007,"Nita":16000008,"Dynamike":16000009,"El Primo":16000010,"Mortis":16000011,"Crow":16000012,"Poco":16000013,"Bo":16000014,"Piper":16000015,"Pam":16000016,"Tara":16000017,"Darryl":16000018,"Penny":16000019,"Frank":16000020,"Gene":16000021,"Tick":16000022,"Leon":16000023,"Rosa":16000024,"Carl":16000025,"Bibi":16000026,"8-Bit":16000027,"Sandy":16000028,"Bea":16000029,"Emz":16000030,"Mr. P":16000031,"Max":16000032,"Jacky":16000034,"Gale":16000035,"Nani":16000036,"Sprout":16000037,"Surge":16000038,"Colette":16000039,"Amber":16000040,"Lou":16000041,"Byron":16000042,"Edgar":16000043,"Ruffs":16000044,"Stu":16000045,"Belle":16000046,"Squeak":16000047,"Grom":16000048,"Buzz":16000049,"Griff":16000050,"Ash":16000051,"Meg":16000052,"Lola":16000053,"Fang":16000054,"Eve":16000056,"Janet":16000057,"Bonnie":16000058,"Otis":16000059,"Sam":16000060,"Gus":16000061,"Buster":16000062,"Chester":16000063,"Gray":16000064,"Mandy":16000065,"R-T":16000066,"Willow":16000067,"Maisie":16000068,"Hank":16000069,"Cordelius":16000070,"Doug":16000071,"Pearl":16000072,"Chuck":16000073,"Charlie":16000074,"Mico":16000075,"Kit":16000076,"Larry & Lawrie":16000077,"Melodie":16000078,"Angelo":16000079,"Draco":16000080,"Lily":16000081,"Berry":16000082,"Clancy":16000083,"Moe":16000084,"Kenji":16000085,"Shade":16000086,"Juju":16000087,"Meeple":16000089,"Ollie":16000090,"Lumi":16000091,"Finx":16000092,"Jae-Yong":16000093,"Kaze":16000094,"Alli":16000095,"Trunk":16000096,"Mina":16000097,"Ziggy":16000098,"Pierce":16000099,"Gigi":16000100,"Glowy":16000101,"Sirius":16000102,"Najia":16000103,"Damian":16000104,"Starr Nova":16000105,"Bolt":16000106,"Nori":16000107,"Wendy":16000108};
+        Object.assign(brawlIdMap, knownIds);
+    }
+
+    function getCardDB(theme) {
+        return ALL_THEMES[theme]?.cards || [];
+    }
 
     // ===== HINTERGRUND-ANIMATIONEN (18 Szenen, ~50s je Szene = 15 Min ohne Wiederholung) =====
     const bgScenes = [
@@ -2152,6 +1739,10 @@
         localStorage.setItem('leo_player_name', name);
         document.getElementById('name-dialog').classList.remove('active');
         updateNameDisplay();
+        // First time? Show theme selection
+        if (!localStorage.getItem('leo_active_themes')) {
+            setTimeout(showThemeSelector, 500);
+        }
     }
 
     // Beim Start: Name-Dialog zeigen falls kein Name gespeichert
@@ -2252,7 +1843,8 @@
                     if (confirm('Wirklich ALLE Karten und Statistiken löschen?')) {
                         localStorage.removeItem('leo_collection');
                         localStorage.removeItem('leo_day_stats');
-                        collection = { pokemon: [], brawlstars: [], minecraft: [] };
+                        collection = {};
+                        Object.keys(ALL_THEMES).forEach(t => { collection[t] = []; });
                         renderTodayStats();
                         showToast('🗑️ Alles gelöscht!');
                     }
@@ -2381,39 +1973,43 @@
         return q;
     } // verhindert Doppelklicks
 
-    let collection = JSON.parse(localStorage.getItem('leo_collection') || '{"pokemon":[],"brawlstars":[],"minecraft":[]}');
-
-    // Sicherstellen dass minecraft-Array existiert (für bestehende User)
-    if (!collection.minecraft) collection.minecraft = [];
+    let collection = JSON.parse(localStorage.getItem('leo_collection') || '{}');
+    // Ensure all themes have arrays
+    Object.keys(ALL_THEMES).forEach(t => { if (!collection[t]) collection[t] = []; });
 
     // Migration: alte Karten bereinigen die nicht mehr in der Datenbank sind
-    (function migrateCollection() {
+    // Note: migration now runs after themes are loaded (see loadThemes().then)
+    function migrateCollection() {
         let changed = false;
         // Falls fussball noch im alten Storage existiert, entfernen
         if (collection.fussball) { delete collection.fussball; changed = true; }
         // Pokémon: nur IDs 1-251 behalten (Gen 1+2)
-        if (collection.pokemon) {
-            const validPokeIds = new Set(pokemonCards.map(c => c.id));
+        if (collection.pokemon && getCardDB('pokemon').length > 0) {
+            const validPokeIds = new Set(getCardDB('pokemon').map(c => c.id));
             const before = collection.pokemon.length;
             collection.pokemon = collection.pokemon.filter(c => validPokeIds.has(c.id));
             if (collection.pokemon.length !== before) changed = true;
         }
         // Brawl Stars: nur bekannte Namen behalten
-        if (collection.brawlstars) {
-            const validBrawlNames = new Set(brawlstarsCards.map(c => c.name));
+        if (collection.brawlstars && getCardDB('brawlstars').length > 0) {
+            const validBrawlNames = new Set(getCardDB('brawlstars').map(c => c.name));
             const before = collection.brawlstars.length;
             collection.brawlstars = collection.brawlstars.filter(c => validBrawlNames.has(c.name));
             if (collection.brawlstars.length !== before) changed = true;
         }
         // Minecraft: nur bekannte Namen behalten
-        if (collection.minecraft) {
-            const validMcNames = new Set(minecraftCards.map(c => c.name));
+        if (collection.minecraft && getCardDB('minecraft').length > 0) {
+            const validMcNames = new Set(getCardDB('minecraft').map(c => c.name));
             const before = collection.minecraft.length;
             collection.minecraft = collection.minecraft.filter(c => validMcNames.has(c.name));
             if (collection.minecraft.length !== before) changed = true;
         }
         if (changed) localStorage.setItem('leo_collection', JSON.stringify(collection));
-    })();
+    }
+
+    function getTotalCards() {
+        return Object.keys(collection).reduce((sum, t) => sum + (collection[t]?.length || 0), 0);
+    }
 
     // ===== TAGES-STATISTIK =====
     function getTodayKey() {
@@ -2459,7 +2055,7 @@
         }
 
         const pct = s.correct + s.wrong > 0 ? Math.round(s.correct / (s.correct + s.wrong) * 100) : 0;
-        const totalCards = collection.pokemon.length + collection.brawlstars.length + collection.minecraft.length;
+        const totalCards = getTotalCards();
 
         // Letzte 7 Tage Streak zählen
         let streak = 0;
@@ -2498,6 +2094,16 @@
     // Initial anzeigen
     renderTodayStats();
 
+    // Load themes on startup
+    loadThemes().then(() => {
+        migrateCollection();
+        renderTodayStats();
+        // Show theme selector after name if first time
+        if (!localStorage.getItem('leo_active_themes') && playerName) {
+            showThemeSelector();
+        }
+    });
+
     // ===== POKEMON BILD CACHE =====
     const pokemonImageCache = {}; // {id: {artwork: url, sprite: url}}
 
@@ -2517,7 +2123,7 @@
 
     // Bilder vorab laden (im Hintergrund)
     function preloadPokemonImages() {
-        pokemonCards.forEach(c => getPokemonImage(c.id));
+        getCardDB('pokemon').forEach(c => getPokemonImage(c.id));
     }
     setTimeout(preloadPokemonImages, 2000); // 2 Sekunden nach Start
 
@@ -2534,6 +2140,25 @@
             if (card.hp >= 80) return 'epic';
             if (card.hp >= 30 || card.atk >= 8) return 'rare';
             if (card.mob === 'Feindlich') return 'uncommon';
+            return 'common';
+        } else if (theme === 'autos') {
+            if (card.hp >= 1000) return 'legendary';
+            if (card.hp >= 600) return 'epic';
+            if (card.hp >= 400) return 'rare';
+            if (card.hp >= 200) return 'uncommon';
+            return 'common';
+        } else if (theme === 'tiere') {
+            const g = card.group;
+            if (g === 'Meerestier' && card.name.includes('wal')) return 'legendary';
+            if (g === 'Bär' || g === 'Raubtier' && card.fact?.includes('schnellst')) return 'epic';
+            if (g === 'Raubtier' || g === 'Reptil') return 'rare';
+            if (g === 'Vogel' || g === 'Affe') return 'uncommon';
+            return 'common';
+        } else if (theme === 'mario') {
+            const r = card.role;
+            if (r === 'Boss' || r === 'Schurke') return 'epic';
+            if (r === 'Held' || r === 'Prinzessin') return 'rare';
+            if (r === 'Helfer') return 'uncommon';
             return 'common';
         } else {
             const r = card.rar;
@@ -2552,21 +2177,18 @@
     }
 
     function getRandomTheme() {
-        // Gewichtet nach Anzahl ungesammelter Karten pro Theme
-        const pokeLeft = Math.max(pokemonCards.length - collection.pokemon.length, 0);
-        const brawlLeft = Math.max(brawlstarsCards.length - collection.brawlstars.length, 0);
-        const mcLeft = Math.max(minecraftCards.length - collection.minecraft.length, 0);
-        const total = Math.max(pokeLeft + brawlLeft + mcLeft, 1);
-        const r = Math.random() * total;
-        if (r < pokeLeft) return 'pokemon';
-        if (r < pokeLeft + brawlLeft) return 'brawlstars';
-        return 'minecraft';
-    }
-
-    function getCardDB(theme) {
-        if (theme === 'pokemon') return pokemonCards;
-        if (theme === 'brawlstars') return brawlstarsCards;
-        return minecraftCards;
+        const weights = activeThemes.map(t => {
+            const db = getCardDB(t);
+            const collected = collection[t]?.length || 0;
+            return { theme: t, left: Math.max(db.length - collected, 0) };
+        });
+        const total = Math.max(weights.reduce((s, w) => s + w.left, 0), 1);
+        let r = Math.random() * total;
+        for (const w of weights) {
+            r -= w.left;
+            if (r <= 0) return w.theme;
+        }
+        return activeThemes[0] || 'pokemon';
     }
 
     function getRandomCard(theme) {
@@ -2640,6 +2262,17 @@
         } else if (card.theme === 'minecraft') {
             const mcImgUrl = `https://minecraft.wiki/w/Special:FilePath/${card.img}.png`;
             imageHTML = `<img src="${mcImgUrl}" alt="${card.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-emoji>${card.emoji}</span>'">`;
+        } else if (card.theme === 'autos') {
+            const autoImgUrl = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(card.wiki)}&prop=pageimages&piprop=thumbnail&pithumbsize=400&format=json&origin=*`;
+            imageHTML = `<img class="wiki-auto-img" data-wiki="${card.wiki}" src="" alt="${card.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-emoji>${card.emoji}</span>'">`;
+        } else if (card.theme === 'tiere') {
+            imageHTML = `<img class="wiki-auto-img" data-wiki="${card.wiki}" src="" alt="${card.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-emoji>${card.emoji}</span>'">`;
+        } else if (card.theme === 'mario') {
+            if (card.img) {
+                imageHTML = `<img src="${card.img}" alt="${card.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-emoji>${card.emoji}</span>'">`;
+            } else {
+                imageHTML = `<span class="card-emoji">${card.emoji}</span>`;
+            }
         } else {
             imageHTML = `<span class="card-emoji">${card.emoji}</span>`;
         }
@@ -2652,13 +2285,25 @@
             bgGrad = `linear-gradient(160deg, #2d5a27ee 0%, ${card.color}88 50%, #1a1a0e 100%)`;
             detailHTML = `<div class="card-detail">${card.emoji} ${card.mob}</div>`;
             if (showStats) statsHTML = `<div class="card-stats"><span class="card-stat">❤️ ${card.hp}</span>${card.atk > 0 ? `<span class="card-stat">⚔️ ${card.atk}</span>` : ''}<span class="card-stat">${card.mob === 'Boss' ? '👑' : card.mob === 'Feindlich' ? '💀' : card.mob === 'Neutral' ? '⚠️' : '💚'}</span></div>`;
+        } else if (card.theme === 'autos') {
+            bgGrad = `linear-gradient(160deg, ${card.color}ee 0%, #1a1a2ecc 50%, #0f0e17 100%)`;
+            detailHTML = `<div class="card-detail">${card.brand} · ${card.year}</div>`;
+            if (showStats) statsHTML = `<div class="card-stats"><span class="card-stat">🐎 ${card.hp} PS</span><span class="card-stat">${card.emoji}</span></div>`;
+        } else if (card.theme === 'tiere') {
+            bgGrad = `linear-gradient(160deg, ${card.color}ee 0%, #1a3a1acc 50%, #0f0e17 100%)`;
+            detailHTML = `<div class="card-detail">${card.group} · ${card.habitat}</div>`;
+            if (showStats) statsHTML = `<div class="card-stats"><span class="card-stat">${card.emoji}</span></div>`;
+        } else if (card.theme === 'mario') {
+            bgGrad = `linear-gradient(160deg, ${card.color}ee 0%, #e74c3c44 50%, #1a1a2e 100%)`;
+            detailHTML = `<div class="card-detail">${card.role} · ${card.game || ''}</div>`;
+            if (showStats) statsHTML = `<div class="card-stats"><span class="card-stat">${card.emoji}</span></div>`;
         } else {
             bgGrad = `linear-gradient(160deg, ${card.color}ee 0%, ${card.color}88 50%, #1a1a2e 100%)`;
             detailHTML = `<div class="card-detail">${card.emoji} ${card.cls}</div>`;
             if (showStats) statsHTML = `<div class="card-stats"><span class="card-stat">💪 ${card.pw}</span><span class="card-stat">✨ ${card.rar}</span></div>`;
         }
 
-        container.className = `reward-card rarity-${rarity}${card.theme === 'brawlstars' ? ' brawl-card' : ''}${card.theme === 'minecraft' ? ' mc-card' : ''}`;
+        container.className = `reward-card rarity-${rarity}${card.theme === 'brawlstars' ? ' brawl-card' : ''}${card.theme === 'minecraft' ? ' mc-card' : ''}${card.theme === 'autos' ? ' auto-card' : ''}${card.theme === 'tiere' ? ' tier-card' : ''}${card.theme === 'mario' ? ' mario-card' : ''}`;
         container.style.background = bgGrad;
         container.innerHTML = `
             <div class="card-border"></div>
@@ -2948,16 +2593,10 @@
     function awardCard() {
         // Theme wählen: bevorzuge Themes die noch ungesammelte Karten haben
         let theme = getRandomTheme();
-        const pokeCollected = collection.pokemon.length;
-        const brawlCollected = collection.brawlstars.length;
-        const mcCollected = collection.minecraft.length;
-        const pokeTotal = pokemonCards.length;
-        const brawlTotal = brawlstarsCards.length;
-        const mcTotal = minecraftCards.length;
         // Wenn gewähltes Theme voll ist, alternatives Theme mit offenen Karten wählen
-        const themeFull = (t) => collection[t].length >= getCardDB(t).length;
+        const themeFull = (t) => (collection[t]?.length || 0) >= getCardDB(t).length;
         if (themeFull(theme)) {
-            const open = ['pokemon','brawlstars','minecraft'].filter(t => !themeFull(t));
+            const open = activeThemes.filter(t => !themeFull(t));
             if (open.length > 0) theme = open[Math.floor(Math.random() * open.length)];
         }
 
@@ -2976,6 +2615,7 @@
         const cardEl = document.getElementById('reward-card');
 
         renderCard(card, cardEl);
+        loadWikiImages();
         cardEl.classList.remove('fly-away');
         cardEl.style.animation = 'none';
         void cardEl.offsetHeight;
@@ -3020,16 +2660,95 @@
         document.getElementById('stat-wrong').textContent = totalWrong;
         document.getElementById('stat-cards').textContent = cardsEarnedToday;
         document.getElementById('stat-total-cards').textContent =
-            collection.pokemon.length + collection.brawlstars.length + collection.minecraft.length;
+            getTotalCards();
 
         recordSession();
         showScreen('timeup-screen');
     }
 
+    // ===== THEME SELECTION =====
+    function showThemeSelector() {
+        const dialog = document.getElementById('theme-dialog');
+        const container = document.getElementById('theme-checkboxes');
+        container.innerHTML = '';
+        Object.entries(ALL_THEMES).forEach(([key, theme]) => {
+            const item = document.createElement('div');
+            item.className = 'theme-checkbox-item' + (activeThemes.includes(key) ? ' selected' : '');
+            item.dataset.theme = key;
+            item.innerHTML = `
+                <span class="theme-emoji">${theme.emoji}</span>
+                <div class="theme-info">
+                    <div class="theme-name">${theme.label}</div>
+                    <div class="theme-count">${theme.cards.length} Karten · ${collection[key]?.length || 0} gesammelt</div>
+                </div>
+            `;
+            onTap(item, () => {
+                item.classList.toggle('selected');
+            });
+            container.appendChild(item);
+        });
+        dialog.classList.add('active');
+    }
+
+    function saveThemes() {
+        const items = document.querySelectorAll('#theme-checkboxes .theme-checkbox-item.selected');
+        const selected = Array.from(items).map(i => i.dataset.theme);
+        if (selected.length === 0) {
+            showToast('Wähle mindestens ein Album!');
+            return;
+        }
+        activeThemes = selected;
+        localStorage.setItem('leo_active_themes', JSON.stringify(selected));
+        document.getElementById('theme-dialog').classList.remove('active');
+    }
+
+    // Auto-load Wikipedia images for cards with wiki field
+    const wikiImageCache = {};
+    function loadWikiImages() {
+        document.querySelectorAll('.wiki-auto-img').forEach(async img => {
+            const wiki = img.dataset.wiki;
+            if (!wiki || img.src) return;
+            if (wikiImageCache[wiki]) { img.src = wikiImageCache[wiki]; return; }
+            try {
+                const resp = await fetch(`https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(wiki)}&prop=pageimages&piprop=thumbnail&pithumbsize=400&format=json&origin=*`);
+                const data = await resp.json();
+                const pages = data.query.pages;
+                const page = Object.values(pages)[0];
+                if (page?.thumbnail?.source) {
+                    wikiImageCache[wiki] = page.thumbnail.source;
+                    img.src = page.thumbnail.source;
+                } else {
+                    img.onerror?.();
+                }
+            } catch { img.onerror?.(); }
+        });
+    }
+
     // ===== ALBUM =====
     function showAlbum() {
+        // Generate tabs dynamically from active themes
+        const tabContainer = document.getElementById('album-tabs-container');
+        tabContainer.innerHTML = '';
+        activeThemes.forEach((t, i) => {
+            const theme = ALL_THEMES[t];
+            if (!theme) return;
+            const btn = document.createElement('button');
+            btn.className = 'album-tab' + (i === 0 ? ' active' : '');
+            btn.dataset.theme = t;
+            btn.textContent = `${theme.emoji} ${theme.label}`;
+            onTap(btn, () => switchAlbumTab(t));
+            tabContainer.appendChild(btn);
+        });
+        // Add settings button
+        const settingsBtn = document.createElement('button');
+        settingsBtn.className = 'album-tab';
+        settingsBtn.textContent = '⚙️';
+        settingsBtn.title = 'Alben bearbeiten';
+        onTap(settingsBtn, showThemeSelector);
+        tabContainer.appendChild(settingsBtn);
+
         showScreen('album-screen');
-        switchAlbumTab('pokemon');
+        if (activeThemes.length > 0) switchAlbumTab(activeThemes[0]);
     }
 
     function switchAlbumTab(theme) {
@@ -3057,6 +2776,7 @@
             wrapper.onclick = () => showCardDetail(card);
             grid.appendChild(wrapper);
         });
+        loadWikiImages();
     }
 
     function showCardDetail(card) {
@@ -3090,6 +2810,12 @@
         } else if (card.theme === 'minecraft') {
             const mobType = card.mob === 'Boss' ? 'Boss Mob' : card.mob === 'Feindlich' ? 'feindlicher Mob' : card.mob === 'Neutral' ? 'neutraler Mob' : 'friedlicher Mob';
             text = `${card.name}! ${mobType}, ${rarity}. ${card.hp} Herzen${card.atk > 0 ? `, ${card.atk} Angriffsschaden` : ''}.`;
+        } else if (card.theme === 'autos') {
+            text = `${card.name}! ${card.brand}, ${card.hp} PS, ${rarity}.`;
+        } else if (card.theme === 'tiere') {
+            text = `${card.name}! ${card.group}, lebt in ${card.habitat || 'der Wildnis'}, ${rarity}.`;
+        } else if (card.theme === 'mario') {
+            text = `${card.name}! ${card.role}, aus ${card.game || 'Super Mario'}, ${rarity}.`;
         } else {
             text = `${card.name}! ${card.cls || 'Kämpfer'}, ${rarity}. Stärke ${card.pw ?? 'nicht bekannt'}.`;
         }
@@ -3169,6 +2895,9 @@
     });
     onTap(document.getElementById('name-edit-btn'), showNameDialog);
 
+    // Theme Selection
+    onTap(document.getElementById('theme-save-btn'), saveThemes);
+
     // Hilfe
     onTap(document.getElementById('help-toggle'), () => showScreen('help-screen'));
     onTap(document.getElementById('help-back-btn'), backToStart);
@@ -3182,9 +2911,6 @@
 
     // Album
     onTap(document.getElementById('album-back-btn'), backToStart);
-    document.querySelectorAll('.album-tab').forEach(tab => {
-        onTap(tab, () => switchAlbumTab(tab.dataset.theme));
-    });
 
     // Card Detail Close
     onTap(document.getElementById('close-detail-btn'), closeCardDetail);

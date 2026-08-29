@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Leos kleines Einmaleins</title>
+    <title>Mathe Trainer</title>
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#6c5ce7">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -184,6 +184,132 @@
 
         @keyframes toastIn { from { opacity:0; transform: translateX(-50%) translateY(20px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
         @keyframes toastOut { to { opacity:0; transform: translateX(-50%) translateY(20px); } }
+
+        /* Name-Dialog */
+        #name-dialog {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9000;
+        }
+
+        #name-dialog.active { display: flex; }
+
+        .name-dialog-box {
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 24px;
+            padding: 35px 30px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .name-dialog-box h2 {
+            font-family: 'Fredoka One', cursive;
+            margin-bottom: 10px;
+        }
+
+        .name-dialog-box p {
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .name-input {
+            width: 80%;
+            padding: 12px 16px;
+            font-size: 1.2em;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            text-align: center;
+            font-family: 'Fredoka One', cursive;
+            outline: none;
+        }
+
+        .name-input:focus { border-color: var(--primary); }
+
+        .name-edit-btn {
+            display: inline-block;
+            margin-left: 6px;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.3);
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: color 0.3s;
+            min-height: auto;
+        }
+
+        .name-edit-btn:hover { color: rgba(255,255,255,0.6); }
+
+        /* Hilfe-Button */
+        .help-toggle {
+            position: absolute;
+            top: 12px; left: 12px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 50%;
+            width: 38px; height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            z-index: 20;
+            min-height: auto;
+        }
+
+        .help-toggle:hover { background: rgba(255,255,255,0.15); }
+
+        /* Aufgaben-Auswahl Redesign */
+        .mode-section { margin-bottom: 12px; }
+
+        .mode-section-label {
+            font-size: 0.8em;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .mode-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+
+        .mode-btn-sm {
+            padding: 8px 14px;
+            border: 2px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.04);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
+            min-height: 40px;
+        }
+
+        .mode-btn-sm:hover, .mode-btn-sm.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .mode-btn-sm:active { transform: scale(0.95); }
 
         .bg-scene {
             position: absolute;
@@ -1144,21 +1270,63 @@
     <div id="bg-canvas"></div>
     <div id="bg-scene-container" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;"></div>
 
+    <!-- ===== NAME DIALOG ===== -->
+    <div id="name-dialog">
+        <div class="name-dialog-box">
+            <div class="mascot">🧮</div>
+            <h2>Willkommen!</h2>
+            <p>Wie heißt du?</p>
+            <input type="text" class="name-input" id="name-input" placeholder="Dein Name" maxlength="20" autocomplete="off">
+            <br><br>
+            <button class="btn-primary" id="name-save-btn">Los geht's!</button>
+        </div>
+    </div>
+
     <!-- ===== START SCREEN ===== -->
     <div id="start-screen" class="screen active">
         <div class="glass-panel" style="position:relative">
+            <div class="help-toggle" id="help-toggle" title="Hilfe">❓</div>
             <div class="sound-toggle" id="sound-toggle" title="Sound an/aus">🔊</div>
             <div class="sound-toggle bg-toggle" id="bg-toggle" title="Hintergrund wechseln" style="right:56px">🎨</div>
             <div class="mascot" id="mascot-tap">🧮</div>
-            <h1>Leos kleines Einmaleins</h1>
-            <p class="subtitle">Sammle coole Karten beim Rechnen!</p>
+            <h1 id="app-title">Mathe Trainer</h1>
+            <p class="subtitle">Sammle coole Karten beim Rechnen! <button class="name-edit-btn" id="name-edit-btn" title="Name ändern">✏️</button></p>
 
             <div class="time-select">
                 <label>Was möchtest du heute üben?</label>
-                <div class="time-buttons" id="mode-buttons">
-                    <button class="time-btn mode-btn selected" data-mode="multiply">✖️ Mal</button>
-                    <button class="time-btn mode-btn" data-mode="divide">➗ Geteilt</button>
-                    <button class="time-btn mode-btn" data-mode="mixed">🔀 Mixed</button>
+
+                <div class="mode-section">
+                    <div class="mode-section-label">➕ Plus</div>
+                    <div class="mode-row">
+                        <button class="mode-btn-sm" data-mode="add10">1–10</button>
+                        <button class="mode-btn-sm" data-mode="add20">1–20</button>
+                        <button class="mode-btn-sm" data-mode="add100">1–100</button>
+                    </div>
+                </div>
+
+                <div class="mode-section">
+                    <div class="mode-section-label">➖ Minus</div>
+                    <div class="mode-row">
+                        <button class="mode-btn-sm" data-mode="sub10">1–10</button>
+                        <button class="mode-btn-sm" data-mode="sub20">1–20</button>
+                        <button class="mode-btn-sm" data-mode="sub100">1–100</button>
+                    </div>
+                </div>
+
+                <div class="mode-section">
+                    <div class="mode-section-label">🔀 Gemischt</div>
+                    <div class="mode-row">
+                        <button class="mode-btn-sm" data-mode="addsub">➕➖ Plus & Minus</button>
+                    </div>
+                </div>
+
+                <div class="mode-section">
+                    <div class="mode-section-label">✖️ Mal & Geteilt</div>
+                    <div class="mode-row">
+                        <button class="mode-btn-sm selected" data-mode="multiply">✖️ Mal</button>
+                        <button class="mode-btn-sm" data-mode="divide">➗ Geteilt</button>
+                        <button class="mode-btn-sm" data-mode="muldiv">🔀 Mixed</button>
+                    </div>
                 </div>
             </div>
 
@@ -1180,7 +1348,7 @@
             <div class="disclaimer">
                 Diese App ist ein kostenloses Lernprogramm für Kinder und wurde mit Liebe von einem Papa gebaut.
                 Hier wird nichts verkauft, keine Daten gesammelt und keine Werbung gezeigt.
-                Alle genannten Marken (Pokémon, Brawl Stars) gehören ihren jeweiligen Eigentümern –
+                Alle genannten Marken (Pokémon, Brawl Stars, Minecraft) gehören ihren jeweiligen Eigentümern –
                 diese App steht in keiner Verbindung zu diesen Unternehmen und dient ausschließlich dem spielerischen Lernen. 🎓
             </div>
         </div>
@@ -1222,7 +1390,7 @@
     <div id="timeup-screen" class="screen">
         <div class="glass-panel">
             <div class="mascot">🏆</div>
-            <h2>Super gemacht, Leo!</h2>
+            <h2 id="timeup-title">Super gemacht!</h2>
             <p class="subtitle">Hier ist deine Zusammenfassung:</p>
             <div class="stats-grid">
                 <div class="stat-box">
@@ -1252,7 +1420,7 @@
     <div id="album-screen" class="screen">
         <div class="glass-panel">
             <div class="album-header">
-                <h2>📖 Leos Album</h2>
+                <h2 id="album-title">📖 Sammelalbum</h2>
                 <button class="back-btn" id="album-back-btn">← Zurück</button>
             </div>
             <div class="album-tabs">
@@ -1262,6 +1430,46 @@
             </div>
             <div class="album-counter" id="album-counter">0 / 100 Karten</div>
             <div class="album-grid" id="album-grid"></div>
+        </div>
+    </div>
+
+    <!-- ===== HILFE SCREEN ===== -->
+    <div id="help-screen" class="screen">
+        <div class="glass-panel">
+            <div class="album-header">
+                <h2>❓ Hilfe</h2>
+                <button class="back-btn" id="help-back-btn">← Zurück</button>
+            </div>
+
+            <div style="text-align:left; font-size:0.9em; color:rgba(255,255,255,0.7); line-height:1.7">
+                <h3 style="color:var(--accent); margin:15px 0 8px">🧮 Was ist das?</h3>
+                <p>Ein Mathe-Trainer für Grundschulkinder. Löse Rechenaufgaben und sammle als Belohnung coole Karten aus Pokémon, Brawl Stars und Minecraft!</p>
+
+                <h3 style="color:var(--accent); margin:15px 0 8px">🎯 Aufgabenarten</h3>
+                <p><b>➕ Plus / ➖ Minus:</b> Wähle den Zahlenraum (1-10, 1-20 oder 1-100). Perfekt für Vor- und Grundschule.</p>
+                <p><b>✖️ Mal / ➗ Geteilt:</b> Das kleine Einmaleins (1-10). Auch als Mixed verfügbar.</p>
+                <p><b>🔀 Mixed:</b> Zufällig gemischte Aufgaben für Profis!</p>
+
+                <h3 style="color:var(--accent); margin:15px 0 8px">🃏 Sammelkarten</h3>
+                <p>Nach 5 richtig gelösten Aufgaben bekommst du eine Sammelkarte. Jede Karte gibt es nur einmal! Im <b>Sammelalbum</b> kannst du deine Karten anschauen und antippen um Details zu sehen.</p>
+
+                <h3 style="color:var(--accent); margin:15px 0 8px">🔊 Buttons</h3>
+                <p>🔊 Sound an/aus – die Aufgaben werden vorgelesen<br>
+                🎨 Hintergrund wechseln (3 Modi)<br>
+                ❓ Diese Hilfe<br>
+                ✏️ Name ändern</p>
+
+                <h3 style="color:var(--accent); margin:15px 0 8px">📱 Als App installieren</h3>
+                <p><b>iPhone:</b> In Safari öffnen → Teilen (⬆️) → "Zum Home-Bildschirm"<br>
+                <b>Android:</b> In Chrome öffnen → Menü (⋮) → "App installieren"<br>
+                Dann hast du ein App-Icon und es läuft im Vollbild!</p>
+
+                <h3 style="color:var(--accent); margin:15px 0 8px">📊 Tages-Statistik</h3>
+                <p>Auf dem Startscreen siehst du wie viele Runden du heute gespielt hast, deine Trefferquote und deinen Übungsstreak.</p>
+
+                <h3 style="color:var(--accent); margin:15px 0 8px">ℹ️ Über diese App</h3>
+                <p>Kostenlos, keine Werbung, keine Daten. Von einem Papa gebaut, damit seine Kinder Spaß am Rechnen haben. Wer genau hinschaut, findet vielleicht auch einen geheimen Modus... 😉</p>
+            </div>
         </div>
     </div>
 
@@ -1908,6 +2116,50 @@
     }
     createBgIcons();
 
+    // ===== NAME MANAGEMENT =====
+    let playerName = localStorage.getItem('leo_player_name') || '';
+
+    function updateNameDisplay() {
+        const title = document.getElementById('app-title');
+        const timeupTitle = document.getElementById('timeup-title');
+        const albumTitle = document.getElementById('album-title');
+        const pageTitle = document.querySelector('title');
+        if (playerName) {
+            title.textContent = `${playerName}s Mathe Trainer`;
+            timeupTitle.textContent = `Super gemacht, ${playerName}!`;
+            albumTitle.textContent = `📖 ${playerName}s Album`;
+            pageTitle.textContent = `${playerName}s Mathe Trainer`;
+        } else {
+            title.textContent = 'Mathe Trainer';
+            timeupTitle.textContent = 'Super gemacht!';
+            albumTitle.textContent = '📖 Sammelalbum';
+        }
+    }
+
+    function showNameDialog() {
+        const dialog = document.getElementById('name-dialog');
+        const input = document.getElementById('name-input');
+        input.value = playerName;
+        dialog.classList.add('active');
+        setTimeout(() => input.focus(), 300);
+    }
+
+    function saveName() {
+        const input = document.getElementById('name-input');
+        const name = input.value.trim();
+        if (name.length === 0) return;
+        playerName = name;
+        localStorage.setItem('leo_player_name', name);
+        document.getElementById('name-dialog').classList.remove('active');
+        updateNameDisplay();
+    }
+
+    // Beim Start: Name-Dialog zeigen falls kein Name gespeichert
+    if (!playerName) {
+        showNameDialog();
+    }
+    updateNameDisplay();
+
     // ===== SOUND TOGGLE =====
     let soundEnabled = localStorage.getItem('leo_sound') !== 'off';
     updateSoundIcon();
@@ -2057,10 +2309,34 @@
     // ===== AUFGABEN-POOL: Shuffle-basiert statt pure Random =====
     function buildQuestionPool() {
         const pool = [];
-        if (gameMode === 'multiply' || gameMode === 'mixed') {
+        const m = gameMode;
+
+        // Addition
+        if (m === 'add10' || m === 'add20' || m === 'add100' || m === 'addsub') {
+            const max = m === 'add10' ? 10 : m === 'add20' ? 20 : 100;
+            const addMax = m === 'addsub' ? 20 : max; // addsub nutzt 1-20
+            for (let i = 0; i < 80; i++) {
+                const a = Math.floor(Math.random() * addMax) + 1;
+                const b = Math.floor(Math.random() * (addMax - a)) + 1;
+                pool.push({ a, b, op: '+' });
+            }
+        }
+
+        // Subtraktion
+        if (m === 'sub10' || m === 'sub20' || m === 'sub100' || m === 'addsub') {
+            const max = m === 'sub10' ? 10 : m === 'sub20' ? 20 : 100;
+            const subMax = m === 'addsub' ? 20 : max;
+            for (let i = 0; i < 80; i++) {
+                const a = Math.floor(Math.random() * (subMax - 1)) + 2; // mindestens 2
+                const b = Math.floor(Math.random() * (a - 1)) + 1; // Ergebnis immer >= 1
+                pool.push({ a, b, op: '−' });
+            }
+        }
+
+        // Multiplikation
+        if (m === 'multiply' || m === 'muldiv') {
             for (let a = 1; a <= 10; a++) {
                 for (let b = 1; b <= 10; b++) {
-                    // ×1 Aufgaben nur selten (nur a×1, nicht 1×b, vermeidet Duplikate)
                     if (a === 1 || b === 1) {
                         if (Math.random() < 0.15) pool.push({ a, b, op: '×' });
                     } else {
@@ -2069,14 +2345,17 @@
                 }
             }
         }
-        if (gameMode === 'divide' || gameMode === 'mixed') {
-            for (let divisor = 2; divisor <= 10; divisor++) { // Kein ÷1
+
+        // Division
+        if (m === 'divide' || m === 'muldiv') {
+            for (let divisor = 2; divisor <= 10; divisor++) {
                 for (let result = 1; result <= 10; result++) {
                     const dividend = divisor * result;
                     pool.push({ a: dividend, b: divisor, op: '÷' });
                 }
             }
         }
+
         // Fisher-Yates Shuffle
         for (let i = pool.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -2424,11 +2703,8 @@
         if (!('speechSynthesis' in window)) return;
         window.speechSynthesis.cancel();
         let text;
-        if (currentOp === '÷') {
-            text = `${numberWords[a]} geteilt durch ${numberWords[b]} ist ${numberWords[result]}!`;
-        } else {
-            text = `${numberWords[a]} mal ${numberWords[b]} ist ${numberWords[result]}!`;
-        }
+        const opWords = { '÷': 'geteilt durch', '×': 'mal', '+': 'plus', '−': 'minus' };
+        text = `${numberWords[a]} ${opWords[currentOp] || 'mal'} ${numberWords[b]} ist ${numberWords[result]}!`;
         const utter = new SpeechSynthesisUtterance(text);
         utter.lang = 'de-DE';
         utter.rate = 0.95;
@@ -2508,8 +2784,8 @@
     // ===== MODUS-AUSWAHL =====
     function selectMode(mode) {
         gameMode = mode;
-        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
-        const btn = document.querySelector(`.mode-btn[data-mode="${mode}"]`);
+        document.querySelectorAll('.mode-btn-sm').forEach(b => b.classList.remove('selected'));
+        const btn = document.querySelector(`.mode-btn-sm[data-mode="${mode}"]`);
         if (btn) btn.classList.add('selected');
     }
 
@@ -2563,7 +2839,7 @@
         currentA = q.a;
         currentB = q.b;
         currentOp = q.op;
-        currentAnswer = q.op === '×' ? q.a * q.b : q.a / q.b;
+        currentAnswer = q.op === '×' ? q.a * q.b : q.op === '÷' ? q.a / q.b : q.op === '+' ? q.a + q.b : q.a - q.b;
         attemptsLeft = 2;
         isProcessing = false;
 
@@ -2882,9 +3158,20 @@
     });
 
     // Modus-Buttons
-    document.querySelectorAll('.mode-btn').forEach(btn => {
+    document.querySelectorAll('.mode-btn-sm').forEach(btn => {
         onTap(btn, () => selectMode(btn.dataset.mode));
     });
+
+    // Name-Buttons
+    onTap(document.getElementById('name-save-btn'), saveName);
+    document.getElementById('name-input').addEventListener('keydown', e => {
+        if (e.key === 'Enter') saveName();
+    });
+    onTap(document.getElementById('name-edit-btn'), showNameDialog);
+
+    // Hilfe
+    onTap(document.getElementById('help-toggle'), () => showScreen('help-screen'));
+    onTap(document.getElementById('help-back-btn'), backToStart);
 
     // Quiz
     onTap(document.getElementById('submit-btn'), checkAnswer);

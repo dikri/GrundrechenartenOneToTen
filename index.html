@@ -1,0 +1,2912 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Leos kleines Einmaleins</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#6c5ce7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Einmaleins">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== RESET & GRUNDLAGEN ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        /* Touch-Optimierung: 300ms Click-Delay entfernen */
+        *, *::before, *::after { touch-action: manipulation; }
+
+        /* Hover-Effekte nur auf Geräten mit Maus */
+        @media (hover: none) {
+            .time-btn:hover, .btn-primary:hover, .btn-secondary:hover,
+            .album-peek-btn:hover, .album-tab:hover, .back-btn:hover,
+            .submit-btn:hover, .album-card-wrapper:hover,
+            .sound-toggle:hover, .close-modal:hover {
+                transform: none !important;
+            }
+        }
+
+        /* Touch-Feedback: Active-State für alle Geräte */
+        .time-btn:active, .btn-primary:active, .btn-secondary:active,
+        .album-peek-btn:active, .submit-btn:active, .album-tab:active,
+        .back-btn:active, .sound-toggle:active {
+            transform: scale(0.95) !important;
+            opacity: 0.8;
+        }
+
+        .album-card-wrapper:active {
+            transform: scale(0.97) !important;
+        }
+
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #5a4bd1;
+            --accent: #ffd32a;
+            --accent-glow: #ff9f1a;
+            --success: #00b894;
+            --danger: #ff6b6b;
+            --bg-dark: #0f0e17;
+            --card-bg: rgba(255,255,255,0.07);
+        }
+
+        body {
+            font-family: 'Nunito', 'Segoe UI', sans-serif;
+            background: var(--bg-dark);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 10px 0;
+            overflow-x: hidden;
+            overflow-y: auto;
+            color: #fff;
+            position: relative;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* Buttons und Inputs: mindestens 44px Touch-Target */
+        button, .album-card-wrapper {
+            min-height: 44px;
+            cursor: pointer;
+        }
+
+        /* Input bleibt selektierbar */
+        input { -webkit-user-select: auto; user-select: auto; }
+
+        /* ===== ANIMIERTER HINTERGRUND ===== */
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 0;
+            background: linear-gradient(135deg, #0f0e17 0%, #1a1a2e 40%, #16213e 70%, #0f0e17 100%);
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Floating Pokémon/Brawl Stars/Minecraft Silhouetten im Hintergrund */
+        .bg-icon {
+            position: absolute;
+            font-size: 3.5em;
+            opacity: 0.07;
+            pointer-events: none;
+            animation: bgIconDrift linear infinite;
+            filter: grayscale(50%) brightness(1.5);
+            transition: opacity 1s, filter 1s;
+        }
+
+        /* Aufgewerteter Modus: farbiger, lebendiger */
+        body.bg-vibrant .bg-icon {
+            opacity: 0.12;
+            filter: grayscale(0%) brightness(1.2) saturate(1.3);
+        }
+
+        /* Bild-Hintergrund Modus */
+        body.bg-image #bg-canvas {
+            background: var(--bg-dark) !important;
+        }
+
+        body.bg-image #bg-canvas::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: url('bg.jpg') center/cover no-repeat;
+            opacity: 0.3;
+            transition: opacity 1.5s ease;
+        }
+
+        body.bg-image .bg-icon { display: none; }
+
+        /* Reveal-Animation: Bild voll sichtbar, UI weg */
+        body.bg-reveal #bg-canvas::after {
+            opacity: 1 !important;
+        }
+
+        body.bg-reveal .screen {
+            opacity: 0 !important;
+            transition: opacity 0s !important;
+        }
+
+        /* Nach Reveal: UI sanft zurückblenden */
+        body.bg-image .screen {
+            transition: opacity 1.8s ease 0.5s;
+        }
+
+        @keyframes bgIconDrift {
+            0% { transform: translateY(0) rotate(0deg) scale(1); }
+            20% { transform: translateY(-10vh) rotate(6deg) scale(1.08); }
+            50% { transform: translateY(2vh) rotate(-2deg) scale(1); }
+            80% { transform: translateY(10vh) rotate(-6deg) scale(0.92); }
+            100% { transform: translateY(0) rotate(0deg) scale(1); }
+        }
+
+        /* Sound Toggle */
+        .sound-toggle {
+            position: absolute;
+            top: 12px; right: 12px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 50%;
+            width: 38px; height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s;
+            z-index: 20;
+        }
+
+        .sound-toggle:hover {
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* Testmodus-Hinweis */
+        .dev-toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(108,92,231,0.9);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            z-index: 9999;
+            animation: toastIn 0.3s ease, toastOut 0.3s ease 1.5s forwards;
+            pointer-events: none;
+        }
+
+        @keyframes toastIn { from { opacity:0; transform: translateX(-50%) translateY(20px); } to { opacity:1; transform: translateX(-50%) translateY(0); } }
+        @keyframes toastOut { to { opacity:0; transform: translateX(-50%) translateY(20px); } }
+
+        .bg-scene {
+            position: absolute;
+            font-size: 2.5em;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(0.5px) brightness(0.5);
+            transition: opacity 2s;
+        }
+
+        .bg-scene.visible {
+            opacity: 0.25;
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            animation: floatUp linear infinite;
+            opacity: 0.08;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0.08; }
+            50% { opacity: 0.15; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* ===== SCREEN SYSTEM ===== */
+        .screen {
+            display: none;
+            width: 100%;
+            max-width: 520px;
+            text-align: center;
+            animation: screenIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 10;
+            margin: auto;
+            padding: 10px;
+        }
+
+        .screen.active { display: block; }
+
+        @keyframes screenIn {
+            from { opacity: 0; transform: scale(0.9) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* ===== GLASSMORPHISM CARDS ===== */
+        .glass-panel {
+            background: rgba(255,255,255,0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 24px;
+            padding: 35px 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        /* ===== STARTSCREEN ===== */
+        #start-screen h1 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2.4em;
+            background: linear-gradient(135deg, var(--accent), #fd79a8, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            color: rgba(255,255,255,0.5);
+            font-size: 1em;
+            margin-bottom: 25px;
+        }
+
+        .mascot {
+            font-size: 3.5em;
+            animation: mascotFloat 3s ease-in-out infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes mascotFloat {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+        }
+
+        .time-select label {
+            display: block;
+            font-size: 1em;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 12px;
+        }
+
+        .time-buttons { display: flex; gap: 12px; justify-content: center; }
+
+        .time-btn {
+            padding: 12px 24px;
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.05);
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .time-btn:hover, .time-btn.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: scale(1.08);
+            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.5);
+        }
+
+        .btn-primary {
+            margin-top: 25px;
+            padding: 16px 45px;
+            background: linear-gradient(135deg, var(--primary), #a29bfe);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3em;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 25px rgba(108, 92, 231, 0.5);
+            font-family: 'Fredoka One', cursive;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 35px rgba(108, 92, 231, 0.7);
+        }
+
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+        .btn-secondary {
+            margin-top: 12px;
+            padding: 12px 30px;
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            border-radius: 50px;
+            font-size: 1.05em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+            transform: scale(1.05);
+        }
+
+        .today-stats {
+            margin-top: 18px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px;
+            display: none;
+        }
+
+        .today-stats.visible { display: block; }
+
+        .today-stats-title {
+            font-size: 0.75em;
+            color: rgba(255,255,255,0.35);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .today-stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        .today-stat {
+            text-align: center;
+        }
+
+        .today-stat-value {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.3em;
+            color: var(--accent);
+        }
+
+        .today-stat-label {
+            font-size: 0.6em;
+            color: rgba(255,255,255,0.4);
+            margin-top: 2px;
+        }
+
+        .today-stats-history {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            font-size: 0.65em;
+            color: rgba(255,255,255,0.3);
+        }
+
+        .disclaimer {
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            font-size: 0.65em;
+            color: rgba(255,255,255,0.3);
+            line-height: 1.5;
+        }
+
+        .album-peek-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 25px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 14px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .album-peek-btn:hover {
+            background: rgba(255,255,255,0.12);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        /* ===== QUIZ SCREEN ===== */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .badge {
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+
+        .badge-timer {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            box-shadow: 0 2px 12px rgba(238, 90, 36, 0.4);
+        }
+
+        .badge-timer.warning {
+            animation: timerPulse 0.6s infinite alternate;
+        }
+
+        @keyframes timerPulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); box-shadow: 0 2px 20px rgba(238, 90, 36, 0.8); }
+        }
+
+        .badge-streak {
+            background: linear-gradient(135deg, var(--accent), var(--accent-glow));
+            color: #333;
+        }
+
+        .badge-cards {
+            background: linear-gradient(135deg, var(--primary), #a29bfe);
+        }
+
+        .question-area { margin: 25px 0 15px; }
+
+        .question {
+            font-family: 'Fredoka One', cursive;
+            font-size: 3.2em;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(108, 92, 231, 0.5);
+        }
+
+        .answer-input {
+            width: 140px;
+            padding: 14px;
+            font-size: 2em;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 16px;
+            outline: none;
+            background: rgba(255,255,255,0.08);
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            transition: all 0.3s;
+        }
+
+        .answer-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(108, 92, 231, 0.4);
+        }
+
+        .answer-input.correct {
+            border-color: var(--success);
+            background: rgba(0, 184, 148, 0.15);
+            box-shadow: 0 0 25px rgba(0, 184, 148, 0.5);
+            animation: successPop 0.4s;
+        }
+
+        .answer-input.wrong {
+            border-color: var(--danger);
+            background: rgba(255, 107, 107, 0.15);
+            box-shadow: 0 0 25px rgba(255, 107, 107, 0.5);
+            animation: shake 0.4s;
+        }
+
+        @keyframes successPop {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        .submit-btn {
+            display: block;
+            margin: 18px auto 0;
+            padding: 12px 35px;
+            background: linear-gradient(135deg, var(--primary), #a29bfe);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .submit-btn:hover { transform: scale(1.05); }
+
+        .feedback {
+            margin-top: 12px;
+            font-size: 1.2em;
+            font-weight: 700;
+            min-height: 35px;
+        }
+
+        .feedback.correct-fb { color: var(--success); }
+        .feedback.wrong-fb { color: var(--danger); }
+
+        .attempts-info {
+            margin-top: 6px;
+            font-size: 0.8em;
+            color: rgba(255,255,255,0.4);
+        }
+
+        .attempts-info.danger { color: var(--danger); }
+
+        /* Richtige Antwort groß anzeigen */
+        .answer-reveal {
+            display: none;
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8em;
+            color: var(--success);
+            margin-top: 10px;
+            animation: revealPop 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .answer-reveal.visible { display: block; }
+
+        @keyframes revealPop {
+            from { transform: scale(0); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* ===== SIX SEVEN MEME ===== */
+        #six-seven-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            flex-direction: column;
+        }
+
+        #six-seven-overlay.active { display: flex; }
+
+        .six-seven-text {
+            font-family: 'Fredoka One', cursive;
+            font-size: 4em;
+            color: var(--accent);
+            text-shadow: 0 0 40px var(--accent), 0 0 80px var(--accent-glow);
+            animation: sixSevenBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .six-seven-sub {
+            font-size: 1.5em;
+            color: rgba(255,255,255,0.7);
+            margin-top: 10px;
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+
+        .six-seven-joke {
+            font-size: 2.5em;
+            margin-top: 15px;
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        @keyframes sixSevenBounce {
+            0% { transform: scale(0) rotate(-10deg); }
+            60% { transform: scale(1.2) rotate(5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== SAMMELKARTEN - HOLOGRAMM DESIGN ===== */
+        #card-reward-screen {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.88);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            flex-direction: column;
+        }
+
+        #card-reward-screen.active { display: flex; }
+
+        .reward-card {
+            width: 260px;
+            height: 370px;
+            border-radius: 18px;
+            position: relative;
+            animation: cardReveal 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            cursor: default;
+        }
+
+        .reward-card::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: conic-gradient(
+                transparent 0deg,
+                rgba(255,255,255,0.15) 60deg,
+                transparent 120deg,
+                rgba(255,255,255,0.1) 180deg,
+                transparent 240deg,
+                rgba(255,255,255,0.15) 300deg,
+                transparent 360deg
+            );
+            animation: holoRotate 8s linear infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .reward-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.1) 45%,
+                rgba(255,255,255,0.3) 50%,
+                rgba(255,255,255,0.1) 55%,
+                rgba(255,255,255,0) 100%
+            );
+            animation: holoSheen 5s ease-in-out infinite alternate;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        @keyframes holoRotate { to { transform: rotate(360deg); } }
+        @keyframes holoSheen {
+            from { transform: translateX(-100%) translateY(-100%); }
+            to { transform: translateX(100%) translateY(100%); }
+        }
+
+        @keyframes cardReveal {
+            0% { transform: scale(0.6) translateY(300px) rotateY(90deg); opacity: 0; }
+            40% { transform: scale(0.85) translateY(0) rotateY(-5deg); opacity: 1; }
+            60% { transform: scale(0.85) translateY(0) rotateY(5deg); opacity: 1; }
+            100% { transform: scale(0.3) translateY(-400px) translateX(200px) rotate(15deg); opacity: 0; }
+        }
+
+        .reward-card.fly-away {
+            animation: cardFly 0.8s cubic-bezier(0.6, -0.28, 0.735, 0.045) forwards;
+        }
+
+        @keyframes cardFly {
+            to { transform: scale(0.1) translateY(-500px) translateX(250px) rotate(30deg); opacity: 0; }
+        }
+
+        /* Karten-Innenlayout */
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-border {
+            position: absolute;
+            inset: 0;
+            border-radius: 18px;
+            border: 3px solid rgba(255,255,255,0.2);
+            z-index: 4;
+            pointer-events: none;
+        }
+
+        .card-rarity-bar {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            z-index: 5;
+            border-radius: 18px 18px 0 0;
+        }
+
+        .rarity-common .card-rarity-bar { background: #95a5a6; }
+        .rarity-uncommon .card-rarity-bar { background: #27ae60; }
+        .rarity-rare .card-rarity-bar { background: linear-gradient(90deg, #2980b9, #6dd5fa); }
+        .rarity-epic .card-rarity-bar { background: linear-gradient(90deg, #8e44ad, #fd79a8); }
+        .rarity-legendary .card-rarity-bar { background: linear-gradient(90deg, #f39c12, #e74c3c, #f39c12); animation: legendaryGlow 1.5s ease infinite; }
+        .rarity-ultra-legendary .card-rarity-bar { background: linear-gradient(90deg, #e1fb2a, #ff6b6b, #6c5ce7, #e1fb2a); animation: ultraGlow 1s ease infinite; }
+
+        @keyframes legendaryGlow {
+            0%,100% { box-shadow: 0 0 10px #f39c12; }
+            50% { box-shadow: 0 0 25px #e74c3c, 0 0 50px #f39c12; }
+        }
+
+        @keyframes ultraGlow {
+            0%,100% { box-shadow: 0 0 15px #e1fb2a; }
+            33% { box-shadow: 0 0 30px #ff6b6b, 0 0 60px #e1fb2a; }
+            66% { box-shadow: 0 0 30px #6c5ce7, 0 0 60px #e1fb2a; }
+        }
+
+        .card-rarity-badge {
+            position: absolute;
+            top: 10px; right: 10px;
+            padding: 3px 9px;
+            border-radius: 8px;
+            font-size: 0.6em;
+            font-weight: 800;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            z-index: 5;
+        }
+
+        .rarity-common .card-rarity-badge { background: rgba(149,165,166,0.8); }
+        .rarity-uncommon .card-rarity-badge { background: rgba(39,174,96,0.8); }
+        .rarity-rare .card-rarity-badge { background: rgba(41,128,185,0.8); }
+        .rarity-epic .card-rarity-badge { background: rgba(142,68,173,0.8); }
+        .rarity-legendary .card-rarity-badge { background: linear-gradient(135deg, #f39c12, #e74c3c); }
+        .rarity-ultra-legendary .card-rarity-badge { background: linear-gradient(135deg, #e1fb2a, #ff6b6b, #6c5ce7); animation: ultraBadgePulse 1.2s ease infinite; }
+
+        @keyframes ultraBadgePulse {
+            0%,100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        .card-image-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-image-area img {
+            max-width: 85%;
+            max-height: 85%;
+            image-rendering: auto;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-image-area .card-emoji {
+            font-size: 4.5em;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+        }
+
+        .card-info-area {
+            padding: 10px 14px 14px;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .card-name-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+
+        .card-name {
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.95em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-detail {
+            font-size: 0.7em;
+            opacity: 0.6;
+            margin-bottom: 6px;
+        }
+
+        .card-stats {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .card-stat {
+            background: rgba(255,255,255,0.15);
+            padding: 2px 7px;
+            border-radius: 6px;
+            font-size: 0.65em;
+            font-weight: 700;
+        }
+
+        .new-card-text {
+            font-family: 'Fredoka One', cursive;
+            color: var(--accent);
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px var(--accent);
+            animation: quickFlash 1.8s ease forwards;
+        }
+
+        @keyframes quickFlash {
+            0% { opacity: 0; transform: scale(0.5); }
+            15% { opacity: 1; transform: scale(1.1); }
+            30% { opacity: 1; transform: scale(1); }
+            60% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+            to { text-shadow: 0 0 30px var(--accent), 0 0 60px var(--accent-glow); }
+        }
+
+        /* ===== TIME UP SCREEN ===== */
+        #timeup-screen h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2em;
+            background: linear-gradient(135deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            padding: 14px;
+            border-radius: 16px;
+        }
+
+        .stat-value {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2em;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ===== ALBUM SCREEN ===== */
+        #album-screen {
+            max-width: 850px;
+            max-height: 88vh;
+            overflow-y: auto;
+        }
+
+        #album-screen::-webkit-scrollbar { width: 6px; }
+        #album-screen::-webkit-scrollbar-track { background: transparent; }
+        #album-screen::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+
+        .album-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .album-header h2 {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.6em;
+        }
+
+        .album-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .album-tab {
+            padding: 8px 18px;
+            border: 2px solid rgba(255,255,255,0.12);
+            border-radius: 14px;
+            background: rgba(255,255,255,0.04);
+            cursor: pointer;
+            font-weight: 700;
+            color: rgba(255,255,255,0.5);
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
+            font-size: 0.9em;
+        }
+
+        .album-tab.active, .album-tab:hover {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .album-counter {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.85em;
+            margin-bottom: 12px;
+        }
+
+        .album-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+            gap: 12px;
+        }
+
+        .album-card-wrapper {
+            aspect-ratio: 5/7;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+            cursor: pointer;
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .album-card-wrapper:hover { transform: scale(1.06) translateY(-4px); }
+
+        .album-card-wrapper .reward-card {
+            width: 100%;
+            height: 100%;
+            border-radius: 14px;
+            animation: none;
+        }
+
+        .album-card-wrapper .card-image-area { padding: 8px; }
+        .album-card-wrapper .card-image-area .card-emoji { font-size: 2.5em; }
+        .album-card-wrapper .card-image-area img { max-width: 80%; max-height: 80%; }
+        .album-card-wrapper .card-name { font-size: 0.7em; }
+        .album-card-wrapper .card-detail { font-size: 0.55em; }
+        .album-card-wrapper .card-stats { display: none; }
+        .album-card-wrapper .card-rarity-badge { font-size: 0.5em; padding: 2px 5px; }
+
+        .back-btn {
+            padding: 8px 18px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 12px;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        .back-btn:hover { background: rgba(255,255,255,0.15); color: white; }
+
+        /* ===== KARTEN-DETAIL MODAL ===== */
+        #card-detail-modal {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            flex-direction: column;
+            perspective: 1000px;
+        }
+
+        #card-detail-modal.active { display: flex; }
+
+        #card-detail-modal .reward-card {
+            animation: cardSpinReveal 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        @keyframes cardSpinReveal {
+            0%   { transform: scale(0.15) rotateY(0deg);     opacity: 0; }
+            15%  { transform: scale(0.3)  rotateY(180deg);   opacity: 0.5; }
+            35%  { transform: scale(0.5)  rotateY(360deg);   opacity: 0.7; }
+            55%  { transform: scale(0.7)  rotateY(540deg);   opacity: 0.85; }
+            75%  { transform: scale(0.9)  rotateY(680deg);   opacity: 0.95; }
+            90%  { transform: scale(1.05) rotateY(715deg);   opacity: 1; }
+            100% { transform: scale(1)    rotateY(720deg);   opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px; right: 30px;
+            color: rgba(255,255,255,0.6);
+            font-size: 2em;
+            cursor: pointer;
+            background: none;
+            border: none;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover { color: white; }
+
+        /* ===== CONFETTI ===== */
+        .confetti-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .confetti {
+            position: absolute;
+            top: -10px;
+            animation: confettiFall 3s linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .empty-album {
+            grid-column: 1 / -1;
+            padding: 40px;
+            color: rgba(255,255,255,0.4);
+            font-size: 1em;
+        }
+
+        /* ===== SVG SILHOUETTEN ===== */
+        .svg-silhouette {
+            width: 75%;
+            height: 75%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .svg-silhouette svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+        }
+
+        .brawl-silhouette {
+            color: rgba(255,255,255,0.85);
+            filter: drop-shadow(0 0 12px rgba(255,255,255,0.2));
+        }
+
+        /* ===== BRAWL STARS CARD STYLE ===== */
+        .brawl-card .card-image-area {
+            background: radial-gradient(ellipse at center, rgba(255,255,255,0.08) 0%, transparent 70%);
+        }
+
+        /* ===== MINECRAFT CARD STYLE ===== */
+        .mc-card {
+            border: 3px solid #4a7a3a;
+        }
+
+        .mc-card .card-image-area {
+            background: radial-gradient(ellipse at center, rgba(45,90,39,0.15) 0%, transparent 70%);
+        }
+
+        .mc-card::before {
+            background: conic-gradient(
+                transparent 0deg,
+                rgba(45,90,39,0.15) 60deg,
+                transparent 120deg,
+                rgba(45,90,39,0.1) 180deg,
+                transparent 240deg,
+                rgba(45,90,39,0.15) 300deg,
+                transparent 360deg
+            ) !important;
+        }
+
+        /* Kleine Karten im Album - Silhouetten anpassen */
+        .album-card-wrapper .svg-silhouette {
+            width: 65%;
+            height: 65%;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 520px) {
+            .screen { padding: 15px; margin: 8px; }
+            .glass-panel { padding: 25px 18px; }
+            .question { font-size: 2.4em; }
+            .answer-input { width: 110px; font-size: 1.6em; padding: 12px; }
+            #start-screen h1 { font-size: 1.8em; }
+            .time-btn { padding: 12px 20px; font-size: 1em; }
+            .btn-primary { padding: 14px 35px; font-size: 1.2em; }
+            .submit-btn { padding: 14px 40px; font-size: 1.1em; }
+            .album-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; }
+            .six-seven-text { font-size: 2.5em; }
+            .sound-toggle { width: 44px; height: 44px; font-size: 1.2em; }
+            .badge { padding: 8px 12px; font-size: 0.85em; }
+
+            /* Startscreen scrollbar auf kleinen Handys */
+            #start-screen .glass-panel { overflow-y: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HINTERGRUND -->
+    <div id="bg-canvas"></div>
+    <div id="bg-scene-container" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1;"></div>
+
+    <!-- ===== START SCREEN ===== -->
+    <div id="start-screen" class="screen active">
+        <div class="glass-panel" style="position:relative">
+            <div class="sound-toggle" id="sound-toggle" title="Sound an/aus">🔊</div>
+            <div class="sound-toggle bg-toggle" id="bg-toggle" title="Hintergrund wechseln" style="right:56px">🎨</div>
+            <div class="mascot" id="mascot-tap">🧮</div>
+            <h1>Leos kleines Einmaleins</h1>
+            <p class="subtitle">Sammle coole Karten beim Rechnen!</p>
+
+            <div class="time-select">
+                <label>Was möchtest du heute üben?</label>
+                <div class="time-buttons" id="mode-buttons">
+                    <button class="time-btn mode-btn selected" data-mode="multiply">✖️ Mal</button>
+                    <button class="time-btn mode-btn" data-mode="divide">➗ Geteilt</button>
+                    <button class="time-btn mode-btn" data-mode="mixed">🔀 Mixed</button>
+                </div>
+            </div>
+
+            <div class="time-select">
+                <label>Wie lange möchtest du heute üben?</label>
+                <div class="time-buttons" id="time-buttons-container">
+                    <button class="time-btn" data-minutes="5">5 Min</button>
+                    <button class="time-btn" data-minutes="7">7 Min</button>
+                    <button class="time-btn" data-minutes="10">10 Min</button>
+                </div>
+            </div>
+
+            <button class="btn-primary" id="start-btn" disabled>Los geht's!</button>
+            <br>
+            <button class="album-peek-btn" id="album-peek-btn">📖 Sammelalbum anschauen</button>
+
+            <div class="today-stats" id="today-stats"></div>
+
+            <div class="disclaimer">
+                Diese App ist ein kostenloses Lernprogramm für Kinder und wurde mit Liebe von einem Papa gebaut.
+                Hier wird nichts verkauft, keine Daten gesammelt und keine Werbung gezeigt.
+                Alle genannten Marken (Pokémon, Brawl Stars) gehören ihren jeweiligen Eigentümern –
+                diese App steht in keiner Verbindung zu diesen Unternehmen und dient ausschließlich dem spielerischen Lernen. 🎓
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== QUIZ SCREEN ===== -->
+    <div id="quiz-screen" class="screen">
+        <div class="glass-panel">
+            <div class="quiz-header">
+                <div class="badge badge-timer" id="timer">⏱ 5:00</div>
+                <div class="badge badge-streak" id="streak-counter">⭐ 0/5</div>
+                <div class="badge badge-cards" id="cards-today">🃏 0</div>
+            </div>
+            <div class="question-area">
+                <div class="question" id="question">7 × 8 = ?</div>
+                <input type="tel" class="answer-input" id="answer-input" autocomplete="off" inputmode="numeric" pattern="[0-9]*" enterkeyhint="done">
+                <button class="submit-btn" id="submit-btn">Prüfen ✓</button>
+                <div class="feedback" id="feedback"></div>
+                <div class="answer-reveal" id="answer-reveal"></div>
+                <div class="attempts-info" id="attempts-info">Versuch 1 von 2</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== SIX SEVEN MEME ===== -->
+    <div id="six-seven-overlay">
+        <div class="six-seven-text">SIX SEVEN!</div>
+        <div class="six-seven-sub">Why was 6 afraid of 7?</div>
+        <div class="six-seven-joke">Because 7 ATE 9! 😱</div>
+    </div>
+
+    <!-- ===== CARD REWARD OVERLAY ===== -->
+    <div id="card-reward-screen">
+        <div class="new-card-text">✨ Neue Karte! ✨</div>
+        <div class="reward-card" id="reward-card"></div>
+    </div>
+
+    <!-- ===== TIME UP SCREEN ===== -->
+    <div id="timeup-screen" class="screen">
+        <div class="glass-panel">
+            <div class="mascot">🏆</div>
+            <h2>Super gemacht, Leo!</h2>
+            <p class="subtitle">Hier ist deine Zusammenfassung:</p>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-correct">0</div>
+                    <div class="stat-label">Richtig</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-wrong">0</div>
+                    <div class="stat-label">Falsch</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-cards">0</div>
+                    <div class="stat-label">Neue Karten</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="stat-total-cards">0</div>
+                    <div class="stat-label">Sammlung</div>
+                </div>
+            </div>
+            <button class="btn-primary" id="timeup-album-btn">📖 Album anschauen</button>
+            <br>
+            <button class="btn-secondary" id="timeup-back-btn">🔄 Nochmal üben</button>
+        </div>
+    </div>
+
+    <!-- ===== ALBUM SCREEN ===== -->
+    <div id="album-screen" class="screen">
+        <div class="glass-panel">
+            <div class="album-header">
+                <h2>📖 Leos Album</h2>
+                <button class="back-btn" id="album-back-btn">← Zurück</button>
+            </div>
+            <div class="album-tabs">
+                <button class="album-tab active" data-theme="pokemon">Pokémon</button>
+                <button class="album-tab" data-theme="brawlstars">💥 Brawl Stars</button>
+                <button class="album-tab" data-theme="minecraft">⛏️ Minecraft</button>
+            </div>
+            <div class="album-counter" id="album-counter">0 / 100 Karten</div>
+            <div class="album-grid" id="album-grid"></div>
+        </div>
+    </div>
+
+    <!-- ===== CARD DETAIL MODAL ===== -->
+    <div id="card-detail-modal">
+        <button class="close-modal" id="close-detail-btn">✕</button>
+        <div class="reward-card" id="detail-card"></div>
+    </div>
+
+    <!-- ===== CONFETTI ===== -->
+    <div class="confetti-container" id="confetti-container"></div>
+
+    <script>
+    // ===== POKEMON DATENBANK (251 Karten: Gen 1 Kanto + Gen 2 Johto, PokeAPI IDs) =====
+    const pokemonCards = [
+        { id:1, name:"Bisasam", type:"Pflanze/Gift", hp:45, atk:49, emoji:"🌱", color:"#00b894" },
+        { id:2, name:"Bisaknosp", type:"Pflanze/Gift", hp:60, atk:62, emoji:"🌿", color:"#00b894" },
+        { id:3, name:"Bisaflor", type:"Pflanze/Gift", hp:100, atk:82, emoji:"🌿", color:"#27ae60" },
+        { id:4, name:"Glumanda", type:"Feuer", hp:39, atk:52, emoji:"🔥", color:"#ff7675" },
+        { id:5, name:"Glutexo", type:"Feuer", hp:58, atk:64, emoji:"🔥", color:"#e17055" },
+        { id:6, name:"Glurak", type:"Feuer/Flug", hp:120, atk:84, emoji:"🔥", color:"#e74c3c" },
+        { id:7, name:"Schiggy", type:"Wasser", hp:44, atk:48, emoji:"💧", color:"#74b9ff" },
+        { id:8, name:"Schillok", type:"Wasser", hp:59, atk:63, emoji:"💧", color:"#0984e3" },
+        { id:9, name:"Turtok", type:"Wasser", hp:109, atk:83, emoji:"💧", color:"#3498db" },
+        { id:10, name:"Raupy", type:"Käfer", hp:45, atk:30, emoji:"🐛", color:"#27ae60" },
+        { id:11, name:"Safcon", type:"Käfer", hp:50, atk:20, emoji:"🐛", color:"#27ae60" },
+        { id:12, name:"Smettbo", type:"Käfer/Flug", hp:60, atk:45, emoji:"🦋", color:"#a29bfe" },
+        { id:13, name:"Hornliu", type:"Käfer/Gift", hp:40, atk:35, emoji:"🐛", color:"#6c5ce7" },
+        { id:14, name:"Kokuna", type:"Käfer/Gift", hp:45, atk:25, emoji:"🐛", color:"#f1c40f" },
+        { id:15, name:"Bibor", type:"Käfer/Gift", hp:65, atk:90, emoji:"🐝", color:"#f1c40f" },
+        { id:16, name:"Taubsi", type:"Normal/Flug", hp:40, atk:45, emoji:"🐦", color:"#d35400" },
+        { id:17, name:"Tauboga", type:"Normal/Flug", hp:63, atk:60, emoji:"🐦", color:"#d35400" },
+        { id:18, name:"Tauboss", type:"Normal/Flug", hp:83, atk:80, emoji:"🦅", color:"#d35400" },
+        { id:19, name:"Rattfratz", type:"Normal", hp:30, atk:56, emoji:"🐀", color:"#636e72" },
+        { id:20, name:"Rattikarl", type:"Normal", hp:55, atk:81, emoji:"🐀", color:"#636e72" },
+        { id:21, name:"Habitak", type:"Normal/Flug", hp:40, atk:60, emoji:"🐦", color:"#795548" },
+        { id:22, name:"Ibitak", type:"Normal/Flug", hp:65, atk:90, emoji:"🦅", color:"#795548" },
+        { id:23, name:"Rettan", type:"Gift", hp:35, atk:60, emoji:"🐍", color:"#6c5ce7" },
+        { id:24, name:"Arbok", type:"Gift", hp:60, atk:95, emoji:"🐍", color:"#6c5ce7" },
+        { id:25, name:"Pikachu", type:"Elektro", hp:60, atk:55, emoji:"⚡", color:"#f1c40f" },
+        { id:26, name:"Raichu", type:"Elektro", hp:60, atk:90, emoji:"⚡", color:"#f39c12" },
+        { id:27, name:"Sandan", type:"Boden", hp:50, atk:75, emoji:"🦔", color:"#d35400" },
+        { id:28, name:"Sandamer", type:"Boden", hp:75, atk:100, emoji:"🦔", color:"#d35400" },
+        { id:29, name:"Nidoran♀", type:"Gift", hp:55, atk:47, emoji:"🦔", color:"#00cec9" },
+        { id:30, name:"Nidorina", type:"Gift", hp:70, atk:62, emoji:"🦔", color:"#00cec9" },
+        { id:31, name:"Nidoqueen", type:"Gift/Boden", hp:90, atk:92, emoji:"👑", color:"#00b894" },
+        { id:32, name:"Nidoran♂", type:"Gift", hp:46, atk:57, emoji:"🦔", color:"#6c5ce7" },
+        { id:33, name:"Nidorino", type:"Gift", hp:61, atk:72, emoji:"🦔", color:"#6c5ce7" },
+        { id:34, name:"Nidoking", type:"Gift/Boden", hp:81, atk:102, emoji:"👑", color:"#6c5ce7" },
+        { id:35, name:"Piepi", type:"Fee", hp:70, atk:45, emoji:"🌙", color:"#fd79a8" },
+        { id:36, name:"Pixi", type:"Fee", hp:95, atk:70, emoji:"🌙", color:"#fd79a8" },
+        { id:37, name:"Vulpix", type:"Feuer", hp:38, atk:41, emoji:"🦊", color:"#e17055" },
+        { id:38, name:"Vulnona", type:"Feuer", hp:73, atk:76, emoji:"🦊", color:"#e17055" },
+        { id:39, name:"Pummeluff", type:"Fee", hp:115, atk:45, emoji:"🎤", color:"#fd79a8" },
+        { id:40, name:"Knuddeluff", type:"Fee", hp:140, atk:70, emoji:"🎤", color:"#fd79a8" },
+        { id:41, name:"Zubat", type:"Gift/Flug", hp:40, atk:45, emoji:"🦇", color:"#6c5ce7" },
+        { id:42, name:"Golbat", type:"Gift/Flug", hp:75, atk:80, emoji:"🦇", color:"#6c5ce7" },
+        { id:43, name:"Myrapla", type:"Pflanze/Gift", hp:45, atk:50, emoji:"🌿", color:"#27ae60" },
+        { id:44, name:"Duflor", type:"Pflanze/Gift", hp:60, atk:65, emoji:"🌸", color:"#27ae60" },
+        { id:45, name:"Giflor", type:"Pflanze/Gift", hp:75, atk:80, emoji:"🌺", color:"#e74c3c" },
+        { id:46, name:"Paras", type:"Käfer/Pflanze", hp:35, atk:70, emoji:"🍄", color:"#e74c3c" },
+        { id:47, name:"Parasek", type:"Käfer/Pflanze", hp:60, atk:95, emoji:"🍄", color:"#e74c3c" },
+        { id:48, name:"Bluzuk", type:"Käfer/Gift", hp:60, atk:55, emoji:"🐛", color:"#6c5ce7" },
+        { id:49, name:"Omot", type:"Käfer/Gift", hp:70, atk:65, emoji:"🦋", color:"#6c5ce7" },
+        { id:50, name:"Digda", type:"Boden", hp:10, atk:55, emoji:"🕳️", color:"#d35400" },
+        { id:51, name:"Digdri", type:"Boden", hp:35, atk:100, emoji:"🕳️", color:"#d35400" },
+        { id:52, name:"Mauzi", type:"Normal", hp:40, atk:45, emoji:"🐱", color:"#f1c40f" },
+        { id:53, name:"Snobilikat", type:"Normal", hp:65, atk:70, emoji:"🐱", color:"#f1c40f" },
+        { id:54, name:"Enton", type:"Wasser", hp:50, atk:52, emoji:"🦆", color:"#fdcb6e" },
+        { id:55, name:"Entoron", type:"Wasser", hp:80, atk:82, emoji:"🦆", color:"#3498db" },
+        { id:56, name:"Menki", type:"Kampf", hp:40, atk:80, emoji:"🐒", color:"#d35400" },
+        { id:57, name:"Rasaff", type:"Kampf", hp:65, atk:105, emoji:"🐒", color:"#d35400" },
+        { id:58, name:"Fukano", type:"Feuer", hp:55, atk:70, emoji:"🐕", color:"#e17055" },
+        { id:59, name:"Arkani", type:"Feuer", hp:90, atk:110, emoji:"🐕", color:"#e74c3c" },
+        { id:60, name:"Quapsel", type:"Wasser", hp:40, atk:50, emoji:"💧", color:"#74b9ff" },
+        { id:61, name:"Quaputzi", type:"Wasser", hp:65, atk:65, emoji:"💧", color:"#0984e3" },
+        { id:62, name:"Quappo", type:"Wasser/Kampf", hp:90, atk:95, emoji:"💧", color:"#2980b9" },
+        { id:63, name:"Abra", type:"Psycho", hp:25, atk:20, emoji:"🧠", color:"#fdcb6e" },
+        { id:64, name:"Kadabra", type:"Psycho", hp:40, atk:35, emoji:"🧠", color:"#a29bfe" },
+        { id:65, name:"Simsala", type:"Psycho", hp:55, atk:50, emoji:"🥄", color:"#a29bfe" },
+        { id:66, name:"Machollo", type:"Kampf", hp:70, atk:80, emoji:"💪", color:"#636e72" },
+        { id:67, name:"Maschock", type:"Kampf", hp:80, atk:100, emoji:"💪", color:"#636e72" },
+        { id:68, name:"Machomei", type:"Kampf", hp:90, atk:130, emoji:"💪", color:"#636e72" },
+        { id:69, name:"Knofensa", type:"Pflanze/Gift", hp:50, atk:75, emoji:"🌱", color:"#27ae60" },
+        { id:70, name:"Ultrigaria", type:"Pflanze/Gift", hp:65, atk:90, emoji:"🌿", color:"#27ae60" },
+        { id:71, name:"Sarzenia", type:"Pflanze/Gift", hp:80, atk:105, emoji:"🌿", color:"#27ae60" },
+        { id:72, name:"Tentacha", type:"Wasser/Gift", hp:40, atk:40, emoji:"🐙", color:"#74b9ff" },
+        { id:73, name:"Tentoxa", type:"Wasser/Gift", hp:80, atk:70, emoji:"🐙", color:"#0984e3" },
+        { id:74, name:"Kleinstein", type:"Gestein/Boden", hp:40, atk:80, emoji:"🪨", color:"#795548" },
+        { id:75, name:"Georok", type:"Gestein/Boden", hp:55, atk:95, emoji:"🪨", color:"#795548" },
+        { id:76, name:"Geowaz", type:"Gestein/Boden", hp:80, atk:120, emoji:"🪨", color:"#795548" },
+        { id:77, name:"Ponita", type:"Feuer", hp:50, atk:85, emoji:"🐴", color:"#e74c3c" },
+        { id:78, name:"Gallopa", type:"Feuer", hp:65, atk:100, emoji:"🐴", color:"#e74c3c" },
+        { id:79, name:"Flegmon", type:"Wasser/Psycho", hp:90, atk:65, emoji:"🐚", color:"#fd79a8" },
+        { id:80, name:"Lahmus", type:"Wasser/Psycho", hp:95, atk:75, emoji:"🐚", color:"#fd79a8" },
+        { id:81, name:"Magnetilo", type:"Elektro", hp:25, atk:35, emoji:"🧲", color:"#636e72" },
+        { id:82, name:"Magneton", type:"Elektro/Stahl", hp:50, atk:60, emoji:"🧲", color:"#636e72" },
+        { id:83, name:"Porenta", type:"Normal", hp:52, atk:90, emoji:"🦆", color:"#d35400" },
+        { id:84, name:"Dodu", type:"Normal/Flug", hp:35, atk:85, emoji:"🐦", color:"#d35400" },
+        { id:85, name:"Dodri", type:"Normal/Flug", hp:60, atk:110, emoji:"🐦", color:"#d35400" },
+        { id:86, name:"Jurob", type:"Wasser", hp:65, atk:45, emoji:"🦭", color:"#dfe6e9" },
+        { id:87, name:"Jugong", type:"Wasser/Eis", hp:90, atk:70, emoji:"🦭", color:"#dfe6e9" },
+        { id:88, name:"Sleima", type:"Gift", hp:80, atk:80, emoji:"💜", color:"#6c5ce7" },
+        { id:89, name:"Sleimok", type:"Gift", hp:105, atk:105, emoji:"💜", color:"#6c5ce7" },
+        { id:90, name:"Muschas", type:"Wasser", hp:30, atk:65, emoji:"🐚", color:"#636e72" },
+        { id:91, name:"Austos", type:"Wasser/Eis", hp:50, atk:95, emoji:"🐚", color:"#636e72" },
+        { id:92, name:"Nebulak", type:"Geist/Gift", hp:30, atk:35, emoji:"👻", color:"#8e44ad" },
+        { id:93, name:"Alpollo", type:"Geist/Gift", hp:45, atk:50, emoji:"👻", color:"#8e44ad" },
+        { id:94, name:"Gengar", type:"Geist/Gift", hp:60, atk:65, emoji:"👻", color:"#8e44ad" },
+        { id:95, name:"Onix", type:"Gestein/Boden", hp:35, atk:45, emoji:"🐍", color:"#636e72" },
+        { id:96, name:"Traumato", type:"Psycho", hp:60, atk:48, emoji:"💤", color:"#fdcb6e" },
+        { id:97, name:"Hypno", type:"Psycho", hp:85, atk:73, emoji:"💤", color:"#fdcb6e" },
+        { id:98, name:"Krabby", type:"Wasser", hp:30, atk:105, emoji:"🦀", color:"#e74c3c" },
+        { id:99, name:"Kingler", type:"Wasser", hp:55, atk:130, emoji:"🦀", color:"#e74c3c" },
+        { id:100, name:"Voltobal", type:"Elektro", hp:40, atk:30, emoji:"⚡", color:"#e74c3c" },
+        { id:101, name:"Lektrobal", type:"Elektro", hp:60, atk:50, emoji:"💣", color:"#e74c3c" },
+        { id:102, name:"Owei", type:"Pflanze/Psycho", hp:60, atk:40, emoji:"🥚", color:"#fd79a8" },
+        { id:103, name:"Kokowei", type:"Pflanze/Psycho", hp:95, atk:95, emoji:"🌴", color:"#27ae60" },
+        { id:104, name:"Tragosso", type:"Boden", hp:50, atk:50, emoji:"🦴", color:"#d35400" },
+        { id:105, name:"Knogga", type:"Boden", hp:60, atk:80, emoji:"🦴", color:"#d35400" },
+        { id:106, name:"Kicklee", type:"Kampf", hp:50, atk:120, emoji:"🦵", color:"#795548" },
+        { id:107, name:"Nockchan", type:"Kampf", hp:50, atk:105, emoji:"🥊", color:"#795548" },
+        { id:108, name:"Schlurp", type:"Normal", hp:90, atk:55, emoji:"👅", color:"#fd79a8" },
+        { id:109, name:"Smogon", type:"Gift", hp:40, atk:65, emoji:"💨", color:"#636e72" },
+        { id:110, name:"Smogmog", type:"Gift", hp:65, atk:90, emoji:"💨", color:"#636e72" },
+        { id:111, name:"Rihorn", type:"Boden/Gestein", hp:80, atk:85, emoji:"🦏", color:"#636e72" },
+        { id:112, name:"Rizeros", type:"Boden/Gestein", hp:105, atk:130, emoji:"🦏", color:"#636e72" },
+        { id:113, name:"Chaneira", type:"Normal", hp:250, atk:5, emoji:"💗", color:"#fd79a8" },
+        { id:114, name:"Tangela", type:"Pflanze", hp:65, atk:55, emoji:"🌿", color:"#2980b9" },
+        { id:115, name:"Kangama", type:"Normal", hp:105, atk:95, emoji:"🦘", color:"#795548" },
+        { id:116, name:"Seeper", type:"Wasser", hp:30, atk:40, emoji:"🐴", color:"#74b9ff" },
+        { id:117, name:"Seemon", type:"Wasser", hp:55, atk:65, emoji:"🐴", color:"#0984e3" },
+        { id:118, name:"Goldini", type:"Wasser", hp:45, atk:67, emoji:"🐟", color:"#e74c3c" },
+        { id:119, name:"Golking", type:"Wasser", hp:80, atk:92, emoji:"🐟", color:"#e74c3c" },
+        { id:120, name:"Sterndu", type:"Wasser", hp:30, atk:45, emoji:"⭐", color:"#795548" },
+        { id:121, name:"Starmie", type:"Wasser/Psycho", hp:60, atk:75, emoji:"⭐", color:"#6c5ce7" },
+        { id:122, name:"Pantimos", type:"Psycho", hp:40, atk:45, emoji:"🤹", color:"#e91e63" },
+        { id:123, name:"Sichlor", type:"Käfer", hp:70, atk:110, emoji:"🦗", color:"#27ae60" },
+        { id:124, name:"Rossana", type:"Eis/Psycho", hp:65, atk:50, emoji:"💋", color:"#e74c3c" },
+        { id:125, name:"Elektek", type:"Elektro", hp:65, atk:83, emoji:"⚡", color:"#f1c40f" },
+        { id:126, name:"Magmar", type:"Feuer", hp:65, atk:95, emoji:"🔥", color:"#e74c3c" },
+        { id:127, name:"Pinsir", type:"Käfer", hp:65, atk:125, emoji:"🦗", color:"#795548" },
+        { id:128, name:"Tauros", type:"Normal", hp:75, atk:100, emoji:"🐂", color:"#d35400" },
+        { id:129, name:"Karpador", type:"Wasser", hp:20, atk:10, emoji:"🐟", color:"#e74c3c" },
+        { id:130, name:"Garados", type:"Wasser/Flug", hp:95, atk:125, emoji:"🌊", color:"#0984e3" },
+        { id:131, name:"Lapras", type:"Wasser/Eis", hp:130, atk:85, emoji:"🐢", color:"#00cec9" },
+        { id:132, name:"Ditto", type:"Normal", hp:48, atk:48, emoji:"🟣", color:"#a29bfe" },
+        { id:133, name:"Evoli", type:"Normal", hp:55, atk:55, emoji:"🦊", color:"#a0522d" },
+        { id:134, name:"Aquana", type:"Wasser", hp:130, atk:65, emoji:"💧", color:"#0984e3" },
+        { id:135, name:"Blitza", type:"Elektro", hp:65, atk:65, emoji:"⚡", color:"#f1c40f" },
+        { id:136, name:"Flamara", type:"Feuer", hp:65, atk:130, emoji:"🔥", color:"#e74c3c" },
+        { id:137, name:"Porygon", type:"Normal", hp:65, atk:60, emoji:"💻", color:"#e91e63" },
+        { id:138, name:"Amonitas", type:"Gestein", hp:35, atk:40, emoji:"🐚", color:"#74b9ff" },
+        { id:139, name:"Amoroso", type:"Gestein", hp:70, atk:60, emoji:"🐚", color:"#74b9ff" },
+        { id:140, name:"Kabuto", type:"Gestein", hp:30, atk:80, emoji:"🪨", color:"#795548" },
+        { id:141, name:"Kabutops", type:"Gestein", hp:60, atk:115, emoji:"🪨", color:"#795548" },
+        { id:142, name:"Aerodactyl", type:"Gestein/Flug", hp:80, atk:105, emoji:"🦅", color:"#636e72" },
+        { id:143, name:"Relaxo", type:"Normal", hp:160, atk:110, emoji:"😴", color:"#2c3e50" },
+        { id:144, name:"Arktos", type:"Eis/Flug", hp:90, atk:85, emoji:"❄️", color:"#74b9ff" },
+        { id:145, name:"Zapdos", type:"Elektro/Flug", hp:90, atk:90, emoji:"⚡", color:"#fdcb6e" },
+        { id:146, name:"Lavados", type:"Feuer/Flug", hp:90, atk:100, emoji:"🔥", color:"#e17055" },
+        { id:147, name:"Dratini", type:"Drache", hp:41, atk:64, emoji:"🐉", color:"#74b9ff" },
+        { id:148, name:"Dragonir", type:"Drache", hp:61, atk:84, emoji:"🐉", color:"#3498db" },
+        { id:149, name:"Dragoran", type:"Drache/Flug", hp:91, atk:134, emoji:"🐉", color:"#f39c12" },
+        { id:150, name:"Mewtu", type:"Psycho", hp:106, atk:110, emoji:"🔮", color:"#9b59b6" },
+        { id:151, name:"Mew", type:"Psycho", hp:100, atk:100, emoji:"✨", color:"#e91e63" },
+        { id:152, name:"Endivie", type:"Pflanze", hp:45, atk:49, emoji:"🌱", color:"#27ae60" },
+        { id:153, name:"Lorblatt", type:"Pflanze", hp:60, atk:62, emoji:"🌿", color:"#27ae60" },
+        { id:154, name:"Meganie", type:"Pflanze", hp:80, atk:82, emoji:"🌸", color:"#27ae60" },
+        { id:155, name:"Feurigel", type:"Feuer", hp:39, atk:52, emoji:"🔥", color:"#e74c3c" },
+        { id:156, name:"Igelavar", type:"Feuer", hp:58, atk:64, emoji:"🔥", color:"#e17055" },
+        { id:157, name:"Tornupto", type:"Feuer", hp:78, atk:84, emoji:"🔥", color:"#e74c3c" },
+        { id:158, name:"Karnimani", type:"Wasser", hp:50, atk:65, emoji:"🐊", color:"#0984e3" },
+        { id:159, name:"Tyracroc", type:"Wasser", hp:65, atk:80, emoji:"🐊", color:"#0984e3" },
+        { id:160, name:"Impergator", type:"Wasser", hp:85, atk:105, emoji:"🐊", color:"#0984e3" },
+        { id:161, name:"Wiesor", type:"Normal", hp:35, atk:46, emoji:"🦝", color:"#795548" },
+        { id:162, name:"Wiesenior", type:"Normal", hp:75, atk:76, emoji:"🦝", color:"#795548" },
+        { id:163, name:"Hoothoot", type:"Normal/Flug", hp:60, atk:30, emoji:"🦉", color:"#795548" },
+        { id:164, name:"Noctuh", type:"Normal/Flug", hp:100, atk:50, emoji:"🦉", color:"#795548" },
+        { id:165, name:"Ledyba", type:"Käfer/Flug", hp:40, atk:20, emoji:"🐞", color:"#e74c3c" },
+        { id:166, name:"Ledian", type:"Käfer/Flug", hp:55, atk:35, emoji:"🐞", color:"#e74c3c" },
+        { id:167, name:"Webarak", type:"Käfer/Gift", hp:40, atk:60, emoji:"🕷️", color:"#27ae60" },
+        { id:168, name:"Ariados", type:"Käfer/Gift", hp:70, atk:90, emoji:"🕷️", color:"#e74c3c" },
+        { id:169, name:"Iksbat", type:"Gift/Flug", hp:85, atk:90, emoji:"🦇", color:"#6c5ce7" },
+        { id:170, name:"Lampi", type:"Wasser/Elektro", hp:75, atk:38, emoji:"💡", color:"#74b9ff" },
+        { id:171, name:"Lanturn", type:"Wasser/Elektro", hp:125, atk:58, emoji:"💡", color:"#0984e3" },
+        { id:172, name:"Pichu", type:"Elektro", hp:20, atk:40, emoji:"⚡", color:"#f1c40f" },
+        { id:173, name:"Pii", type:"Fee", hp:50, atk:25, emoji:"⭐", color:"#fd79a8" },
+        { id:174, name:"Fluffeluff", type:"Fee", hp:90, atk:30, emoji:"🎤", color:"#fd79a8" },
+        { id:175, name:"Togepi", type:"Fee", hp:35, atk:20, emoji:"🥚", color:"#dfe6e9" },
+        { id:176, name:"Togetic", type:"Fee", hp:55, atk:40, emoji:"🕊️", color:"#dfe6e9" },
+        { id:177, name:"Natu", type:"Psycho/Flug", hp:40, atk:50, emoji:"🐦", color:"#27ae60" },
+        { id:178, name:"Xatu", type:"Psycho/Flug", hp:65, atk:75, emoji:"🐦", color:"#27ae60" },
+        { id:179, name:"Voltilamm", type:"Elektro", hp:55, atk:40, emoji:"🐑", color:"#f1c40f" },
+        { id:180, name:"Waaty", type:"Elektro", hp:70, atk:55, emoji:"🐑", color:"#fd79a8" },
+        { id:181, name:"Ampharos", type:"Elektro", hp:90, atk:75, emoji:"⚡", color:"#f1c40f" },
+        { id:182, name:"Blubella", type:"Pflanze", hp:75, atk:80, emoji:"🌺", color:"#27ae60" },
+        { id:183, name:"Marill", type:"Wasser", hp:70, atk:20, emoji:"💧", color:"#74b9ff" },
+        { id:184, name:"Azumarill", type:"Wasser", hp:100, atk:50, emoji:"💧", color:"#3498db" },
+        { id:185, name:"Mogelbaum", type:"Gestein", hp:70, atk:100, emoji:"🌳", color:"#27ae60" },
+        { id:186, name:"Quaxo", type:"Wasser", hp:90, atk:75, emoji:"🐸", color:"#27ae60" },
+        { id:187, name:"Hoppspross", type:"Pflanze/Flug", hp:35, atk:35, emoji:"🌱", color:"#27ae60" },
+        { id:188, name:"Hubelupf", type:"Pflanze/Flug", hp:55, atk:45, emoji:"🌸", color:"#27ae60" },
+        { id:189, name:"Papungha", type:"Pflanze/Flug", hp:75, atk:55, emoji:"🌸", color:"#74b9ff" },
+        { id:190, name:"Griffel", type:"Normal", hp:55, atk:60, emoji:"🐒", color:"#6c5ce7" },
+        { id:191, name:"Sonnkern", type:"Pflanze", hp:30, atk:30, emoji:"🌻", color:"#f1c40f" },
+        { id:192, name:"Sonnflora", type:"Pflanze", hp:75, atk:75, emoji:"🌻", color:"#f1c40f" },
+        { id:193, name:"Yanma", type:"Käfer/Flug", hp:65, atk:65, emoji:"🪰", color:"#27ae60" },
+        { id:194, name:"Felino", type:"Wasser/Boden", hp:55, atk:45, emoji:"💧", color:"#74b9ff" },
+        { id:195, name:"Morlord", type:"Wasser/Boden", hp:95, atk:75, emoji:"💧", color:"#3498db" },
+        { id:196, name:"Psiana", type:"Psycho", hp:65, atk:65, emoji:"☀️", color:"#a29bfe" },
+        { id:197, name:"Nachtara", type:"Unlicht", hp:95, atk:65, emoji:"🌙", color:"#2c3e50" },
+        { id:198, name:"Kramurx", type:"Unlicht/Flug", hp:60, atk:85, emoji:"🐦", color:"#2c3e50" },
+        { id:199, name:"Laschoking", type:"Wasser/Psycho", hp:95, atk:75, emoji:"👑", color:"#fd79a8" },
+        { id:200, name:"Traunfugil", type:"Geist", hp:60, atk:60, emoji:"👻", color:"#6c5ce7" },
+        { id:201, name:"Icognito", type:"Psycho", hp:48, atk:72, emoji:"🔤", color:"#2c3e50" },
+        { id:202, name:"Woingenau", type:"Psycho", hp:190, atk:33, emoji:"💙", color:"#74b9ff" },
+        { id:203, name:"Girafarig", type:"Normal/Psycho", hp:70, atk:80, emoji:"🦒", color:"#f1c40f" },
+        { id:204, name:"Tannza", type:"Käfer", hp:50, atk:65, emoji:"🌲", color:"#636e72" },
+        { id:205, name:"Forstellka", type:"Käfer/Stahl", hp:75, atk:90, emoji:"🌲", color:"#636e72" },
+        { id:206, name:"Dummisel", type:"Normal", hp:100, atk:70, emoji:"🐍", color:"#f1c40f" },
+        { id:207, name:"Skorgla", type:"Boden/Flug", hp:65, atk:75, emoji:"🦂", color:"#6c5ce7" },
+        { id:208, name:"Stahlos", type:"Stahl/Boden", hp:75, atk:85, emoji:"⛓️", color:"#636e72" },
+        { id:209, name:"Snubbull", type:"Fee", hp:60, atk:80, emoji:"🐕", color:"#fd79a8" },
+        { id:210, name:"Granbull", type:"Fee", hp:90, atk:120, emoji:"🐕", color:"#6c5ce7" },
+        { id:211, name:"Baldorfish", type:"Wasser/Gift", hp:65, atk:95, emoji:"🐡", color:"#0984e3" },
+        { id:212, name:"Scherox", type:"Käfer/Stahl", hp:70, atk:130, emoji:"✂️", color:"#c0392b" },
+        { id:213, name:"Pottrott", type:"Käfer", hp:20, atk:10, emoji:"🐛", color:"#f1c40f" },
+        { id:214, name:"Skaraborn", type:"Käfer/Kampf", hp:80, atk:125, emoji:"🪲", color:"#2980b9" },
+        { id:215, name:"Sniebel", type:"Unlicht/Eis", hp:55, atk:95, emoji:"❄️", color:"#2c3e50" },
+        { id:216, name:"Teddiursa", type:"Normal", hp:60, atk:80, emoji:"🧸", color:"#d35400" },
+        { id:217, name:"Ursaring", type:"Normal", hp:90, atk:130, emoji:"🐻", color:"#795548" },
+        { id:218, name:"Schneckmag", type:"Feuer", hp:40, atk:40, emoji:"🐌", color:"#e74c3c" },
+        { id:219, name:"Magcargo", type:"Feuer/Gestein", hp:60, atk:50, emoji:"🐌", color:"#e74c3c" },
+        { id:220, name:"Quiekel", type:"Eis/Boden", hp:50, atk:50, emoji:"🐷", color:"#d35400" },
+        { id:221, name:"Keifel", type:"Eis/Boden", hp:100, atk:100, emoji:"🐷", color:"#795548" },
+        { id:222, name:"Corasonn", type:"Wasser/Gestein", hp:65, atk:55, emoji:"🪸", color:"#fd79a8" },
+        { id:223, name:"Remoraid", type:"Wasser", hp:35, atk:65, emoji:"🐟", color:"#74b9ff" },
+        { id:224, name:"Octillery", type:"Wasser", hp:75, atk:105, emoji:"🐙", color:"#e74c3c" },
+        { id:225, name:"Botogel", type:"Eis/Flug", hp:45, atk:55, emoji:"🐧", color:"#e74c3c" },
+        { id:226, name:"Mantax", type:"Wasser/Flug", hp:85, atk:40, emoji:"🐟", color:"#0984e3" },
+        { id:227, name:"Panzaeron", type:"Stahl/Flug", hp:65, atk:80, emoji:"🦅", color:"#636e72" },
+        { id:228, name:"Hunduster", type:"Unlicht/Feuer", hp:45, atk:60, emoji:"🐕", color:"#2c3e50" },
+        { id:229, name:"Hundemon", type:"Unlicht/Feuer", hp:75, atk:90, emoji:"🐕‍🦺", color:"#2c3e50" },
+        { id:230, name:"Seedraking", type:"Wasser/Drache", hp:75, atk:95, emoji:"🐴", color:"#0984e3" },
+        { id:231, name:"Phanpy", type:"Boden", hp:90, atk:60, emoji:"🐘", color:"#74b9ff" },
+        { id:232, name:"Donphan", type:"Boden", hp:90, atk:120, emoji:"🐘", color:"#636e72" },
+        { id:233, name:"Porygon2", type:"Normal", hp:85, atk:80, emoji:"💻", color:"#e74c3c" },
+        { id:234, name:"Damhirplex", type:"Normal", hp:73, atk:95, emoji:"🦌", color:"#795548" },
+        { id:235, name:"Farbeagle", type:"Normal", hp:55, atk:20, emoji:"🎨", color:"#dfe6e9" },
+        { id:236, name:"Rabauz", type:"Kampf", hp:35, atk:35, emoji:"👶", color:"#795548" },
+        { id:237, name:"Kapoera", type:"Kampf", hp:50, atk:95, emoji:"🤸", color:"#795548" },
+        { id:238, name:"Kussilla", type:"Eis", hp:45, atk:30, emoji:"💋", color:"#fd79a8" },
+        { id:239, name:"Elekid", type:"Elektro", hp:45, atk:63, emoji:"⚡", color:"#f1c40f" },
+        { id:240, name:"Magby", type:"Feuer", hp:45, atk:75, emoji:"🔥", color:"#e74c3c" },
+        { id:241, name:"Miltank", type:"Normal", hp:95, atk:80, emoji:"🐄", color:"#fd79a8" },
+        { id:242, name:"Heiteira", type:"Normal", hp:255, atk:10, emoji:"💗", color:"#fd79a8" },
+        { id:243, name:"Raikou", type:"Elektro", hp:90, atk:85, emoji:"⚡", color:"#f1c40f" },
+        { id:244, name:"Entei", type:"Feuer", hp:115, atk:115, emoji:"🔥", color:"#d35400" },
+        { id:245, name:"Suicune", type:"Wasser", hp:100, atk:75, emoji:"💎", color:"#00cec9" },
+        { id:246, name:"Larvitar", type:"Gestein/Boden", hp:50, atk:64, emoji:"🦎", color:"#27ae60" },
+        { id:247, name:"Pupitar", type:"Gestein/Boden", hp:70, atk:84, emoji:"🦎", color:"#636e72" },
+        { id:248, name:"Despotar", type:"Gestein/Unlicht", hp:100, atk:134, emoji:"🦖", color:"#27ae60" },
+        { id:249, name:"Lugia", type:"Psycho/Flug", hp:106, atk:90, emoji:"🌊", color:"#dfe6e9" },
+        { id:250, name:"Ho-Oh", type:"Feuer/Flug", hp:106, atk:130, emoji:"🌈", color:"#e74c3c" },
+        { id:251, name:"Celebi", type:"Pflanze/Psycho", hp:100, atk:100, emoji:"🌳", color:"#27ae60" }
+    ];
+
+    // ===== (Fußball entfernt – ohne Bilder kein Spaß) =====
+
+    // ===== BRAWL STARS CDN MAPPING =====
+    // Name -> offizielle Brawler-ID für cdn.brawlify.com
+    const brawlIdMap = {
+        "Shelly":16000000,"Colt":16000001,"Bull":16000002,"Brock":16000003,"Rico":16000004,
+        "Spike":16000005,"Barley":16000006,"Jessie":16000007,"Nita":16000008,"Dynamike":16000009,
+        "El Primo":16000010,"Mortis":16000011,"Crow":16000012,"Poco":16000013,"Bo":16000014,
+        "Piper":16000015,"Pam":16000016,"Tara":16000017,"Darryl":16000018,"Penny":16000019,
+        "Frank":16000020,"Gene":16000021,"Tick":16000022,"Leon":16000023,"Rosa":16000024,
+        "Carl":16000025,"Bibi":16000026,"8-Bit":16000027,"Sandy":16000028,"Bea":16000029,
+        "Emz":16000030,"Mr. P":16000031,"Max":16000032,"Jacky":16000034,
+        "Gale":16000035,"Nani":16000036,"Sprout":16000037,"Surge":16000038,
+        "Colette":16000039,"Amber":16000040,"Lou":16000041,"Byron":16000042,
+        "Edgar":16000043,"Ruffs":16000044,"Stu":16000045,"Belle":16000046,
+        "Squeak":16000047,"Grom":16000048,"Buzz":16000049,"Griff":16000050,
+        "Ash":16000051,"Meg":16000052,"Lola":16000053,"Fang":16000054,
+        "Eve":16000056,"Janet":16000057,"Bonnie":16000058,"Otis":16000059,
+        "Sam":16000060,"Gus":16000061,"Buster":16000062,"Chester":16000063,
+        "Gray":16000064,"Mandy":16000065,"R-T":16000066,"Willow":16000067,
+        "Maisie":16000068,"Hank":16000069,"Cordelius":16000070,"Doug":16000071,
+        "Pearl":16000072,"Chuck":16000073,"Charlie":16000074,"Mico":16000075,
+        "Kit":16000076,"Larry & Lawrie":16000077,"Melodie":16000078,"Angelo":16000079,
+        "Draco":16000080,"Lily":16000081,"Berry":16000082,"Clancy":16000083,
+        "Moe":16000084,"Kenji":16000085,"Shade":16000086,"Juju":16000087,
+        "Meeple":16000089,"Ollie":16000090,"Lumi":16000091,"Finx":16000092,
+        "Jae-Yong":16000093,"Kaze":16000094,"Alli":16000095,"Trunk":16000096,
+        "Mina":16000097,"Ziggy":16000098,"Pierce":16000099,"Gigi":16000100,
+        "Glowy":16000101,"Sirius":16000102,"Najia":16000103,"Damian":16000104,
+        "Starr Nova":16000105,"Bolt":16000106,"Nori":16000107,"Wendy":16000108
+    };
+
+    function getBrawlCdnUrl(name, type) {
+        const bid = brawlIdMap[name];
+        if (!bid) return null;
+        if (type === 'icon') return `https://cdn.brawlify.com/brawlers/borders/${bid}.png`;
+        if (type === 'model') return `https://cdn.brawlify.com/brawlers/model/${bid}.png`;
+        return null;
+    }
+
+    // ===== BRAWL STARS DATENBANK =====
+    const brawlstarsCards = [
+        { id:1, name:"Shelly", cls:"Kämpfer", rar:"Starter", pw:7, emoji:"💥", color:"#b9eaff" },
+        { id:2, name:"Colt", cls:"Kämpfer", rar:"Starter", pw:7, emoji:"�", color:"#b9eaff" },
+        { id:3, name:"Bull", cls:"Tank", rar:"Starter", pw:7, emoji:"�", color:"#b9eaff" },
+        { id:4, name:"Brock", cls:"Scharfschütze", rar:"Starter", pw:7, emoji:"�", color:"#b9eaff" },
+        { id:5, name:"Rico", cls:"Kämpfer", rar:"Starter", pw:7, emoji:"🎯", color:"#b9eaff" },
+        { id:6, name:"Spike", cls:"Kämpfer", rar:"Starter", pw:7, emoji:"🌵", color:"#b9eaff" },
+        { id:7, name:"Barley", cls:"Werfer", rar:"Starter", pw:7, emoji:"🍺", color:"#b9eaff" },
+        { id:8, name:"Jessie", cls:"Kämpfer", rar:"Starter", pw:7, emoji:"🔧", color:"#b9eaff" },
+        { id:9, name:"Nita", cls:"Kämpfer", rar:"Starter", pw:7, emoji:"🐻", color:"#b9eaff" },
+        { id:10, name:"Dynamike", cls:"Werfer", rar:"Starter", pw:7, emoji:"�", color:"#b9eaff" },
+        { id:11, name:"El Primo", cls:"Tank", rar:"Starter", pw:7, emoji:"🤼", color:"#b9eaff" },
+        { id:12, name:"Mortis", cls:"Assassine", rar:"Starter", pw:7, emoji:"🦇", color:"#b9eaff" },
+        { id:13, name:"Crow", cls:"Assassine", rar:"Starter", pw:7, emoji:"�‍⬛", color:"#b9eaff" },
+        { id:14, name:"Poco", cls:"Heiler", rar:"Starter", pw:7, emoji:"�", color:"#b9eaff" },
+        { id:15, name:"Bo", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"🏹", color:"#68c73c" },
+        { id:16, name:"Piper", cls:"Scharfschütze", rar:"Selten", pw:7, emoji:"☂️", color:"#fd79a8" },
+        { id:17, name:"Pam", cls:"Heiler", rar:"Selten", pw:7, emoji:"🔩", color:"#1abc9c" },
+        { id:18, name:"Tara", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"�", color:"#6c5ce7" },
+        { id:19, name:"Darryl", cls:"Tank", rar:"Selten", pw:7, emoji:"🛢️", color:"#e74c3c" },
+        { id:20, name:"Penny", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"�", color:"#f39c12" },
+        { id:21, name:"Frank", cls:"Tank", rar:"Selten", pw:7, emoji:"🔨", color:"#2c3e50" },
+        { id:22, name:"Gene", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"�", color:"#6c5ce7" },
+        { id:23, name:"Tick", cls:"Werfer", rar:"Selten", pw:7, emoji:"⏰", color:"#3498db" },
+        { id:24, name:"Leon", cls:"Assassine", rar:"Selten", pw:7, emoji:"�", color:"#27ae60" },
+        { id:25, name:"Rosa", cls:"Tank", rar:"Selten", pw:7, emoji:"🌹", color:"#27ae60" },
+        { id:26, name:"Carl", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"⛏️", color:"#3498db" },
+        { id:27, name:"Bibi", cls:"Tank", rar:"Selten", pw:7, emoji:"🫧", color:"#fd79a8" },
+        { id:28, name:"8-Bit", cls:"Scharfschütze", rar:"Selten", pw:7, emoji:"🕹️", color:"#2ecc71" },
+        { id:29, name:"Sandy", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"💤", color:"#f1c40f" },
+        { id:30, name:"Bea", cls:"Scharfschütze", rar:"Selten", pw:7, emoji:"�", color:"#f1c40f" },
+        { id:31, name:"Emz", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"📱", color:"#6c5ce7" },
+        { id:32, name:"Mr. P", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"�", color:"#3498db" },
+        { id:33, name:"Max", cls:"Kämpfer", rar:"Selten", pw:7, emoji:"⚡", color:"#f1c40f" },
+        { id:34, name:"Jacky", cls:"Tank", rar:"Selten", pw:7, emoji:"🔨", color:"#f39c12" },
+        { id:35, name:"Gale", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"❄️", color:"#74b9ff" },
+        { id:36, name:"Nani", cls:"Scharfschütze", rar:"Episch", pw:8, emoji:"🤖", color:"#3498db" },
+        { id:37, name:"Sprout", cls:"Werfer", rar:"Episch", pw:8, emoji:"🌱", color:"#27ae60" },
+        { id:38, name:"Surge", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"⚡", color:"#6c5ce7" },
+        { id:39, name:"Colette", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"📒", color:"#fd79a8" },
+        { id:40, name:"Amber", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"�", color:"#e74c3c" },
+        { id:41, name:"Lou", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"🧊", color:"#74b9ff" },
+        { id:42, name:"Byron", cls:"Heiler", rar:"Episch", pw:8, emoji:"�", color:"#6c5ce7" },
+        { id:43, name:"Edgar", cls:"Assassine", rar:"Episch", pw:8, emoji:"🧣", color:"#2c3e50" },
+        { id:44, name:"Ruffs", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"�", color:"#f39c12" },
+        { id:45, name:"Stu", cls:"Assassine", rar:"Episch", pw:8, emoji:"🏍️", color:"#e74c3c" },
+        { id:46, name:"Belle", cls:"Scharfschütze", rar:"Episch", pw:8, emoji:"⚡", color:"#f1c40f" },
+        { id:47, name:"Squeak", cls:"Werfer", rar:"Episch", pw:8, emoji:"💦", color:"#f1c40f" },
+        { id:48, name:"Grom", cls:"Werfer", rar:"Episch", pw:8, emoji:"📋", color:"#636e72" },
+        { id:49, name:"Buzz", cls:"Tank", rar:"Episch", pw:8, emoji:"🦈", color:"#3498db" },
+        { id:50, name:"Griff", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"💵", color:"#27ae60" },
+        { id:51, name:"Ash", cls:"Tank", rar:"Episch", pw:8, emoji:"🗑️", color:"#636e72" },
+        { id:52, name:"Meg", cls:"Episch", rar:"Episch", pw:8, emoji:"🤖", color:"#6c5ce7" },
+        { id:53, name:"Lola", cls:"Kämpfer", rar:"Episch", pw:8, emoji:"💎", color:"#fd79a8" },
+        { id:54, name:"Fang", cls:"Assassine", rar:"Episch", pw:8, emoji:"�", color:"#e74c3c" },
+        { id:55, name:"Eve", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"🥚", color:"#fe5e72" },
+        { id:56, name:"Janet", cls:"Scharfschütze", rar:"Mythisch", pw:8, emoji:"🎤", color:"#fe5e72" },
+        { id:57, name:"Bonnie", cls:"Scharfschütze", rar:"Mythisch", pw:8, emoji:"�", color:"#fd79a8" },
+        { id:58, name:"Otis", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"�", color:"#3498db" },
+        { id:59, name:"Sam", cls:"Tank", rar:"Mythisch", pw:8, emoji:"🥊", color:"#2c3e50" },
+        { id:60, name:"Gus", cls:"Heiler", rar:"Mythisch", pw:8, emoji:"�", color:"#a29bfe" },
+        { id:61, name:"Buster", cls:"Tank", rar:"Mythisch", pw:8, emoji:"🛡️", color:"#2c3e50" },
+        { id:62, name:"Chester", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"🃏", color:"#f39c12" },
+        { id:63, name:"Gray", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"�", color:"#636e72" },
+        { id:64, name:"Mandy", cls:"Scharfschütze", rar:"Mythisch", pw:8, emoji:"�", color:"#fd79a8" },
+        { id:65, name:"R-T", cls:"Tank", rar:"Mythisch", pw:8, emoji:"�", color:"#636e72" },
+        { id:66, name:"Willow", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"�", color:"#6c5ce7" },
+        { id:67, name:"Maisie", cls:"Scharfschütze", rar:"Mythisch", pw:8, emoji:"🎯", color:"#e74c3c" },
+        { id:68, name:"Hank", cls:"Tank", rar:"Mythisch", pw:8, emoji:"�", color:"#3498db" },
+        { id:69, name:"Cordelius", cls:"Assassine", rar:"Mythisch", pw:8, emoji:"�", color:"#6c5ce7" },
+        { id:70, name:"Doug", cls:"Heiler", rar:"Mythisch", pw:8, emoji:"🌭", color:"#f39c12" },
+        { id:71, name:"Pearl", cls:"Scharfschütze", rar:"Mythisch", pw:8, emoji:"🫧", color:"#74b9ff" },
+        { id:72, name:"Chuck", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"�", color:"#f1c40f" },
+        { id:73, name:"Charlie", cls:"Kämpfer", rar:"Mythisch", pw:8, emoji:"🕷️", color:"#6c5ce7" },
+        { id:74, name:"Mico", cls:"Assassine", rar:"Mythisch", pw:8, emoji:"🐒", color:"#f39c12" },
+        { id:75, name:"Kit", cls:"Heiler", rar:"Mythisch", pw:8, emoji:"🐱", color:"#dfe6e9" },
+        { id:76, name:"Larry & Lawrie", cls:"Werfer", rar:"Mythisch", pw:8, emoji:"�", color:"#636e72" },
+        { id:77, name:"Melodie", cls:"Assassine", rar:"Mythisch", pw:8, emoji:"�", color:"#fd79a8" },
+        { id:78, name:"Angelo", cls:"Scharfschütze", rar:"Mythisch", pw:8, emoji:"😈", color:"#2c3e50" },
+        { id:79, name:"Draco", cls:"Tank", rar:"Legendär", pw:9, emoji:"🐲", color:"#e74c3c" },
+        { id:80, name:"Lily", cls:"Assassine", rar:"Legendär", pw:9, emoji:"🌸", color:"#27ae60" },
+        { id:81, name:"Berry", cls:"Kämpfer", rar:"Legendär", pw:9, emoji:"🫐", color:"#6c5ce7" },
+        { id:82, name:"Clancy", cls:"Kämpfer", rar:"Legendär", pw:9, emoji:"🦞", color:"#e74c3c" },
+        { id:83, name:"Moe", cls:"Assassine", rar:"Legendär", pw:9, emoji:"🐛", color:"#27ae60" },
+        { id:84, name:"Kenji", cls:"Assassine", rar:"Legendär", pw:9, emoji:"⚔️", color:"#c0392b" },
+        { id:85, name:"Shade", cls:"Assassine", rar:"Legendär", pw:9, emoji:"🌑", color:"#2c3e50" },
+        { id:86, name:"Juju", cls:"Kämpfer", rar:"Legendär", pw:9, emoji:"🎃", color:"#6c5ce7" },
+        { id:87, name:"Meeple", cls:"Kämpfer", rar:"Legendär", pw:9, emoji:"🧩", color:"#f39c12" },
+        { id:88, name:"Ollie", cls:"Tank", rar:"Legendär", pw:9, emoji:"🧸", color:"#27ae60" },
+        { id:89, name:"Lumi", cls:"Heiler", rar:"Legendär", pw:9, emoji:"✨", color:"#74b9ff" },
+        { id:90, name:"Finx", cls:"Assassine", rar:"Legendär", pw:9, emoji:"🦊", color:"#e74c3c" },
+        { id:91, name:"Jae-Yong", cls:"Tank", rar:"Legendär", pw:9, emoji:"�", color:"#e74c3c" },
+        { id:92, name:"Kaze", cls:"Assassine", rar:"Legendär", pw:9, emoji:"�️", color:"#74b9ff" },
+        { id:93, name:"Alli", cls:"Kämpfer", rar:"Legendär", pw:9, emoji:"🐊", color:"#27ae60" },
+        { id:94, name:"Trunk", cls:"Tank", rar:"Legendär", pw:9, emoji:"🐘", color:"#636e72" },
+        { id:95, name:"Mina", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"�", color:"#e1fb2a" },
+        { id:96, name:"Ziggy", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"⭐", color:"#e1fb2a" },
+        { id:97, name:"Pierce", cls:"Scharfschütze", rar:"Ultra Legendär", pw:10, emoji:"🎯", color:"#e1fb2a" },
+        { id:98, name:"Gigi", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"💃", color:"#e1fb2a" },
+        { id:99, name:"Glowy", cls:"Heiler", rar:"Ultra Legendär", pw:10, emoji:"�", color:"#e1fb2a" },
+        { id:100, name:"Sirius", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"🐺", color:"#e1fb2a" },
+        { id:101, name:"Najia", cls:"Assassine", rar:"Ultra Legendär", pw:10, emoji:"�", color:"#e1fb2a" },
+        { id:102, name:"Damian", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"�", color:"#e1fb2a" },
+        { id:103, name:"Starr Nova", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"🌟", color:"#e1fb2a" },
+        { id:104, name:"Bolt", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"⚡", color:"#e1fb2a" },
+        { id:105, name:"Nori", cls:"Heiler", rar:"Ultra Legendär", pw:10, emoji:"🍣", color:"#e1fb2a" },
+        { id:106, name:"Wendy", cls:"Kämpfer", rar:"Ultra Legendär", pw:10, emoji:"🧚", color:"#e1fb2a" }
+    ];
+
+    // ===== MINECRAFT DATENBANK (90 Mobs) =====
+    const minecraftCards = [
+        // Hostile Mobs
+        { id:1, name:"Creeper", mob:"Feindlich", hp:20, atk:49, emoji:"💥", color:"#2ecc71", img:"Creeper" },
+        { id:2, name:"Zombie", mob:"Feindlich", hp:20, atk:3, emoji:"🧟", color:"#2ecc71", img:"Zombie" },
+        { id:3, name:"Skelett", mob:"Feindlich", hp:20, atk:4, emoji:"💀", color:"#dfe6e9", img:"Skeleton" },
+        { id:4, name:"Spinne", mob:"Feindlich", hp:16, atk:2, emoji:"🕷️", color:"#2c3e50", img:"Spider" },
+        { id:5, name:"Enderman", mob:"Neutral", hp:40, atk:7, emoji:"🟣", color:"#6c5ce7", img:"Enderman" },
+        { id:6, name:"Schleicher", mob:"Feindlich", hp:20, atk:3, emoji:"🧊", color:"#636e72", img:"Stray" },
+        { id:7, name:"Wüstenzombie", mob:"Feindlich", hp:20, atk:3, emoji:"🏜️", color:"#d35400", img:"Husk" },
+        { id:8, name:"Ertrunkener", mob:"Feindlich", hp:20, atk:3, emoji:"🌊", color:"#0984e3", img:"Drowned" },
+        { id:9, name:"Hexe", mob:"Feindlich", hp:26, atk:6, emoji:"🧙‍♀️", color:"#6c5ce7", img:"Witch" },
+        { id:10, name:"Schleim", mob:"Feindlich", hp:16, atk:4, emoji:"🟢", color:"#27ae60", img:"Slime" },
+        { id:11, name:"Magmawürfel", mob:"Feindlich", hp:16, atk:6, emoji:"🔥", color:"#e74c3c", img:"Magma_Cube" },
+        { id:12, name:"Phantom", mob:"Feindlich", hp:20, atk:6, emoji:"👻", color:"#74b9ff", img:"Phantom" },
+        { id:13, name:"Silberfischchen", mob:"Feindlich", hp:8, atk:1, emoji:"🐛", color:"#636e72", img:"Silverfish" },
+        { id:14, name:"Endermilbe", mob:"Feindlich", hp:8, atk:2, emoji:"🐜", color:"#6c5ce7", img:"Endermite" },
+        { id:15, name:"Höhlenspinne", mob:"Feindlich", hp:12, atk:2, emoji:"🕸️", color:"#0984e3", img:"Cave_Spider" },
+        { id:16, name:"Lohe", mob:"Feindlich", hp:20, atk:5, emoji:"🔥", color:"#f39c12", img:"Blaze" },
+        { id:17, name:"Ghast", mob:"Feindlich", hp:10, atk:6, emoji:"😭", color:"#dfe6e9", img:"Ghast" },
+        { id:18, name:"Witherskelett", mob:"Feindlich", hp:20, atk:10, emoji:"🖤", color:"#2c3e50", img:"Wither_Skeleton" },
+        { id:19, name:"Wächter", mob:"Feindlich", hp:30, atk:6, emoji:"🐡", color:"#00cec9", img:"Guardian" },
+        { id:20, name:"Großer Wächter", mob:"Feindlich", hp:80, atk:8, emoji:"🐡", color:"#00b894", img:"Elder_Guardian" },
+        { id:21, name:"Shulker", mob:"Feindlich", hp:30, atk:4, emoji:"📦", color:"#6c5ce7", img:"Shulker" },
+        { id:22, name:"Plünderer", mob:"Feindlich", hp:24, atk:4, emoji:"🏹", color:"#636e72", img:"Pillager" },
+        { id:23, name:"Diener", mob:"Feindlich", hp:24, atk:5, emoji:"🪓", color:"#636e72", img:"Vindicator" },
+        { id:24, name:"Magier", mob:"Feindlich", hp:24, atk:6, emoji:"✨", color:"#636e72", img:"Evoker" },
+        { id:25, name:"Vex", mob:"Feindlich", hp:14, atk:9, emoji:"👼", color:"#74b9ff", img:"Vex" },
+        { id:26, name:"Verwüster", mob:"Feindlich", hp:100, atk:12, emoji:"🐂", color:"#636e72", img:"Ravager" },
+        { id:27, name:"Piglin", mob:"Neutral", hp:16, atk:5, emoji:"🐷", color:"#f39c12", img:"Piglin" },
+        { id:28, name:"Piglin-Barbar", mob:"Feindlich", hp:50, atk:7, emoji:"🐷", color:"#2c3e50", img:"Piglin_Brute" },
+        { id:29, name:"Hoglin", mob:"Feindlich", hp:40, atk:6, emoji:"🐗", color:"#795548", img:"Hoglin" },
+        { id:30, name:"Zoglin", mob:"Feindlich", hp:40, atk:8, emoji:"🧟", color:"#27ae60", img:"Zoglin" },
+        { id:31, name:"Warden", mob:"Feindlich", hp:500, atk:30, emoji:"👂", color:"#00cec9", img:"Warden" },
+        { id:32, name:"Breeze", mob:"Feindlich", hp:30, atk:3, emoji:"💨", color:"#74b9ff", img:"Breeze" },
+        { id:33, name:"Bogged", mob:"Feindlich", hp:16, atk:4, emoji:"🍄", color:"#27ae60", img:"Bogged" },
+        { id:34, name:"Creaking", mob:"Feindlich", hp:1, atk:3, emoji:"🌳", color:"#795548", img:"Creaking" },
+        // Passive Mobs
+        { id:35, name:"Schwein", mob:"Passiv", hp:10, atk:0, emoji:"🐷", color:"#fd79a8", img:"Pig" },
+        { id:36, name:"Kuh", mob:"Passiv", hp:10, atk:0, emoji:"🐄", color:"#795548", img:"Cow" },
+        { id:37, name:"Schaf", mob:"Passiv", hp:8, atk:0, emoji:"🐑", color:"#dfe6e9", img:"Sheep" },
+        { id:38, name:"Huhn", mob:"Passiv", hp:4, atk:0, emoji:"🐔", color:"#dfe6e9", img:"Chicken" },
+        { id:39, name:"Wolf", mob:"Neutral", hp:8, atk:4, emoji:"🐺", color:"#636e72", img:"Wolf" },
+        { id:40, name:"Katze", mob:"Passiv", hp:10, atk:0, emoji:"🐱", color:"#f39c12", img:"Cat" },
+        { id:41, name:"Pferd", mob:"Passiv", hp:26, atk:0, emoji:"🐴", color:"#795548", img:"Horse" },
+        { id:42, name:"Esel", mob:"Passiv", hp:26, atk:0, emoji:"🫏", color:"#636e72", img:"Donkey" },
+        { id:43, name:"Lama", mob:"Neutral", hp:22, atk:1, emoji:"🦙", color:"#d35400", img:"Llama" },
+        { id:44, name:"Fuchs", mob:"Passiv", hp:10, atk:2, emoji:"🦊", color:"#e17055", img:"Fox" },
+        { id:45, name:"Biene", mob:"Neutral", hp:10, atk:2, emoji:"🐝", color:"#f1c40f", img:"Bee" },
+        { id:46, name:"Delfin", mob:"Neutral", hp:10, atk:3, emoji:"🐬", color:"#74b9ff", img:"Dolphin" },
+        { id:47, name:"Schildkröte", mob:"Passiv", hp:30, atk:0, emoji:"🐢", color:"#27ae60", img:"Turtle" },
+        { id:48, name:"Panda", mob:"Neutral", hp:20, atk:6, emoji:"🐼", color:"#2c3e50", img:"Panda" },
+        { id:49, name:"Papagei", mob:"Passiv", hp:6, atk:0, emoji:"🦜", color:"#e74c3c", img:"Parrot" },
+        { id:50, name:"Axolotl", mob:"Passiv", hp:14, atk:2, emoji:"🩷", color:"#fd79a8", img:"Axolotl" },
+        { id:51, name:"Frosch", mob:"Passiv", hp:10, atk:0, emoji:"🐸", color:"#27ae60", img:"Frog" },
+        { id:52, name:"Kaulquappe", mob:"Passiv", hp:6, atk:0, emoji:"💧", color:"#2c3e50", img:"Tadpole" },
+        { id:53, name:"Allay", mob:"Passiv", hp:20, atk:0, emoji:"💙", color:"#74b9ff", img:"Allay" },
+        { id:54, name:"Schnüffler", mob:"Passiv", hp:14, atk:0, emoji:"🦕", color:"#27ae60", img:"Sniffer" },
+        { id:55, name:"Kamel", mob:"Passiv", hp:32, atk:0, emoji:"🐪", color:"#d35400", img:"Camel" },
+        { id:56, name:"Gürteltier", mob:"Passiv", hp:12, atk:0, emoji:"🦔", color:"#d35400", img:"Armadillo" },
+        { id:57, name:"Tintenfisch", mob:"Passiv", hp:10, atk:0, emoji:"🦑", color:"#2c3e50", img:"Squid" },
+        { id:58, name:"Leucht-Tintenfisch", mob:"Passiv", hp:10, atk:0, emoji:"✨", color:"#00cec9", img:"Glow_Squid" },
+        { id:59, name:"Fledermaus", mob:"Passiv", hp:6, atk:0, emoji:"🦇", color:"#636e72", img:"Bat" },
+        { id:60, name:"Ozelot", mob:"Passiv", hp:10, atk:0, emoji:"🐆", color:"#f1c40f", img:"Ocelot" },
+        { id:61, name:"Kaninchen", mob:"Passiv", hp:3, atk:0, emoji:"🐰", color:"#d35400", img:"Rabbit" },
+        { id:62, name:"Eisbär", mob:"Neutral", hp:30, atk:6, emoji:"🐻‍❄️", color:"#dfe6e9", img:"Polar_Bear" },
+        { id:63, name:"Mooshroom", mob:"Passiv", hp:10, atk:0, emoji:"🍄", color:"#e74c3c", img:"Mooshroom" },
+        { id:64, name:"Streuner", mob:"Neutral", hp:30, atk:4, emoji:"🐐", color:"#636e72", img:"Goat" },
+        // NPCs & Golems
+        { id:65, name:"Dorfbewohner", mob:"Passiv", hp:20, atk:0, emoji:"👨‍🌾", color:"#795548", img:"Villager" },
+        { id:66, name:"Eisengolem", mob:"Neutral", hp:100, atk:21, emoji:"🤖", color:"#636e72", img:"Iron_Golem" },
+        { id:67, name:"Schneegolem", mob:"Passiv", hp:4, atk:0, emoji:"⛄", color:"#dfe6e9", img:"Snow_Golem" },
+        { id:68, name:"Fahrender Händler", mob:"Passiv", hp:20, atk:0, emoji:"🧳", color:"#0984e3", img:"Wandering_Trader" },
+        // Nether Mobs
+        { id:69, name:"Zombifizierter Piglin", mob:"Neutral", hp:20, atk:5, emoji:"🧟", color:"#27ae60", img:"Zombified_Piglin" },
+        { id:70, name:"Strider", mob:"Passiv", hp:20, atk:0, emoji:"🦶", color:"#e74c3c", img:"Strider" },
+        // End Mobs
+        { id:71, name:"Enddrache", mob:"Boss", hp:200, atk:10, emoji:"🐲", color:"#2c3e50", img:"Ender_Dragon" },
+        { id:72, name:"Wither", mob:"Boss", hp:300, atk:12, emoji:"💀", color:"#2c3e50", img:"Wither" },
+        // Wasserkreaturen
+        { id:73, name:"Kabeljau", mob:"Passiv", hp:3, atk:0, emoji:"🐟", color:"#d35400", img:"Cod" },
+        { id:74, name:"Lachs", mob:"Passiv", hp:3, atk:0, emoji:"🐟", color:"#e74c3c", img:"Salmon" },
+        { id:75, name:"Kugelfisch", mob:"Passiv", hp:3, atk:0, emoji:"🐡", color:"#f1c40f", img:"Pufferfish" },
+        { id:76, name:"Tropenfisch", mob:"Passiv", hp:3, atk:0, emoji:"🐠", color:"#e17055", img:"Tropical_Fish" },
+        // Weitere
+        { id:77, name:"Zombie-Dorfbewohner", mob:"Feindlich", hp:20, atk:3, emoji:"🧟", color:"#27ae60", img:"Zombie_Villager" },
+        { id:78, name:"Plagegeist", mob:"Feindlich", hp:20, atk:3, emoji:"🌀", color:"#636e72", img:"Husk" },
+        { id:79, name:"Wüstenräuber", mob:"Feindlich", hp:24, atk:5, emoji:"⚔️", color:"#d35400", img:"Pillager" },
+        { id:80, name:"Skelett-Pferd", mob:"Passiv", hp:15, atk:0, emoji:"💀", color:"#dfe6e9", img:"Skeleton_Horse" },
+        { id:81, name:"Zombie-Pferd", mob:"Passiv", hp:15, atk:0, emoji:"🧟", color:"#27ae60", img:"Zombie_Horse" },
+        { id:82, name:"Wander-Händler-Lama", mob:"Neutral", hp:22, atk:1, emoji:"🦙", color:"#0984e3", img:"Trader_Llama" },
+        { id:83, name:"Maultier", mob:"Passiv", hp:26, atk:0, emoji:"🫏", color:"#795548", img:"Mule" },
+        { id:84, name:"Hexenbiest", mob:"Feindlich", hp:24, atk:5, emoji:"🧙", color:"#636e72", img:"Illusioner" },
+        { id:85, name:"Wither-Rose", mob:"Feindlich", hp:1, atk:1, emoji:"🥀", color:"#2c3e50", img:"Wither" },
+        { id:86, name:"Schneefuchs", mob:"Passiv", hp:10, atk:2, emoji:"🦊", color:"#dfe6e9", img:"Fox" },
+        { id:87, name:"Braune Mooshroom", mob:"Passiv", hp:10, atk:0, emoji:"🍄", color:"#795548", img:"Brown_Mooshroom" },
+        { id:88, name:"Bienen-Nest", mob:"Neutral", hp:10, atk:2, emoji:"🐝", color:"#f1c40f", img:"Bee" },
+        { id:89, name:"Killer-Kaninchen", mob:"Feindlich", hp:8, atk:8, emoji:"🐰", color:"#e74c3c", img:"Rabbit" },
+        { id:90, name:"Steve", mob:"Spieler", hp:20, atk:1, emoji:"🧑", color:"#74b9ff", img:"Steve" }
+    ];
+
+    // ===== HINTERGRUND-ANIMATIONEN (18 Szenen, ~50s je Szene = 15 Min ohne Wiederholung) =====
+    const bgScenes = [
+        // Fußball-Szenen
+        { emoji:"⚽", frames:["⚽💨", "🥅⚽💥", "🎉 TOOOR!"], dur:6000 },
+        { emoji:"🧤", frames:["⚽➡️🧤", "🧤✋⚽", "🧤💪 Gehalten!"], dur:5500 },
+        { emoji:"🦶", frames:["🏃‍♂️💨", "🦶⚽💫", "⚽🔄🏃"], dur:5000 },
+        { emoji:"⚽", frames:["🏃⚽🏃", "⚽⬆️🌙", "⚽🥅🎊"], dur:6000 },
+        { emoji:"🏟️", frames:["📣🏟️📣", "🏟️⚽🔥", "👏👏👏"], dur:5500 },
+        { emoji:"🧑‍🤝‍🧑", frames:["🤝⚽", "⚽💨➡️", "🙌 Assist!"], dur:5000 },
+        // Pokemon-Szenen
+        { emoji:"🔴", frames:["🔴💫", "🔴✨⚡", "✨ Gefangen! ✨"], dur:6000 },
+        { emoji:"⚡", frames:["⚡🐭", "⚡💥🔥", "⚡🐭💪"], dur:5500 },
+        { emoji:"🐉", frames:["🐉 vs 🔥", "💥💥💥", "🐉🏆"], dur:6000 },
+        { emoji:"🌿", frames:["🌿💫✨", "🌿➡️🌳", "🌳💪 Evolution!"], dur:5500 },
+        { emoji:"🔮", frames:["🔮💜", "🔮✨🌀", "🔮💥 Psychokinese!"], dur:5000 },
+        { emoji:"💧", frames:["💧🌊", "🌊💦💦", "💧🐢 Aquaknarre!"], dur:5500 },
+        // Brawl Stars-Szenen
+        { emoji:"💥", frames:["💥🏃", "💥💥💥", "🏆 Sieg!"], dur:6000 },
+        { emoji:"🦇", frames:["🦇💨", "🦇⚔️💀", "🦇🏆 Mortis!"], dur:5500 },
+        { emoji:"🌵", frames:["🌵😎", "🌵💥💥", "🌵✨ Spike!"], dur:5000 },
+        { emoji:"🦎", frames:["🦎👀", "🦎💨...", "🦎 Unsichtbar!"], dur:6000 },
+        { emoji:"⚔️", frames:["⚔️🔥", "⚔️💥💫", "🏆 Super!"], dur:5500 },
+        { emoji:"🛡️", frames:["🛡️💪", "💥🛡️✨", "🛡️🏆 Verteidigt!"], dur:5000 },
+        // Minecraft-Szenen
+        { emoji:"💥", frames:["💥🟢", "🟢💣💥", "💥 Creeper!"], dur:6000 },
+        { emoji:"⛏️", frames:["⛏️💎", "💎✨✨", "⛏️ Diamant!"], dur:5500 },
+        { emoji:"🐲", frames:["🐲🟣", "🐲💥⚔️", "🐲🏆 Enderdrache!"], dur:6000 },
+        { emoji:"🧟", frames:["🧟🌙", "🧟⚔️💀", "☀️🧟💨 Verbrannt!"], dur:5500 },
+        { emoji:"🏹", frames:["💀🏹", "🏹➡️🎯", "💀 Skelett!"], dur:5000 },
+        { emoji:"🐺", frames:["🐺🦴", "🐺❤️", "🐺🐺🐺 Rudel!"], dur:5500 }
+    ];
+
+    let sceneIndex = 0;
+    let bgAnimInterval = null;
+
+    function shuffleArray(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function startBgAnimations() {
+        shuffleArray(bgScenes);
+        sceneIndex = 0;
+        playNextScene();
+    }
+
+    function playNextScene() {
+        if (sceneIndex >= bgScenes.length) {
+            shuffleArray(bgScenes);
+            sceneIndex = 0;
+        }
+        const scene = bgScenes[sceneIndex++];
+        const container = document.getElementById('bg-scene-container');
+
+        const el = document.createElement('div');
+        el.className = 'bg-scene';
+        el.style.left = (10 + Math.random() * 70) + '%';
+        el.style.top = (10 + Math.random() * 70) + '%';
+        el.style.fontSize = (1.5 + Math.random() * 1.5) + 'em';
+        container.appendChild(el);
+
+        let frameIdx = 0;
+        el.textContent = scene.emoji;
+        setTimeout(() => el.classList.add('visible'), 50);
+
+        const frameInterval = setInterval(() => {
+            if (frameIdx < scene.frames.length) {
+                el.textContent = scene.frames[frameIdx++];
+            } else {
+                clearInterval(frameInterval);
+                el.classList.remove('visible');
+                setTimeout(() => el.remove(), 2000);
+            }
+        }, scene.dur / (scene.frames.length + 1));
+
+        bgAnimInterval = setTimeout(playNextScene, scene.dur + 3000);
+    }
+
+    function stopBgAnimations() {
+        clearTimeout(bgAnimInterval);
+        const container = document.getElementById('bg-scene-container');
+        if (container) container.innerHTML = '';
+    }
+
+    // ===== FLOATING PARTICLES =====
+    function createParticles() {
+        const colors = ['#6c5ce7','#ffd32a','#ff6b6b','#00b894','#fd79a8','#74b9ff'];
+        for (let i = 0; i < 15; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + '%';
+            p.style.width = (3 + Math.random() * 8) + 'px';
+            p.style.height = p.style.width;
+            p.style.background = colors[Math.floor(Math.random() * colors.length)];
+            p.style.animationDuration = (8 + Math.random() * 15) + 's';
+            p.style.animationDelay = (Math.random() * 10) + 's';
+            document.body.appendChild(p);
+        }
+    }
+    createParticles();
+
+    // ===== HINTERGRUND-SILHOUETTEN =====
+    function createBgIcons() {
+        const canvas = document.getElementById('bg-canvas');
+        const icons = [
+            '⚡','🔥','💧','🌿','👻','🐉','✨','🔮','🦊','😴','❄️','🐢','🌊','💪','🥄',
+            '🐝','🦇','🐛','🐍','🐴','🧲','🐟','🌵','🦎','🐲','🛡️','⚔️','💥','🎯','🤖',
+            '🐧','🌱','🐒','🎤','💣','🐕','🔨','☂️','🦈','💎','🐱','🍄','🏹','💉','🃏',
+            '⛏️','🧟','💀','🕷️','🐷','🐄','🐑','🐺','🐲','🧱'
+        ];
+        for (let i = 0; i < 35; i++) {
+            const el = document.createElement('div');
+            el.className = 'bg-icon';
+            el.textContent = icons[Math.floor(Math.random() * icons.length)];
+            el.style.left = (Math.random() * 95) + '%';
+            el.style.top = (Math.random() * 95) + '%';
+            el.style.animationDuration = (25 + Math.random() * 35) + 's';
+            el.style.animationDelay = (-Math.random() * 25) + 's';
+            el.style.fontSize = (2 + Math.random() * 3) + 'em';
+            canvas.appendChild(el);
+        }
+    }
+    createBgIcons();
+
+    // ===== SOUND TOGGLE =====
+    let soundEnabled = localStorage.getItem('leo_sound') !== 'off';
+    updateSoundIcon();
+
+    function toggleSound() {
+        soundEnabled = !soundEnabled;
+        localStorage.setItem('leo_sound', soundEnabled ? 'on' : 'off');
+        updateSoundIcon();
+        if (!soundEnabled) window.speechSynthesis?.cancel();
+    }
+
+    function updateSoundIcon() {
+        const btn = document.getElementById('sound-toggle');
+        if (btn) btn.textContent = soundEnabled ? '🔊' : '🔇';
+    }
+
+    // ===== HINTERGRUND WECHSELN =====
+    // Modes: 'default' -> 'vibrant' -> 'image' -> 'default'
+    const bgModes = ['default', 'vibrant', 'image'];
+    const bgLabels = { default: '🎨', vibrant: '🌈', image: '🖼️' };
+    let bgModeIndex = bgModes.indexOf(localStorage.getItem('leo_bg_mode') || 'default');
+    if (bgModeIndex < 0) bgModeIndex = 0;
+    applyBgMode();
+
+    function cycleBgMode() {
+        bgModeIndex = (bgModeIndex + 1) % bgModes.length;
+        const mode = bgModes[bgModeIndex];
+        localStorage.setItem('leo_bg_mode', mode);
+
+        if (mode === 'image') {
+            // Reveal: Bild kurz voll zeigen, dann UI einblenden
+            document.body.classList.remove('bg-vibrant');
+            document.body.classList.add('bg-image', 'bg-reveal');
+            const btn = document.getElementById('bg-toggle');
+            if (btn) btn.textContent = bgLabels[mode];
+            // Nach 2s: Reveal beenden, UI sanft zurück
+            setTimeout(() => {
+                document.body.classList.remove('bg-reveal');
+            }, 2000);
+        } else {
+            applyBgMode();
+        }
+
+        const names = { default: 'Dezent', vibrant: 'Farbenfroh', image: 'Bild' };
+        showToast(`Hintergrund: ${names[mode]}`);
+    }
+
+    function applyBgMode() {
+        const mode = bgModes[bgModeIndex];
+        document.body.classList.remove('bg-vibrant', 'bg-image');
+        if (mode === 'vibrant') document.body.classList.add('bg-vibrant');
+        if (mode === 'image') document.body.classList.add('bg-image');
+        const btn = document.getElementById('bg-toggle');
+        if (btn) btn.textContent = bgLabels[mode];
+    }
+
+    // ===== VERSTECKTER TESTMODUS (5x Mascot tippen) =====
+    let mascotTapCount = 0;
+    let mascotTapTimer = null;
+    let testModeActive = false;
+
+    function handleMascotTap() {
+        mascotTapCount++;
+        clearTimeout(mascotTapTimer);
+
+        if (mascotTapCount >= 5) {
+            mascotTapCount = 0;
+            testModeActive = !testModeActive;
+
+            if (testModeActive) {
+                showToast('🔧 Testmodus AN – 1 Min, Karte nach 2 Aufgaben');
+                // 1-Minuten-Button hinzufügen
+                const testBtn = document.createElement('button');
+                testBtn.className = 'time-btn selected';
+                testBtn.id = 'test-mode-btn';
+                testBtn.dataset.minutes = '1';
+                testBtn.textContent = '🔧 1 Min';
+                testBtn.onclick = () => selectTime(1);
+                document.querySelector('.time-buttons').appendChild(testBtn);
+                selectTime(1);
+                // Reset-Button hinzufügen
+                const resetBtn = document.createElement('button');
+                resetBtn.className = 'album-peek-btn';
+                resetBtn.id = 'dev-reset-btn';
+                resetBtn.textContent = '🗑️ Sammlung zurücksetzen';
+                resetBtn.style.marginTop = '8px';
+                resetBtn.style.color = '#ff6b6b';
+                resetBtn.style.borderColor = '#ff6b6b';
+                resetBtn.onclick = () => {
+                    if (confirm('Wirklich ALLE Karten und Statistiken löschen?')) {
+                        localStorage.removeItem('leo_collection');
+                        localStorage.removeItem('leo_day_stats');
+                        collection = { pokemon: [], brawlstars: [], minecraft: [] };
+                        renderTodayStats();
+                        showToast('🗑️ Alles gelöscht!');
+                    }
+                };
+                document.querySelector('#start-screen .glass-panel').insertBefore(
+                    resetBtn, document.querySelector('.disclaimer')
+                );
+            } else {
+                showToast('🔧 Testmodus AUS');
+                const testBtn = document.getElementById('test-mode-btn');
+                if (testBtn) testBtn.remove();
+                const resetBtn = document.getElementById('dev-reset-btn');
+                if (resetBtn) resetBtn.remove();
+                // Auswahl zurücksetzen
+                document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+                document.getElementById('start-btn').disabled = true;
+                selectedTime = 0;
+            }
+        } else {
+            if (mascotTapCount >= 3) {
+                showToast(`Noch ${5 - mascotTapCount}x tippen...`);
+            }
+            mascotTapTimer = setTimeout(() => { mascotTapCount = 0; }, 2000);
+        }
+    }
+
+    function showToast(text) {
+        const existing = document.querySelector('.dev-toast');
+        if (existing) existing.remove();
+        const toast = document.createElement('div');
+        toast.className = 'dev-toast';
+        toast.textContent = text;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+
+    // ===== SPIELZUSTAND =====
+    let selectedTime = 0;
+    let timeRemaining = 0;
+    let timerInterval = null;
+    let currentA = 0, currentB = 0, currentAnswer = 0;
+    let currentOp = '×'; // '×' oder '÷'
+    let correctStreak = 0;
+    let totalCorrect = 0;
+    let totalWrong = 0;
+    let cardsEarnedToday = 0;
+    let quizActive = false;
+    let attemptsLeft = 2;
+    let isProcessing = false;
+    let gameMode = 'multiply'; // 'multiply', 'divide', 'mixed'
+    let questionPool = []; // Vorgemischter Aufgaben-Pool
+    let lastQuestion = ''; // Letzte Aufgabe um direkte Wiederholung zu vermeiden
+
+    // ===== AUFGABEN-POOL: Shuffle-basiert statt pure Random =====
+    function buildQuestionPool() {
+        const pool = [];
+        if (gameMode === 'multiply' || gameMode === 'mixed') {
+            for (let a = 1; a <= 10; a++) {
+                for (let b = 1; b <= 10; b++) {
+                    // ×1 Aufgaben nur selten (nur a×1, nicht 1×b, vermeidet Duplikate)
+                    if (a === 1 || b === 1) {
+                        if (Math.random() < 0.15) pool.push({ a, b, op: '×' });
+                    } else {
+                        pool.push({ a, b, op: '×' });
+                    }
+                }
+            }
+        }
+        if (gameMode === 'divide' || gameMode === 'mixed') {
+            for (let divisor = 2; divisor <= 10; divisor++) { // Kein ÷1
+                for (let result = 1; result <= 10; result++) {
+                    const dividend = divisor * result;
+                    pool.push({ a: dividend, b: divisor, op: '÷' });
+                }
+            }
+        }
+        // Fisher-Yates Shuffle
+        for (let i = pool.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [pool[i], pool[j]] = [pool[j], pool[i]];
+        }
+        return pool;
+    }
+
+    function getNextQuestion() {
+        // Pool leer? Neu bauen
+        if (questionPool.length === 0) questionPool = buildQuestionPool();
+        // Nächste Aufgabe ziehen, direkte Wiederholung vermeiden
+        let q = questionPool.pop();
+        let key = `${q.a}${q.op}${q.b}`;
+        let tries = 0;
+        while (key === lastQuestion && questionPool.length > 0 && tries < 5) {
+            questionPool.unshift(q); // Zurück legen
+            q = questionPool.pop();
+            key = `${q.a}${q.op}${q.b}`;
+            tries++;
+        }
+        lastQuestion = key;
+        return q;
+    } // verhindert Doppelklicks
+
+    let collection = JSON.parse(localStorage.getItem('leo_collection') || '{"pokemon":[],"brawlstars":[],"minecraft":[]}');
+
+    // Sicherstellen dass minecraft-Array existiert (für bestehende User)
+    if (!collection.minecraft) collection.minecraft = [];
+
+    // Migration: alte Karten bereinigen die nicht mehr in der Datenbank sind
+    (function migrateCollection() {
+        let changed = false;
+        // Falls fussball noch im alten Storage existiert, entfernen
+        if (collection.fussball) { delete collection.fussball; changed = true; }
+        // Pokémon: nur IDs 1-251 behalten (Gen 1+2)
+        if (collection.pokemon) {
+            const validPokeIds = new Set(pokemonCards.map(c => c.id));
+            const before = collection.pokemon.length;
+            collection.pokemon = collection.pokemon.filter(c => validPokeIds.has(c.id));
+            if (collection.pokemon.length !== before) changed = true;
+        }
+        // Brawl Stars: nur bekannte Namen behalten
+        if (collection.brawlstars) {
+            const validBrawlNames = new Set(brawlstarsCards.map(c => c.name));
+            const before = collection.brawlstars.length;
+            collection.brawlstars = collection.brawlstars.filter(c => validBrawlNames.has(c.name));
+            if (collection.brawlstars.length !== before) changed = true;
+        }
+        // Minecraft: nur bekannte Namen behalten
+        if (collection.minecraft) {
+            const validMcNames = new Set(minecraftCards.map(c => c.name));
+            const before = collection.minecraft.length;
+            collection.minecraft = collection.minecraft.filter(c => validMcNames.has(c.name));
+            if (collection.minecraft.length !== before) changed = true;
+        }
+        if (changed) localStorage.setItem('leo_collection', JSON.stringify(collection));
+    })();
+
+    // ===== TAGES-STATISTIK =====
+    function getTodayKey() {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+
+    function loadDayStats() {
+        const all = JSON.parse(localStorage.getItem('leo_day_stats') || '{}');
+        const today = getTodayKey();
+        if (!all[today]) all[today] = { sessions:0, correct:0, wrong:0, cards:0, minutes:0 };
+        return all;
+    }
+
+    function saveDayStats(allStats) {
+        // Nur die letzten 30 Tage behalten
+        const keys = Object.keys(allStats).sort().slice(-30);
+        const trimmed = {};
+        keys.forEach(k => trimmed[k] = allStats[k]);
+        localStorage.setItem('leo_day_stats', JSON.stringify(trimmed));
+    }
+
+    function recordSession() {
+        const all = loadDayStats();
+        const today = getTodayKey();
+        all[today].sessions++;
+        all[today].correct += totalCorrect;
+        all[today].wrong += totalWrong;
+        all[today].cards += cardsEarnedToday;
+        all[today].minutes += selectedTime;
+        saveDayStats(all);
+    }
+
+    function renderTodayStats() {
+        const all = loadDayStats();
+        const today = getTodayKey();
+        const s = all[today];
+        const el = document.getElementById('today-stats');
+
+        if (s.sessions === 0) {
+            el.classList.remove('visible');
+            return;
+        }
+
+        const pct = s.correct + s.wrong > 0 ? Math.round(s.correct / (s.correct + s.wrong) * 100) : 0;
+        const totalCards = collection.pokemon.length + collection.brawlstars.length + collection.minecraft.length;
+
+        // Letzte 7 Tage Streak zählen
+        let streak = 0;
+        const d = new Date();
+        for (let i = 0; i < 7; i++) {
+            const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            if (all[key] && all[key].sessions > 0) { streak++; d.setDate(d.getDate()-1); }
+            else break;
+        }
+
+        el.innerHTML = `
+            <div class="today-stats-title">📊 Heute</div>
+            <div class="today-stats-grid">
+                <div class="today-stat">
+                    <div class="today-stat-value">${s.sessions}</div>
+                    <div class="today-stat-label">${s.sessions === 1 ? 'Runde' : 'Runden'}</div>
+                </div>
+                <div class="today-stat">
+                    <div class="today-stat-value">${s.correct}</div>
+                    <div class="today-stat-label">Richtig</div>
+                </div>
+                <div class="today-stat">
+                    <div class="today-stat-value">${pct}%</div>
+                    <div class="today-stat-label">Quote</div>
+                </div>
+                <div class="today-stat">
+                    <div class="today-stat-value">+${s.cards}</div>
+                    <div class="today-stat-label">Karten</div>
+                </div>
+            </div>
+            ${streak >= 2 ? `<div class="today-stats-history">🔥 ${streak} Tage in Folge geübt! · ${totalCards} Karten gesammelt</div>` : `<div class="today-stats-history">📚 ${s.minutes} Min geübt · ${totalCards} Karten gesammelt</div>`}
+        `;
+        el.classList.add('visible');
+    }
+
+    // Initial anzeigen
+    renderTodayStats();
+
+    // ===== POKEMON BILD CACHE =====
+    const pokemonImageCache = {}; // {id: {artwork: url, sprite: url}}
+
+    async function getPokemonImage(pokeId) {
+        if (pokemonImageCache[pokeId]) return pokemonImageCache[pokeId];
+        try {
+            const resp = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokeId}`);
+            const data = await resp.json();
+            const artwork = data.sprites.other['official-artwork'].front_default || null;
+            const sprite = data.sprites.front_default || null;
+            pokemonImageCache[pokeId] = { artwork, sprite };
+            return pokemonImageCache[pokeId];
+        } catch {
+            return null;
+        }
+    }
+
+    // Bilder vorab laden (im Hintergrund)
+    function preloadPokemonImages() {
+        pokemonCards.forEach(c => getPokemonImage(c.id));
+    }
+    setTimeout(preloadPokemonImages, 2000); // 2 Sekunden nach Start
+
+    // ===== HILFSFUNKTIONEN =====
+    function getRarity(card, theme) {
+        if (theme === 'pokemon') {
+            if (card.atk >= 130 || card.hp >= 140) return 'legendary';
+            if (card.atk >= 100 || card.hp >= 110) return 'epic';
+            if (card.atk >= 80) return 'rare';
+            if (card.atk >= 50) return 'uncommon';
+            return 'common';
+        } else if (theme === 'minecraft') {
+            if (card.mob === 'Boss') return 'legendary';
+            if (card.hp >= 80) return 'epic';
+            if (card.hp >= 30 || card.atk >= 8) return 'rare';
+            if (card.mob === 'Feindlich') return 'uncommon';
+            return 'common';
+        } else {
+            const r = card.rar;
+            if (r === 'Ultra Legendär') return 'ultra-legendary';
+            if (r === 'Legendär') return 'legendary';
+            if (r === 'Mythisch') return 'epic';
+            if (r === 'Episch') return 'rare';
+            if (r === 'Selten') return 'uncommon';
+            if (r === 'Starter') return 'common';
+            return 'uncommon';
+        }
+    }
+
+    function getRarityLabel(r) {
+        return { common:'Gewöhnlich', uncommon:'Ungewöhnlich', rare:'Selten', epic:'Episch', legendary:'Legendär', 'ultra-legendary':'Ultra Legendär' }[r] || r;
+    }
+
+    function getRandomTheme() {
+        // Gewichtet nach Anzahl ungesammelter Karten pro Theme
+        const pokeLeft = Math.max(pokemonCards.length - collection.pokemon.length, 0);
+        const brawlLeft = Math.max(brawlstarsCards.length - collection.brawlstars.length, 0);
+        const mcLeft = Math.max(minecraftCards.length - collection.minecraft.length, 0);
+        const total = Math.max(pokeLeft + brawlLeft + mcLeft, 1);
+        const r = Math.random() * total;
+        if (r < pokeLeft) return 'pokemon';
+        if (r < pokeLeft + brawlLeft) return 'brawlstars';
+        return 'minecraft';
+    }
+
+    function getCardDB(theme) {
+        if (theme === 'pokemon') return pokemonCards;
+        if (theme === 'brawlstars') return brawlstarsCards;
+        return minecraftCards;
+    }
+
+    function getRandomCard(theme) {
+        const db = getCardDB(theme);
+        // Nur Karten die noch NICHT in der Sammlung sind
+        const collected = new Set(collection[theme].map(c => c.name));
+        const available = db.filter(c => !collected.has(c.name));
+        // Falls alle gesammelt: zufällige aus der ganzen DB (Glückwunsch!)
+        const pool = available.length > 0 ? available : db;
+        return { ...pool[Math.floor(Math.random() * pool.length)], theme };
+    }
+
+    // ===== SVG SILHOUETTEN: BRAWL STARS (10 Posen) =====
+    const brawlSVGs = [
+        // 0: Schuss/Angriff
+        `<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="45" cy="18" r="8"/><path d="M45,26 L43,42 M43,42 L35,55 M43,42 L60,38 M60,38 L75,32 M75,32 L80,28 M43,42 L42,65 M42,65 L32,85 M42,65 L52,85 M35,55 L25,52" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/><circle cx="82" cy="27" r="3" fill="currentColor" opacity="0.6"/><circle cx="86" cy="24" r="2" fill="currentColor" opacity="0.4"/></svg>`,
+        // 1: Nahkampf (Schwert/Schlag)
+        `<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="50" cy="18" r="8"/><path d="M50,26 L48,42 M48,42 L55,55 M48,42 L35,35 M35,35 L20,25 M48,42 L47,65 M47,65 L38,85 M47,65 L58,85 M55,55 L65,50" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/><line x1="20" y1="25" x2="12" y2="15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>`,
+        // 2: Siegespose
+        `<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="50" cy="16" r="8"/><path d="M50,24 L48,42 M48,42 L48,65 M48,65 L38,85 M48,65 L58,85 M48,42 L30,25 M48,42 L68,22 M30,25 L26,20 M68,22 L72,18" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/><text x="24" y="16" font-size="8" fill="currentColor">★</text><text x="70" y="14" font-size="8" fill="currentColor">★</text></svg>`,
+        // 3: Schild/Verteidigung
+        `<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="50" cy="18" r="8"/><path d="M50,26 L48,42 M48,42 L38,52 M48,42 L55,48 M48,42 L47,65 M47,65 L38,85 M47,65 L58,85" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/><path d="M28,35 L28,58 Q38,68 38,52 L38,35 Z" fill="currentColor" opacity="0.3" stroke="currentColor" stroke-width="1.5"/></svg>`,
+        // 4: Wurf/Werfer
+        `<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="48" cy="18" r="8"/><path d="M48,26 L46,42 M46,42 L35,52 M46,42 L62,32 M62,32 L72,22 M46,42 L45,65 M45,65 L35,85 M45,65 L55,85 M35,52 L28,55" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/><circle cx="74" cy="20" r="4" fill="none" stroke="currentColor" stroke-width="2"/></svg>`,
+        // 5: Heilung
+        `<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="50" cy="18" r="8"/><path d="M50,26 L48,42 M48,42 L35,48 M48,42 L62,48 M48,42 L47,65 M47,65 L38,85 M47,65 L58,85" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/><path d="M46,38 L54,38 M50,34 L50,42" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/><path d="M62,42 L70,42 M66,38 L66,46" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.5"/></svg>`,
+        // 6: Schleichen/Assassine
+        `<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="45" cy="30" r="7.5"/><path d="M45,38 L48,52 M48,52 L55,60 M48,52 L38,58 M48,52 L50,72 M50,72 L42,90 M50,72 L60,88 M55,60 L65,55 M38,58 L28,55" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/></svg>`,
+        // 7: Scharfschütze (Zielen)
+        `<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="40" cy="20" r="7.5"/><path d="M40,28 L42,45 M42,45 L55,40 M55,40 L75,35 M42,45 L35,52 M42,45 L43,68 M43,68 L34,88 M43,68 L54,88 M35,52 L28,56" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/><line x1="75" y1="35" x2="85" y2="32" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.6"/></svg>`,
+        // 8: Super-Angriff (Energie)
+        `<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="50" cy="18" r="8"/><path d="M50,26 L48,42 M48,42 L32,38 M48,42 L65,35 M48,42 L47,65 M47,65 L38,85 M47,65 L58,85" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" fill="none"/><path d="M25,30 L22,22 L30,28 L28,18 L35,26" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.5"/><path d="M68,28 L72,18 L70,28 L76,20 L72,30" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.5"/></svg>`,
+        // 9: Tank-Charge
+        `<svg viewBox="0 0 100 120" fill="currentColor"><circle cx="55" cy="22" r="9"/><path d="M55,31 L52,48 M52,48 L40,55 M52,48 L65,52 M52,48 L50,70 M50,70 L38,88 M50,70 L62,88 M40,55 L30,50 M65,52 L74,48" stroke="currentColor" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`
+    ];
+
+    function getBrawlSVG(card) {
+        const clsMap = {
+            'Kämpfer': [0, 2, 8],
+            'Scharfschütze': [7, 0, 4],
+            'Tank': [3, 9, 1],
+            'Werfer': [4, 0, 8],
+            'Heiler': [5, 2, 3],
+            'Assassine': [6, 1, 8],
+            'Starter': [0, 2]
+        };
+        const poses = clsMap[card.cls] || [0, 2];
+        const idx = card.id % poses.length;
+        return brawlSVGs[poses[idx]];
+    }
+
+    // ===== KARTE RENDERN =====
+    function renderCard(card, container, showStats = true) {
+        const rarity = getRarity(card, card.theme);
+        let bgGrad, detailHTML, statsHTML = '', imageHTML;
+
+        // Bild-Bereich
+        const cachedPoke = card.theme === 'pokemon' ? pokemonImageCache[card.id] : null;
+        if (card.theme === 'pokemon') {
+            const pokeImgUrl = cachedPoke
+                ? (cachedPoke.artwork || cachedPoke.sprite)
+                : `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${card.id}.png`;
+            imageHTML = `<img src="${pokeImgUrl}" alt="${card.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-emoji>${card.emoji}</span>'">`;
+        } else if (card.theme === 'brawlstars') {
+            const brawlImg = getBrawlCdnUrl(card.name, showStats ? 'model' : 'icon');
+            if (brawlImg) {
+                imageHTML = `<img src="${brawlImg}" alt="${card.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-emoji>${card.emoji}</span>'">`;
+            } else {
+                imageHTML = `<div class="svg-silhouette brawl-silhouette">${getBrawlSVG(card)}</div>`;
+            }
+        } else if (card.theme === 'minecraft') {
+            const mcImgUrl = `https://minecraft.wiki/w/Special:FilePath/${card.img}.png`;
+            imageHTML = `<img src="${mcImgUrl}" alt="${card.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-emoji>${card.emoji}</span>'">`;
+        } else {
+            imageHTML = `<span class="card-emoji">${card.emoji}</span>`;
+        }
+
+        if (card.theme === 'pokemon') {
+            bgGrad = `linear-gradient(160deg, ${card.color}ee 0%, ${card.color}88 50%, #1a1a2e 100%)`;
+            detailHTML = `<div class="card-detail">#${String(card.id).padStart(3,'0')} · ${card.type}</div>`;
+            if (showStats) statsHTML = `<div class="card-stats"><span class="card-stat">❤️ ${card.hp ?? '?'}</span><span class="card-stat">⚔️ ${card.atk ?? '?'}</span><span class="card-stat">${card.emoji || '?'}</span></div>`;
+        } else if (card.theme === 'minecraft') {
+            bgGrad = `linear-gradient(160deg, #2d5a27ee 0%, ${card.color}88 50%, #1a1a0e 100%)`;
+            detailHTML = `<div class="card-detail">${card.emoji} ${card.mob}</div>`;
+            if (showStats) statsHTML = `<div class="card-stats"><span class="card-stat">❤️ ${card.hp}</span>${card.atk > 0 ? `<span class="card-stat">⚔️ ${card.atk}</span>` : ''}<span class="card-stat">${card.mob === 'Boss' ? '👑' : card.mob === 'Feindlich' ? '💀' : card.mob === 'Neutral' ? '⚠️' : '💚'}</span></div>`;
+        } else {
+            bgGrad = `linear-gradient(160deg, ${card.color}ee 0%, ${card.color}88 50%, #1a1a2e 100%)`;
+            detailHTML = `<div class="card-detail">${card.emoji} ${card.cls}</div>`;
+            if (showStats) statsHTML = `<div class="card-stats"><span class="card-stat">💪 ${card.pw}</span><span class="card-stat">✨ ${card.rar}</span></div>`;
+        }
+
+        container.className = `reward-card rarity-${rarity}${card.theme === 'brawlstars' ? ' brawl-card' : ''}${card.theme === 'minecraft' ? ' mc-card' : ''}`;
+        container.style.background = bgGrad;
+        container.innerHTML = `
+            <div class="card-border"></div>
+            <div class="card-rarity-bar"></div>
+            <div class="card-inner">
+                <span class="card-rarity-badge">${getRarityLabel(rarity)}</span>
+                <div class="card-image-area">${imageHTML}</div>
+                <div class="card-info-area">
+                    <div class="card-name-row">
+                        <span class="card-name">${card.name}</span>
+                    </div>
+                    ${detailHTML}
+                    ${statsHTML}
+                </div>
+            </div>
+        `;
+    }
+
+    // ===== SPEECH API - AUFGABE VORLESEN =====
+    const numberWords = ['Null','Eins','Zwei','Drei','Vier','Fünf','Sechs','Sieben','Acht','Neun','Zehn',
+        'Elf','Zwölf','Dreizehn','Vierzehn','Fünfzehn','Sechzehn','Siebzehn','Achtzehn','Neunzehn','Zwanzig',
+        'Einundzwanzig','Zweiundzwanzig','Dreiundzwanzig','Vierundzwanzig','Fünfundzwanzig',
+        'Sechsundzwanzig','Siebenundzwanzig','Achtundzwanzig','Neunundzwanzig','Dreißig',
+        'Einunddreißig','Zweiunddreißig','Dreiunddreißig','Vierunddreißig','Fünfunddreißig',
+        'Sechsunddreißig','Siebenunddreißig','Achtunddreißig','Neununddreißig','Vierzig',
+        'Einundvierzig','Zweiundvierzig','Dreiundvierzig','Vierundvierzig','Fünfundvierzig',
+        'Sechsundvierzig','Siebenundvierzig','Achtundvierzig','Neunundvierzig','Fünfzig',
+        'Einundfünfzig','Zweiundfünfzig','Dreiundfünfzig','Vierundfünfzig','Fünfundfünfzig',
+        'Sechsundfünfzig','Siebenundfünfzig','Achtundfünfzig','Neunundfünfzig','Sechzig',
+        'Einundsechzig','Zweiundsechzig','Dreiundsechzig','Vierundsechzig','Fünfundsechzig',
+        'Sechsundsechzig','Siebenundsechzig','Achtundsechzig','Neunundsechzig','Siebzig',
+        'Einundsiebzig','Zweiundsiebzig','Dreiundsiebzig','Vierundsiebzig','Fünfundsiebzig',
+        'Sechsundsiebzig','Siebenundsiebzig','Achtundsiebzig','Neunundsiebzig','Achtzig',
+        'Einundachtzig','Zweiundachtzig','Dreiundachtzig','Vierundachtzig','Fünfundachtzig',
+        'Sechsundachtzig','Siebenundachtzig','Achtundachtzig','Neunundachtzig','Neunzig',
+        'Einundneunzig','Zweiundneunzig','Dreiundneunzig','Vierundneunzig','Fünfundneunzig',
+        'Sechsundneunzig','Siebenundneunzig','Achtundneunzig','Neunundneunzig','Hundert'
+    ];
+
+    function speakResult(a, b, result) {
+        if (!soundEnabled) return;
+        if (!('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        let text;
+        if (currentOp === '÷') {
+            text = `${numberWords[a]} geteilt durch ${numberWords[b]} ist ${numberWords[result]}!`;
+        } else {
+            text = `${numberWords[a]} mal ${numberWords[b]} ist ${numberWords[result]}!`;
+        }
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'de-DE';
+        utter.rate = 0.95;
+        utter.pitch = 1.05;
+        // Beste deutsche Stimme finden (natürliche Online-Stimmen bevorzugen)
+        const voice = pickBestGermanVoice();
+        if (voice) utter.voice = voice;
+        window.speechSynthesis.speak(utter);
+    }
+
+    function pickBestGermanVoice() {
+        const voices = window.speechSynthesis.getVoices();
+        const de = voices.filter(v => v.lang.startsWith('de'));
+        if (de.length === 0) return null;
+        // Priorität: Online/natürliche Stimmen > lokale Stimmen
+        // Edge hat "Microsoft Conrad Online", Chrome hat "Google Deutsch"
+        const prefer = ['conrad','ingrid','katja online','google deutsch','google de',
+                        'natural','neural','premium','enhanced','online'];
+        for (const keyword of prefer) {
+            const match = de.find(v => v.name.toLowerCase().includes(keyword));
+            if (match) return match;
+        }
+        // Fallback: nimm die erste weibliche (klingt oft freundlicher für Kinder)
+        const female = de.find(v => /katja|anna|petra|marlene|vicki/i.test(v.name));
+        if (female) return female;
+        return de[0];
+    }
+
+    // Voices laden (manche Browser laden sie asynchron)
+    let _voicesLoaded = false;
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.getVoices();
+        window.speechSynthesis.onvoiceschanged = () => {
+            _voicesLoaded = true;
+            window.speechSynthesis.getVoices();
+        };
+    }
+
+    // ===== SIX SEVEN MEME =====
+    function triggerSixSeven() {
+        return new Promise(resolve => {
+            const overlay = document.getElementById('six-seven-overlay');
+            overlay.classList.add('active');
+
+            // Speech: "Six... Seven... because seven ATE nine!"
+            if (soundEnabled && 'speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance("Oh oh! Six Seven! Why was six afraid of seven? Because seven ate nine!");
+                u.lang = 'en-US';
+                u.rate = 0.85;
+                u.pitch = 1.2;
+                // Natürliche englische Stimme bevorzugen
+                const voices = window.speechSynthesis.getVoices();
+                const en = voices.filter(v => v.lang.startsWith('en'));
+                const pref = en.find(v => /google|natural|neural|online|premium|enhanced/i.test(v.name));
+                if (pref) u.voice = pref;
+                else if (en.length) u.voice = en[0];
+                window.speechSynthesis.speak(u);
+            }
+
+            setTimeout(() => {
+                overlay.classList.remove('active');
+                resolve();
+            }, 4000);
+        });
+    }
+
+    // ===== ZEITAUSWAHL =====
+    function selectTime(minutes) {
+        selectedTime = minutes;
+        document.querySelectorAll('#time-buttons-container .time-btn').forEach(b => b.classList.remove('selected'));
+        const btn = document.querySelector(`.time-btn[data-minutes="${minutes}"]`);
+        if (btn) btn.classList.add('selected');
+        document.getElementById('start-btn').disabled = false;
+    }
+
+    // ===== MODUS-AUSWAHL =====
+    function selectMode(mode) {
+        gameMode = mode;
+        document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('selected'));
+        const btn = document.querySelector(`.mode-btn[data-mode="${mode}"]`);
+        if (btn) btn.classList.add('selected');
+    }
+
+    // ===== QUIZ STARTEN =====
+    function startQuiz() {
+        if (selectedTime === 0) return;
+        timeRemaining = selectedTime * 60;
+        correctStreak = 0;
+        totalCorrect = 0;
+        totalWrong = 0;
+        cardsEarnedToday = 0;
+        quizActive = true;
+        isProcessing = false;
+        lastQuestion = '';
+        questionPool = buildQuestionPool();
+
+        showScreen('quiz-screen');
+        document.getElementById('streak-counter').textContent = `⭐ 0/${testModeActive ? 2 : 5}`;
+        generateQuestion();
+        startTimer();
+        startBgAnimations();
+
+        document.getElementById('answer-input').focus();
+    }
+
+    // ===== TIMER =====
+    function startTimer() {
+        updateTimerDisplay();
+        timerInterval = setInterval(() => {
+            timeRemaining--;
+            updateTimerDisplay();
+            if (timeRemaining <= 0) endQuiz();
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const m = Math.floor(timeRemaining / 60);
+        const s = timeRemaining % 60;
+        const el = document.getElementById('timer');
+        el.textContent = `⏱ ${m}:${s.toString().padStart(2, '0')}`;
+        if (timeRemaining <= 30) {
+            el.classList.add('warning');
+        } else {
+            el.classList.remove('warning');
+        }
+    }
+
+    // ===== FRAGE GENERIEREN =====
+    async function generateQuestion() {
+        const q = getNextQuestion();
+        currentA = q.a;
+        currentB = q.b;
+        currentOp = q.op;
+        currentAnswer = q.op === '×' ? q.a * q.b : q.a / q.b;
+        attemptsLeft = 2;
+        isProcessing = false;
+
+        // Six Seven Easter Egg (nur bei Multiplikation)
+        if (currentOp === '×' && ((currentA === 6 && currentB === 7) || (currentA === 7 && currentB === 6))) {
+            await triggerSixSeven();
+        }
+
+        document.getElementById('question').textContent = `${currentA} ${currentOp} ${currentB} = ?`;
+        document.getElementById('answer-input').value = '';
+        document.getElementById('answer-input').className = 'answer-input';
+        document.getElementById('feedback').textContent = '';
+        document.getElementById('feedback').className = 'feedback';
+        document.getElementById('answer-reveal').className = 'answer-reveal';
+        document.getElementById('answer-reveal').textContent = '';
+        document.getElementById('attempts-info').textContent = 'Versuch 1 von 2';
+        document.getElementById('attempts-info').className = 'attempts-info';
+
+        document.getElementById('answer-input').focus();
+    }
+
+    // ===== ANTWORT PRÜFEN =====
+    function checkAnswer() {
+        if (!quizActive || isProcessing) return;
+
+        const input = document.getElementById('answer-input');
+        const userAnswer = parseInt(input.value);
+        if (isNaN(userAnswer)) return;
+
+        if (userAnswer === currentAnswer) {
+            // RICHTIG!
+            isProcessing = true;
+            input.className = 'answer-input correct';
+            const msg = getCorrectMessage();
+            document.getElementById('feedback').textContent = msg;
+            document.getElementById('feedback').className = 'feedback correct-fb';
+
+            // Antwort groß anzeigen
+            const reveal = document.getElementById('answer-reveal');
+            reveal.textContent = `${currentA} ${currentOp} ${currentB} = ${currentAnswer} ✓`;
+            reveal.className = 'answer-reveal visible';
+
+            // Vorlesen
+            speakResult(currentA, currentB, currentAnswer);
+
+            totalCorrect++;
+            correctStreak++;
+            const needed = testModeActive ? 2 : 5;
+            document.getElementById('streak-counter').textContent = `⭐ ${correctStreak}/${needed}`;
+
+            if (correctStreak >= needed) {
+                correctStreak = 0;
+                document.getElementById('streak-counter').textContent = `⭐ 0/${needed}`;
+                // Längere Anzeige: 3.5s, dann Karte
+                setTimeout(() => awardCard(), 3500);
+            } else {
+                // Richtige Antwort 4 Sekunden anzeigen (Stimme liest vor)
+                setTimeout(() => { if (quizActive) generateQuestion(); }, 4000);
+            }
+        } else {
+            // FALSCH
+            attemptsLeft--;
+
+            if (attemptsLeft > 0) {
+                input.className = 'answer-input wrong';
+                document.getElementById('feedback').textContent = `Knapp daneben! Noch 1 Versuch 🤔`;
+                document.getElementById('feedback').className = 'feedback wrong-fb';
+                document.getElementById('attempts-info').textContent = 'Versuch 2 von 2';
+                document.getElementById('attempts-info').className = 'attempts-info danger';
+                input.value = '';
+                setTimeout(() => { input.className = 'answer-input'; input.focus(); }, 600);
+            } else {
+                // Keine Versuche mehr
+                isProcessing = true;
+                input.className = 'answer-input wrong';
+                document.getElementById('feedback').textContent = `Schade!`;
+                document.getElementById('feedback').className = 'feedback wrong-fb';
+
+                const reveal = document.getElementById('answer-reveal');
+                reveal.textContent = `${currentA} ${currentOp} ${currentB} = ${currentAnswer}`;
+                reveal.className = 'answer-reveal visible';
+                reveal.style.color = 'var(--danger)';
+
+                // Trotzdem vorlesen – zum Lernen!
+                speakResult(currentA, currentB, currentAnswer);
+
+                totalWrong++;
+                correctStreak = 0;
+                document.getElementById('streak-counter').textContent = `⭐ 0/${testModeActive ? 2 : 5}`;
+
+                setTimeout(() => {
+                    const rev = document.getElementById('answer-reveal');
+                    rev.style.color = '';
+                    if (quizActive) generateQuestion();
+                }, 5000);
+            }
+        }
+    }
+
+    function getCorrectMessage() {
+        const m = ['Super! 🎉','Richtig! ⭐','Klasse! 💪','Toll! 🌟','Perfekt! ✨','Mega! 🔥','Stark! 💥','Wow! 🏆','Bombe! 💣','Genial! 🧠'];
+        return m[Math.floor(Math.random() * m.length)];
+    }
+
+    // ===== KARTE VERGEBEN =====
+    function awardCard() {
+        // Theme wählen: bevorzuge Themes die noch ungesammelte Karten haben
+        let theme = getRandomTheme();
+        const pokeCollected = collection.pokemon.length;
+        const brawlCollected = collection.brawlstars.length;
+        const mcCollected = collection.minecraft.length;
+        const pokeTotal = pokemonCards.length;
+        const brawlTotal = brawlstarsCards.length;
+        const mcTotal = minecraftCards.length;
+        // Wenn gewähltes Theme voll ist, alternatives Theme mit offenen Karten wählen
+        const themeFull = (t) => collection[t].length >= getCardDB(t).length;
+        if (themeFull(theme)) {
+            const open = ['pokemon','brawlstars','minecraft'].filter(t => !themeFull(t));
+            if (open.length > 0) theme = open[Math.floor(Math.random() * open.length)];
+        }
+
+        const card = getRandomCard(theme);
+
+        collection[theme].push(card);
+        localStorage.setItem('leo_collection', JSON.stringify(collection));
+        cardsEarnedToday++;
+        document.getElementById('cards-today').textContent = `🃏 ${cardsEarnedToday}`;
+
+        showCardReward(card);
+    }
+
+    function showCardReward(card) {
+        const screen = document.getElementById('card-reward-screen');
+        const cardEl = document.getElementById('reward-card');
+
+        renderCard(card, cardEl);
+        cardEl.classList.remove('fly-away');
+        cardEl.style.animation = 'none';
+        void cardEl.offsetHeight;
+        // Eine durchgehende Animation: reinfliegen → kurz sichtbar → ins Album fliegen
+        cardEl.style.animation = 'cardReveal 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
+        screen.classList.add('active');
+
+        createConfetti();
+
+        // Nach der Animation (1.8s) → Overlay weg, nächste Frage
+        setTimeout(() => {
+            screen.classList.remove('active');
+            if (quizActive) generateQuestion();
+        }, 2000);
+    }
+
+    // ===== CONFETTI =====
+    function createConfetti() {
+        const container = document.getElementById('confetti-container');
+        const colors = ['#ff6b6b','#ffd32a','#6c5ce7','#00cec9','#fd79a8','#27ae60','#e17055','#74b9ff'];
+        for (let i = 0; i < 40; i++) {
+            const c = document.createElement('div');
+            c.className = 'confetti';
+            c.style.left = Math.random() * 100 + '%';
+            c.style.background = colors[Math.floor(Math.random() * colors.length)];
+            c.style.animationDelay = (Math.random() * 0.6) + 's';
+            c.style.width = (4 + Math.random() * 8) + 'px';
+            c.style.height = (4 + Math.random() * 8) + 'px';
+            c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+            container.appendChild(c);
+        }
+        setTimeout(() => container.innerHTML = '', 3500);
+    }
+
+    // ===== QUIZ BEENDEN =====
+    function endQuiz() {
+        quizActive = false;
+        clearInterval(timerInterval);
+        stopBgAnimations();
+
+        document.getElementById('stat-correct').textContent = totalCorrect;
+        document.getElementById('stat-wrong').textContent = totalWrong;
+        document.getElementById('stat-cards').textContent = cardsEarnedToday;
+        document.getElementById('stat-total-cards').textContent =
+            collection.pokemon.length + collection.brawlstars.length + collection.minecraft.length;
+
+        recordSession();
+        showScreen('timeup-screen');
+    }
+
+    // ===== ALBUM =====
+    function showAlbum() {
+        showScreen('album-screen');
+        switchAlbumTab('pokemon');
+    }
+
+    function switchAlbumTab(theme) {
+        document.querySelectorAll('.album-tab').forEach(t => t.classList.remove('active'));
+        document.querySelector(`.album-tab[data-theme="${theme}"]`).classList.add('active');
+
+        const grid = document.getElementById('album-grid');
+        const cards = collection[theme];
+
+        document.getElementById('album-counter').textContent = `${cards.length} / ${getCardDB(theme).length} Karten gesammelt`;
+        grid.innerHTML = '';
+
+        if (cards.length === 0) {
+            grid.innerHTML = '<div class="empty-album">Noch keine Karten! Übe fleißig und sammle welche! 💪</div>';
+            return;
+        }
+
+        cards.forEach(card => {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'album-card-wrapper';
+            const cardEl = document.createElement('div');
+            card.theme = theme;
+            renderCard(card, cardEl, false);
+            wrapper.appendChild(cardEl);
+            wrapper.onclick = () => showCardDetail(card);
+            grid.appendChild(wrapper);
+        });
+    }
+
+    function showCardDetail(card) {
+        const modal = document.getElementById('card-detail-modal');
+        const cardEl = document.getElementById('detail-card');
+        renderCard(card, cardEl);
+        // Reset animation
+        cardEl.style.animation = 'none';
+        cardEl.style.transform = 'scale(0.15) rotateY(0deg)';
+        cardEl.style.opacity = '0';
+        void cardEl.offsetHeight;
+        cardEl.style.animation = '';
+        cardEl.style.transform = '';
+        cardEl.style.opacity = '';
+        modal.classList.add('active');
+
+        // Karte vorlesen (nach halber Drehung, wenn sie sichtbar wird)
+        setTimeout(() => speakCard(card), 700);
+    }
+
+    function speakCard(card) {
+        if (!soundEnabled || !('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        const rarity = getRarityLabel(getRarity(card, card.theme));
+        let text;
+        if (card.theme === 'pokemon') {
+            const hp = card.hp ?? 'nicht bekannt';
+            const atk = card.atk ?? 'nicht bekannt';
+            const typeSpoken = (card.type || 'unbekannt').replace('/', ' und ');
+            text = `${card.name}! Typ ${typeSpoken}, ${rarity}. ${hp} Lebenspunkte, ${atk} Angriff.`;
+        } else if (card.theme === 'minecraft') {
+            const mobType = card.mob === 'Boss' ? 'Boss Mob' : card.mob === 'Feindlich' ? 'feindlicher Mob' : card.mob === 'Neutral' ? 'neutraler Mob' : 'friedlicher Mob';
+            text = `${card.name}! ${mobType}, ${rarity}. ${card.hp} Herzen${card.atk > 0 ? `, ${card.atk} Angriffsschaden` : ''}.`;
+        } else {
+            text = `${card.name}! ${card.cls || 'Kämpfer'}, ${rarity}. Stärke ${card.pw ?? 'nicht bekannt'}.`;
+        }
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.lang = 'de-DE';
+        utter.rate = 0.95;
+        utter.pitch = 1.1;
+        const voice = pickBestGermanVoice();
+        if (voice) utter.voice = voice;
+        window.speechSynthesis.speak(utter);
+    }
+
+    function closeCardDetail() {
+        document.getElementById('card-detail-modal').classList.remove('active');
+        window.speechSynthesis?.cancel();
+    }
+
+    // ===== SCREEN WECHSEL =====
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function backToStart() {
+        clearInterval(timerInterval);
+        stopBgAnimations();
+        quizActive = false;
+        renderTodayStats();
+        showScreen('start-screen');
+    }
+
+    // ===== TASTATUR =====
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Enter' && quizActive) checkAnswer();
+        if (e.key === 'Escape') closeCardDetail();
+    });
+
+    // ===== CARD DETAIL: Klick/Touch außerhalb schließen =====
+    const detailModal = document.getElementById('card-detail-modal');
+    detailModal.addEventListener('click', e => {
+        if (e.target === detailModal) closeCardDetail();
+    });
+    detailModal.addEventListener('touchend', e => {
+        if (e.target === detailModal) { e.preventDefault(); closeCardDetail(); }
+    });
+
+    // ===== ALLE BUTTON-EVENTS (statt inline onclick) =====
+    // Hilfsfunktion: click + touchend für maximale Kompatibilität
+    function onTap(el, fn) {
+        if (!el) return;
+        let touched = false;
+        el.addEventListener('touchend', e => { e.preventDefault(); touched = true; fn(e); });
+        el.addEventListener('click', e => { if (!touched) fn(e); touched = false; });
+    }
+
+    // Startscreen
+    onTap(document.getElementById('sound-toggle'), toggleSound);
+    onTap(document.getElementById('bg-toggle'), cycleBgMode);
+    onTap(document.getElementById('mascot-tap'), handleMascotTap);
+    onTap(document.getElementById('start-btn'), startQuiz);
+    onTap(document.getElementById('album-peek-btn'), showAlbum);
+
+    // Zeit-Buttons (nur die im time-buttons-container)
+    document.querySelectorAll('#time-buttons-container .time-btn').forEach(btn => {
+        onTap(btn, () => selectTime(parseInt(btn.dataset.minutes)));
+    });
+
+    // Modus-Buttons
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        onTap(btn, () => selectMode(btn.dataset.mode));
+    });
+
+    // Quiz
+    onTap(document.getElementById('submit-btn'), checkAnswer);
+
+    // Time-Up Screen
+    onTap(document.getElementById('timeup-album-btn'), showAlbum);
+    onTap(document.getElementById('timeup-back-btn'), backToStart);
+
+    // Album
+    onTap(document.getElementById('album-back-btn'), backToStart);
+    document.querySelectorAll('.album-tab').forEach(tab => {
+        onTap(tab, () => switchAlbumTab(tab.dataset.theme));
+    });
+
+    // Card Detail Close
+    onTap(document.getElementById('close-detail-btn'), closeCardDetail);
+    </script>
+    <script>
+    // PWA Service Worker registrieren
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+    }
+    </script>
+</body>
+</html>

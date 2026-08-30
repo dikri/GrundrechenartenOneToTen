@@ -585,6 +585,25 @@
         }
 
         /* ===== QUIZ SCREEN ===== */
+        .quiz-quit-btn {
+            position: absolute;
+            top: 10px; right: 12px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            width: 32px; height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s;
+            z-index: 5;
+        }
+        .quiz-quit-btn:hover { color: var(--danger); border-color: var(--danger); }
+        .quiz-quit-btn:active { transform: scale(0.9); }
+
         .quiz-header {
             display: flex;
             justify-content: space-between;
@@ -1124,6 +1143,25 @@
 
         .album-card-wrapper:hover { transform: scale(1.06) translateY(-4px); }
 
+        .card-is-new { position: relative; }
+        .card-is-new::after {
+            content: '✨ NEU';
+            position: absolute;
+            top: 6px; left: 6px;
+            background: var(--accent);
+            color: #333;
+            font-size: 0.55em;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 6px;
+            z-index: 10;
+            animation: newPulse 1.5s ease infinite;
+        }
+        @keyframes newPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
         .album-card-wrapper .reward-card {
             width: 100%;
             height: 100%;
@@ -1397,7 +1435,8 @@
 
     <!-- ===== QUIZ SCREEN ===== -->
     <div id="quiz-screen" class="screen">
-        <div class="glass-panel">
+        <div class="glass-panel" style="position:relative">
+            <button class="quiz-quit-btn" id="quiz-quit-btn" title="Abbrechen">✕</button>
             <div class="quiz-header">
                 <div class="badge badge-timer" id="timer">⏱ 5:00</div>
                 <div class="badge badge-streak" id="streak-counter">⭐ 0/5</div>
@@ -2140,6 +2179,7 @@
     // ===== HILFSFUNKTIONEN =====
     function getRarity(card, theme) {
         if (theme === 'pokemon') {
+            if (card.legendary) return 'legendary';
             if (card.atk >= 130 || card.hp >= 140) return 'legendary';
             if (card.atk >= 100 || card.hp >= 110) return 'epic';
             if (card.atk >= 80) return 'rare';
@@ -2619,6 +2659,7 @@
 
         const card = getRandomCard(theme);
 
+        card.isNew = true;
         collection[theme].push(card);
         localStorage.setItem('leo_collection', JSON.stringify(collection));
         cardsEarnedToday++;
@@ -2782,9 +2823,10 @@
         document.querySelector(`.album-tab[data-theme="${theme}"]`).classList.add('active');
 
         const grid = document.getElementById('album-grid');
-        const cards = collection[theme];
+        const cards = collection[theme] || [];
+        const newCount = cards.filter(c => c.isNew).length;
 
-        document.getElementById('album-counter').textContent = `${cards.length} / ${getCardDB(theme).length} Karten gesammelt`;
+        document.getElementById('album-counter').textContent = `${cards.length} / ${getCardDB(theme).length} Karten gesammelt${newCount > 0 ? ` · ✨ ${newCount} neu` : ''}`;
         grid.innerHTML = '';
 
         if (cards.length === 0) {
@@ -2792,19 +2834,31 @@
             return;
         }
 
-        cards.forEach(card => {
+        // Sortierung: Neue oben, dann nach ID
+        const sorted = [...cards].sort((a, b) => {
+            if (a.isNew && !b.isNew) return -1;
+            if (!a.isNew && b.isNew) return 1;
+            return (a.id || 0) - (b.id || 0);
+        });
+
+        sorted.forEach(card => {
             const wrapper = document.createElement('div');
-            wrapper.className = 'album-card-wrapper';
+            wrapper.className = 'album-card-wrapper' + (card.isNew ? ' card-is-new' : '');
             const cardEl = document.createElement('div');
             card.theme = theme;
             renderCard(card, cardEl, false);
             wrapper.appendChild(cardEl);
-            wrapper.onclick = () => showCardDetail(card);
+            onTap(wrapper, () => showCardDetail(card));
             grid.appendChild(wrapper);
         });
     }
 
     function showCardDetail(card) {
+        // Neu-Flag entfernen
+        if (card.isNew) {
+            card.isNew = false;
+            localStorage.setItem('leo_collection', JSON.stringify(collection));
+        }
         const modal = document.getElementById('card-detail-modal');
         const cardEl = document.getElementById('detail-card');
         renderCard(card, cardEl);
@@ -2929,6 +2983,7 @@
 
     // Quiz
     onTap(document.getElementById('submit-btn'), checkAnswer);
+    onTap(document.getElementById('quiz-quit-btn'), endQuiz);
 
     // Time-Up Screen
     onTap(document.getElementById('timeup-album-btn'), showAlbum);

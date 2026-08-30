@@ -1,106 +1,956 @@
-﻿[{ "id":1, "name":"Shelly", "cls":"Kämpfer", "rar":"Starter", "pw":7, "emoji":"💥", "color":"#b9eaff" },
-        { "id":2, "name":"Colt", "cls":"Kämpfer", "rar":"Starter", "pw":7, "emoji":"�", "color":"#b9eaff" },
-        { "id":3, "name":"Bull", "cls":"Tank", "rar":"Starter", "pw":7, "emoji":"�", "color":"#b9eaff" },
-        { "id":4, "name":"Brock", "cls":"Scharfschütze", "rar":"Starter", "pw":7, "emoji":"�", "color":"#b9eaff" },
-        { "id":5, "name":"Rico", "cls":"Kämpfer", "rar":"Starter", "pw":7, "emoji":"🎯", "color":"#b9eaff" },
-        { "id":6, "name":"Spike", "cls":"Kämpfer", "rar":"Starter", "pw":7, "emoji":"🌵", "color":"#b9eaff" },
-        { "id":7, "name":"Barley", "cls":"Werfer", "rar":"Starter", "pw":7, "emoji":"🍺", "color":"#b9eaff" },
-        { "id":8, "name":"Jessie", "cls":"Kämpfer", "rar":"Starter", "pw":7, "emoji":"🔧", "color":"#b9eaff" },
-        { "id":9, "name":"Nita", "cls":"Kämpfer", "rar":"Starter", "pw":7, "emoji":"🐻", "color":"#b9eaff" },
-        { "id":10, "name":"Dynamike", "cls":"Werfer", "rar":"Starter", "pw":7, "emoji":"�", "color":"#b9eaff" },
-        { "id":11, "name":"El Primo", "cls":"Tank", "rar":"Starter", "pw":7, "emoji":"🤼", "color":"#b9eaff" },
-        { "id":12, "name":"Mortis", "cls":"Assassine", "rar":"Starter", "pw":7, "emoji":"🦇", "color":"#b9eaff" },
-        { "id":13, "name":"Crow", "cls":"Assassine", "rar":"Starter", "pw":7, "emoji":"�‍⬛", "color":"#b9eaff" },
-        { "id":14, "name":"Poco", "cls":"Heiler", "rar":"Starter", "pw":7, "emoji":"�", "color":"#b9eaff" },
-        { "id":15, "name":"Bo", "cls":"Kämpfer", "rar":"Selten", "pw":7, "emoji":"🏹", "color":"#68c73c" },
-        { "id":16, "name":"Piper", "cls":"Scharfschütze", "rar":"Selten", "pw":7, "emoji":"☂️", "color":"#fd79a8" },
-        { "id":17, "name":"Pam", "cls":"Heiler", "rar":"Selten", "pw":7, "emoji":"🔩", "color":"#1abc9c" },
-        { "id":18, "name":"Tara", "cls":"Kämpfer", "rar":"Selten", "pw":7, "emoji":"�", "color":"#6c5ce7" },
-        { "id":19, "name":"Darryl", "cls":"Tank", "rar":"Selten", "pw":7, "emoji":"🛢️", "color":"#e74c3c" },
-        { "id":20, "name":"Penny", "cls":"Kämpfer", "rar":"Selten", "pw":7, "emoji":"�", "color":"#f39c12" },
-        { "id":21, "name":"Frank", "cls":"Tank", "rar":"Selten", "pw":7, "emoji":"🔨", "color":"#2c3e50" },
-        { "id":22, "name":"Gene", "cls":"Kämpfer", "rar":"Selten", "pw":7, "emoji":"�", "color":"#6c5ce7" },
-        { "id":23, "name":"Tick", "cls":"Werfer", "rar":"Selten", "pw":7, "emoji":"⏰", "color":"#3498db" },
-        { "id":24, "name":"Leon", "cls":"Assassine", "rar":"Selten", "pw":7, "emoji":"�", "color":"#27ae60" },
-        { "id":25, "name":"Rosa", "cls":"Tank", "rar":"Selten", "pw":7, "emoji":"🌹", "color":"#27ae60" },
-        { "id":26, "name":"Carl", "cls":"Kämpfer", "rar":"Selten", "pw":7, "emoji":"⛏️", "color":"#3498db" },
-        { "id":27, "name":"Bibi", "cls":"Tank", "rar":"Selten", "pw":7, "emoji":"🫧", "color":"#fd79a8" },
-        { "id":28, "name":"8-Bit", "cls":"Scharfschütze", "rar":"Selten", "pw":7, "emoji":"🕹️", "color":"#2ecc71" },
-        { "id":29, "name":"Sandy", "cls":"Kämpfer", "rar":"Selten", "pw":7, "emoji":"💤", "color":"#f1c40f" },
-        { "id":30, "name":"Bea", "cls":"Scharfschütze", "rar":"Selten", "pw":7, "emoji":"�", "color":"#f1c40f" },
-        { "id":31, "name":"Emz", "cls":"Kämpfer", "rar":"Selten", "pw":7, "emoji":"📱", "color":"#6c5ce7" },
-        { "id":32, "name":"Mr. P", "cls":"Kämpfer", "rar":"Selten", "pw":7, "emoji":"�", "color":"#3498db" },
-        { "id":33, "name":"Max", "cls":"Kämpfer", "rar":"Selten", "pw":7, "emoji":"⚡", "color":"#f1c40f" },
-        { "id":34, "name":"Jacky", "cls":"Tank", "rar":"Selten", "pw":7, "emoji":"🔨", "color":"#f39c12" },
-        { "id":35, "name":"Gale", "cls":"Kämpfer", "rar":"Episch", "pw":8, "emoji":"❄️", "color":"#74b9ff" },
-        { "id":36, "name":"Nani", "cls":"Scharfschütze", "rar":"Episch", "pw":8, "emoji":"🤖", "color":"#3498db" },
-        { "id":37, "name":"Sprout", "cls":"Werfer", "rar":"Episch", "pw":8, "emoji":"🌱", "color":"#27ae60" },
-        { "id":38, "name":"Surge", "cls":"Kämpfer", "rar":"Episch", "pw":8, "emoji":"⚡", "color":"#6c5ce7" },
-        { "id":39, "name":"Colette", "cls":"Kämpfer", "rar":"Episch", "pw":8, "emoji":"📒", "color":"#fd79a8" },
-        { "id":40, "name":"Amber", "cls":"Kämpfer", "rar":"Episch", "pw":8, "emoji":"�", "color":"#e74c3c" },
-        { "id":41, "name":"Lou", "cls":"Kämpfer", "rar":"Episch", "pw":8, "emoji":"🧊", "color":"#74b9ff" },
-        { "id":42, "name":"Byron", "cls":"Heiler", "rar":"Episch", "pw":8, "emoji":"�", "color":"#6c5ce7" },
-        { "id":43, "name":"Edgar", "cls":"Assassine", "rar":"Episch", "pw":8, "emoji":"🧣", "color":"#2c3e50" },
-        { "id":44, "name":"Ruffs", "cls":"Kämpfer", "rar":"Episch", "pw":8, "emoji":"�", "color":"#f39c12" },
-        { "id":45, "name":"Stu", "cls":"Assassine", "rar":"Episch", "pw":8, "emoji":"🏍️", "color":"#e74c3c" },
-        { "id":46, "name":"Belle", "cls":"Scharfschütze", "rar":"Episch", "pw":8, "emoji":"⚡", "color":"#f1c40f" },
-        { "id":47, "name":"Squeak", "cls":"Werfer", "rar":"Episch", "pw":8, "emoji":"💦", "color":"#f1c40f" },
-        { "id":48, "name":"Grom", "cls":"Werfer", "rar":"Episch", "pw":8, "emoji":"📋", "color":"#636e72" },
-        { "id":49, "name":"Buzz", "cls":"Tank", "rar":"Episch", "pw":8, "emoji":"🦈", "color":"#3498db" },
-        { "id":50, "name":"Griff", "cls":"Kämpfer", "rar":"Episch", "pw":8, "emoji":"💵", "color":"#27ae60" },
-        { "id":51, "name":"Ash", "cls":"Tank", "rar":"Episch", "pw":8, "emoji":"🗑️", "color":"#636e72" },
-        { "id":52, "name":"Meg", "cls":"Episch", "rar":"Episch", "pw":8, "emoji":"🤖", "color":"#6c5ce7" },
-        { "id":53, "name":"Lola", "cls":"Kämpfer", "rar":"Episch", "pw":8, "emoji":"💎", "color":"#fd79a8" },
-        { "id":54, "name":"Fang", "cls":"Assassine", "rar":"Episch", "pw":8, "emoji":"�", "color":"#e74c3c" },
-        { "id":55, "name":"Eve", "cls":"Kämpfer", "rar":"Mythisch", "pw":8, "emoji":"🥚", "color":"#fe5e72" },
-        { "id":56, "name":"Janet", "cls":"Scharfschütze", "rar":"Mythisch", "pw":8, "emoji":"🎤", "color":"#fe5e72" },
-        { "id":57, "name":"Bonnie", "cls":"Scharfschütze", "rar":"Mythisch", "pw":8, "emoji":"�", "color":"#fd79a8" },
-        { "id":58, "name":"Otis", "cls":"Kämpfer", "rar":"Mythisch", "pw":8, "emoji":"�", "color":"#3498db" },
-        { "id":59, "name":"Sam", "cls":"Tank", "rar":"Mythisch", "pw":8, "emoji":"🥊", "color":"#2c3e50" },
-        { "id":60, "name":"Gus", "cls":"Heiler", "rar":"Mythisch", "pw":8, "emoji":"�", "color":"#a29bfe" },
-        { "id":61, "name":"Buster", "cls":"Tank", "rar":"Mythisch", "pw":8, "emoji":"🛡️", "color":"#2c3e50" },
-        { "id":62, "name":"Chester", "cls":"Kämpfer", "rar":"Mythisch", "pw":8, "emoji":"🃏", "color":"#f39c12" },
-        { "id":63, "name":"Gray", "cls":"Kämpfer", "rar":"Mythisch", "pw":8, "emoji":"�", "color":"#636e72" },
-        { "id":64, "name":"Mandy", "cls":"Scharfschütze", "rar":"Mythisch", "pw":8, "emoji":"�", "color":"#fd79a8" },
-        { "id":65, "name":"R-T", "cls":"Tank", "rar":"Mythisch", "pw":8, "emoji":"�", "color":"#636e72" },
-        { "id":66, "name":"Willow", "cls":"Kämpfer", "rar":"Mythisch", "pw":8, "emoji":"�", "color":"#6c5ce7" },
-        { "id":67, "name":"Maisie", "cls":"Scharfschütze", "rar":"Mythisch", "pw":8, "emoji":"🎯", "color":"#e74c3c" },
-        { "id":68, "name":"Hank", "cls":"Tank", "rar":"Mythisch", "pw":8, "emoji":"�", "color":"#3498db" },
-        { "id":69, "name":"Cordelius", "cls":"Assassine", "rar":"Mythisch", "pw":8, "emoji":"�", "color":"#6c5ce7" },
-        { "id":70, "name":"Doug", "cls":"Heiler", "rar":"Mythisch", "pw":8, "emoji":"🌭", "color":"#f39c12" },
-        { "id":71, "name":"Pearl", "cls":"Scharfschütze", "rar":"Mythisch", "pw":8, "emoji":"🫧", "color":"#74b9ff" },
-        { "id":72, "name":"Chuck", "cls":"Kämpfer", "rar":"Mythisch", "pw":8, "emoji":"�", "color":"#f1c40f" },
-        { "id":73, "name":"Charlie", "cls":"Kämpfer", "rar":"Mythisch", "pw":8, "emoji":"🕷️", "color":"#6c5ce7" },
-        { "id":74, "name":"Mico", "cls":"Assassine", "rar":"Mythisch", "pw":8, "emoji":"🐒", "color":"#f39c12" },
-        { "id":75, "name":"Kit", "cls":"Heiler", "rar":"Mythisch", "pw":8, "emoji":"🐱", "color":"#dfe6e9" },
-        { "id":76, "name":"Larry & Lawrie", "cls":"Werfer", "rar":"Mythisch", "pw":8, "emoji":"�", "color":"#636e72" },
-        { "id":77, "name":"Melodie", "cls":"Assassine", "rar":"Mythisch", "pw":8, "emoji":"�", "color":"#fd79a8" },
-        { "id":78, "name":"Angelo", "cls":"Scharfschütze", "rar":"Mythisch", "pw":8, "emoji":"😈", "color":"#2c3e50" },
-        { "id":79, "name":"Draco", "cls":"Tank", "rar":"Legendär", "pw":9, "emoji":"🐲", "color":"#e74c3c" },
-        { "id":80, "name":"Lily", "cls":"Assassine", "rar":"Legendär", "pw":9, "emoji":"🌸", "color":"#27ae60" },
-        { "id":81, "name":"Berry", "cls":"Kämpfer", "rar":"Legendär", "pw":9, "emoji":"🫐", "color":"#6c5ce7" },
-        { "id":82, "name":"Clancy", "cls":"Kämpfer", "rar":"Legendär", "pw":9, "emoji":"🦞", "color":"#e74c3c" },
-        { "id":83, "name":"Moe", "cls":"Assassine", "rar":"Legendär", "pw":9, "emoji":"🐛", "color":"#27ae60" },
-        { "id":84, "name":"Kenji", "cls":"Assassine", "rar":"Legendär", "pw":9, "emoji":"⚔️", "color":"#c0392b" },
-        { "id":85, "name":"Shade", "cls":"Assassine", "rar":"Legendär", "pw":9, "emoji":"🌑", "color":"#2c3e50" },
-        { "id":86, "name":"Juju", "cls":"Kämpfer", "rar":"Legendär", "pw":9, "emoji":"🎃", "color":"#6c5ce7" },
-        { "id":87, "name":"Meeple", "cls":"Kämpfer", "rar":"Legendär", "pw":9, "emoji":"🧩", "color":"#f39c12" },
-        { "id":88, "name":"Ollie", "cls":"Tank", "rar":"Legendär", "pw":9, "emoji":"🧸", "color":"#27ae60" },
-        { "id":89, "name":"Lumi", "cls":"Heiler", "rar":"Legendär", "pw":9, "emoji":"✨", "color":"#74b9ff" },
-        { "id":90, "name":"Finx", "cls":"Assassine", "rar":"Legendär", "pw":9, "emoji":"🦊", "color":"#e74c3c" },
-        { "id":91, "name":"Jae-Yong", "cls":"Tank", "rar":"Legendär", "pw":9, "emoji":"�", "color":"#e74c3c" },
-        { "id":92, "name":"Kaze", "cls":"Assassine", "rar":"Legendär", "pw":9, "emoji":"�️", "color":"#74b9ff" },
-        { "id":93, "name":"Alli", "cls":"Kämpfer", "rar":"Legendär", "pw":9, "emoji":"🐊", "color":"#27ae60" },
-        { "id":94, "name":"Trunk", "cls":"Tank", "rar":"Legendär", "pw":9, "emoji":"🐘", "color":"#636e72" },
-        { "id":95, "name":"Mina", "cls":"Kämpfer", "rar":"Ultra Legendär", "pw":10, "emoji":"�", "color":"#e1fb2a" },
-        { "id":96, "name":"Ziggy", "cls":"Kämpfer", "rar":"Ultra Legendär", "pw":10, "emoji":"⭐", "color":"#e1fb2a" },
-        { "id":97, "name":"Pierce", "cls":"Scharfschütze", "rar":"Ultra Legendär", "pw":10, "emoji":"🎯", "color":"#e1fb2a" },
-        { "id":98, "name":"Gigi", "cls":"Kämpfer", "rar":"Ultra Legendär", "pw":10, "emoji":"💃", "color":"#e1fb2a" },
-        { "id":99, "name":"Glowy", "cls":"Heiler", "rar":"Ultra Legendär", "pw":10, "emoji":"�", "color":"#e1fb2a" },
-        { "id":100, "name":"Sirius", "cls":"Kämpfer", "rar":"Ultra Legendär", "pw":10, "emoji":"🐺", "color":"#e1fb2a" },
-        { "id":101, "name":"Najia", "cls":"Assassine", "rar":"Ultra Legendär", "pw":10, "emoji":"�", "color":"#e1fb2a" },
-        { "id":102, "name":"Damian", "cls":"Kämpfer", "rar":"Ultra Legendär", "pw":10, "emoji":"�", "color":"#e1fb2a" },
-        { "id":103, "name":"Starr Nova", "cls":"Kämpfer", "rar":"Ultra Legendär", "pw":10, "emoji":"🌟", "color":"#e1fb2a" },
-        { "id":104, "name":"Bolt", "cls":"Kämpfer", "rar":"Ultra Legendär", "pw":10, "emoji":"⚡", "color":"#e1fb2a" },
-        { "id":105, "name":"Nori", "cls":"Heiler", "rar":"Ultra Legendär", "pw":10, "emoji":"🍣", "color":"#e1fb2a" },
-        { "id":106, "name":"Wendy", "cls":"Kämpfer", "rar":"Ultra Legendär", "pw":10, "emoji":"🧚", "color":"#e1fb2a" }]
+﻿[
+    {
+        "id":  1,
+        "name":  "Shelly",
+        "cls":  "Kämpfer",
+        "rar":  "Starter",
+        "pw":  7,
+        "emoji":  "💥",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  2,
+        "name":  "Colt",
+        "cls":  "Kämpfer",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "�",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  3,
+        "name":  "Bull",
+        "cls":  "Tank",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "�",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  4,
+        "name":  "Brock",
+        "cls":  "Scharfschütze",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "�",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  5,
+        "name":  "Rico",
+        "cls":  "Kämpfer",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "🎯",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  6,
+        "name":  "Spike",
+        "cls":  "Kämpfer",
+        "rar":  "Legendär",
+        "pw":  7,
+        "emoji":  "🌵",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  7,
+        "name":  "Barley",
+        "cls":  "Werfer",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "🍺",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  8,
+        "name":  "Jessie",
+        "cls":  "Kämpfer",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "🔧",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  9,
+        "name":  "Nita",
+        "cls":  "Kämpfer",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "🐻",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  10,
+        "name":  "Dynamike",
+        "cls":  "Werfer",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "�",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  11,
+        "name":  "El Primo",
+        "cls":  "Tank",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "🤼",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  12,
+        "name":  "Mortis",
+        "cls":  "Assassine",
+        "rar":  "Mythisch",
+        "pw":  7,
+        "emoji":  "🦇",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  13,
+        "name":  "Crow",
+        "cls":  "Assassine",
+        "rar":  "Legendär",
+        "pw":  7,
+        "emoji":  "�‍⬛",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  14,
+        "name":  "Poco",
+        "cls":  "Heiler",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "�",
+        "color":  "#b9eaff"
+    },
+    {
+        "id":  15,
+        "name":  "Bo",
+        "cls":  "Kämpfer",
+        "rar":  "Episch",
+        "pw":  7,
+        "emoji":  "🏹",
+        "color":  "#68c73c"
+    },
+    {
+        "id":  16,
+        "name":  "Piper",
+        "cls":  "Scharfschütze",
+        "rar":  "Episch",
+        "pw":  7,
+        "emoji":  "☂️",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  17,
+        "name":  "Pam",
+        "cls":  "Heiler",
+        "rar":  "Episch",
+        "pw":  7,
+        "emoji":  "🔩",
+        "color":  "#1abc9c"
+    },
+    {
+        "id":  18,
+        "name":  "Tara",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  7,
+        "emoji":  "�",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  19,
+        "name":  "Darryl",
+        "cls":  "Tank",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "🛢️",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  20,
+        "name":  "Penny",
+        "cls":  "Kämpfer",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "�",
+        "color":  "#f39c12"
+    },
+    {
+        "id":  21,
+        "name":  "Frank",
+        "cls":  "Tank",
+        "rar":  "Episch",
+        "pw":  7,
+        "emoji":  "🔨",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  22,
+        "name":  "Gene",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  7,
+        "emoji":  "�",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  23,
+        "name":  "Tick",
+        "cls":  "Werfer",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "⏰",
+        "color":  "#3498db"
+    },
+    {
+        "id":  24,
+        "name":  "Leon",
+        "cls":  "Assassine",
+        "rar":  "Legendär",
+        "pw":  7,
+        "emoji":  "�",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  25,
+        "name":  "Rosa",
+        "cls":  "Tank",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "🌹",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  26,
+        "name":  "Carl",
+        "cls":  "Kämpfer",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "⛏️",
+        "color":  "#3498db"
+    },
+    {
+        "id":  27,
+        "name":  "Bibi",
+        "cls":  "Tank",
+        "rar":  "Episch",
+        "pw":  7,
+        "emoji":  "🫧",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  28,
+        "name":  "8-Bit",
+        "cls":  "Scharfschütze",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "🕹️",
+        "color":  "#2ecc71"
+    },
+    {
+        "id":  29,
+        "name":  "Sandy",
+        "cls":  "Kämpfer",
+        "rar":  "Legendär",
+        "pw":  7,
+        "emoji":  "💤",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  30,
+        "name":  "Bea",
+        "cls":  "Scharfschütze",
+        "rar":  "Episch",
+        "pw":  7,
+        "emoji":  "�",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  31,
+        "name":  "Emz",
+        "cls":  "Kämpfer",
+        "rar":  "Episch",
+        "pw":  7,
+        "emoji":  "📱",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  32,
+        "name":  "Mr. P",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  7,
+        "emoji":  "�",
+        "color":  "#3498db"
+    },
+    {
+        "id":  33,
+        "name":  "Max",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  7,
+        "emoji":  "⚡",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  34,
+        "name":  "Jacky",
+        "cls":  "Tank",
+        "rar":  "Selten",
+        "pw":  7,
+        "emoji":  "🔨",
+        "color":  "#f39c12"
+    },
+    {
+        "id":  35,
+        "name":  "Gale",
+        "cls":  "Kämpfer",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "❄️",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  36,
+        "name":  "Nani",
+        "cls":  "Scharfschütze",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "🤖",
+        "color":  "#3498db"
+    },
+    {
+        "id":  37,
+        "name":  "Sprout",
+        "cls":  "Werfer",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "🌱",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  38,
+        "name":  "Surge",
+        "cls":  "Kämpfer",
+        "rar":  "Legendär",
+        "pw":  8,
+        "emoji":  "⚡",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  39,
+        "name":  "Colette",
+        "cls":  "Kämpfer",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "📒",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  40,
+        "name":  "Amber",
+        "cls":  "Kämpfer",
+        "rar":  "Legendär",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  41,
+        "name":  "Lou",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "🧊",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  42,
+        "name":  "Byron",
+        "cls":  "Heiler",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  43,
+        "name":  "Edgar",
+        "cls":  "Assassine",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "🧣",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  44,
+        "name":  "Ruffs",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#f39c12"
+    },
+    {
+        "id":  45,
+        "name":  "Stu",
+        "cls":  "Assassine",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "🏍️",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  46,
+        "name":  "Belle",
+        "cls":  "Scharfschütze",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "⚡",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  47,
+        "name":  "Squeak",
+        "cls":  "Werfer",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "💦",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  48,
+        "name":  "Grom",
+        "cls":  "Werfer",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "📋",
+        "color":  "#636e72"
+    },
+    {
+        "id":  49,
+        "name":  "Buzz",
+        "cls":  "Tank",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "🦈",
+        "color":  "#3498db"
+    },
+    {
+        "id":  50,
+        "name":  "Griff",
+        "cls":  "Kämpfer",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "💵",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  51,
+        "name":  "Ash",
+        "cls":  "Tank",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "🗑️",
+        "color":  "#636e72"
+    },
+    {
+        "id":  52,
+        "name":  "Meg",
+        "cls":  "Episch",
+        "rar":  "Legendär",
+        "pw":  8,
+        "emoji":  "🤖",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  53,
+        "name":  "Lola",
+        "cls":  "Kämpfer",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "💎",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  54,
+        "name":  "Fang",
+        "cls":  "Assassine",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  55,
+        "name":  "Eve",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "🥚",
+        "color":  "#fe5e72"
+    },
+    {
+        "id":  56,
+        "name":  "Janet",
+        "cls":  "Scharfschütze",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "🎤",
+        "color":  "#fe5e72"
+    },
+    {
+        "id":  57,
+        "name":  "Bonnie",
+        "cls":  "Scharfschütze",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  58,
+        "name":  "Otis",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#3498db"
+    },
+    {
+        "id":  59,
+        "name":  "Sam",
+        "cls":  "Tank",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "🥊",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  60,
+        "name":  "Gus",
+        "cls":  "Heiler",
+        "rar":  "Selten",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#a29bfe"
+    },
+    {
+        "id":  61,
+        "name":  "Buster",
+        "cls":  "Tank",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "🛡️",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  62,
+        "name":  "Chester",
+        "cls":  "Kämpfer",
+        "rar":  "Legendär",
+        "pw":  8,
+        "emoji":  "🃏",
+        "color":  "#f39c12"
+    },
+    {
+        "id":  63,
+        "name":  "Gray",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#636e72"
+    },
+    {
+        "id":  64,
+        "name":  "Mandy",
+        "cls":  "Scharfschütze",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  65,
+        "name":  "R-T",
+        "cls":  "Tank",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#636e72"
+    },
+    {
+        "id":  66,
+        "name":  "Willow",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  67,
+        "name":  "Maisie",
+        "cls":  "Scharfschütze",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "🎯",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  68,
+        "name":  "Hank",
+        "cls":  "Tank",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#3498db"
+    },
+    {
+        "id":  69,
+        "name":  "Cordelius",
+        "cls":  "Assassine",
+        "rar":  "Legendär",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  70,
+        "name":  "Doug",
+        "cls":  "Heiler",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "🌭",
+        "color":  "#f39c12"
+    },
+    {
+        "id":  71,
+        "name":  "Pearl",
+        "cls":  "Scharfschütze",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "🫧",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  72,
+        "name":  "Chuck",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  73,
+        "name":  "Charlie",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "🕷️",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  74,
+        "name":  "Mico",
+        "cls":  "Assassine",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "🐒",
+        "color":  "#f39c12"
+    },
+    {
+        "id":  75,
+        "name":  "Kit",
+        "cls":  "Heiler",
+        "rar":  "Legendär",
+        "pw":  8,
+        "emoji":  "🐱",
+        "color":  "#dfe6e9"
+    },
+    {
+        "id":  76,
+        "name":  "Larry \u0026 Lawrie",
+        "cls":  "Werfer",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#636e72"
+    },
+    {
+        "id":  77,
+        "name":  "Melodie",
+        "cls":  "Assassine",
+        "rar":  "Mythisch",
+        "pw":  8,
+        "emoji":  "�",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  78,
+        "name":  "Angelo",
+        "cls":  "Scharfschütze",
+        "rar":  "Episch",
+        "pw":  8,
+        "emoji":  "😈",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  79,
+        "name":  "Draco",
+        "cls":  "Tank",
+        "rar":  "Legendär",
+        "pw":  9,
+        "emoji":  "🐲",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  80,
+        "name":  "Lily",
+        "cls":  "Assassine",
+        "rar":  "Mythisch",
+        "pw":  9,
+        "emoji":  "🌸",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  81,
+        "name":  "Berry",
+        "cls":  "Kämpfer",
+        "rar":  "Episch",
+        "pw":  9,
+        "emoji":  "🫐",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  82,
+        "name":  "Clancy",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  9,
+        "emoji":  "🦞",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  83,
+        "name":  "Moe",
+        "cls":  "Assassine",
+        "rar":  "Mythisch",
+        "pw":  9,
+        "emoji":  "🐛",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  84,
+        "name":  "Kenji",
+        "cls":  "Assassine",
+        "rar":  "Legendär",
+        "pw":  9,
+        "emoji":  "⚔️",
+        "color":  "#c0392b"
+    },
+    {
+        "id":  85,
+        "name":  "Shade",
+        "cls":  "Assassine",
+        "rar":  "Episch",
+        "pw":  9,
+        "emoji":  "🌑",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  86,
+        "name":  "Juju",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  9,
+        "emoji":  "🎃",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  87,
+        "name":  "Meeple",
+        "cls":  "Kämpfer",
+        "rar":  "Episch",
+        "pw":  9,
+        "emoji":  "🧩",
+        "color":  "#f39c12"
+    },
+    {
+        "id":  88,
+        "name":  "Ollie",
+        "cls":  "Tank",
+        "rar":  "Mythisch",
+        "pw":  9,
+        "emoji":  "🧸",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  89,
+        "name":  "Lumi",
+        "cls":  "Heiler",
+        "rar":  "Mythisch",
+        "pw":  9,
+        "emoji":  "✨",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  90,
+        "name":  "Finx",
+        "cls":  "Assassine",
+        "rar":  "Mythisch",
+        "pw":  9,
+        "emoji":  "🦊",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  91,
+        "name":  "Jae-Yong",
+        "cls":  "Tank",
+        "rar":  "Mythisch",
+        "pw":  9,
+        "emoji":  "�",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  92,
+        "name":  "Kaze",
+        "cls":  "Assassine",
+        "rar":  "Ultra Legendär",
+        "pw":  9,
+        "emoji":  "�️",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  93,
+        "name":  "Alli",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  9,
+        "emoji":  "🐊",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  94,
+        "name":  "Trunk",
+        "cls":  "Tank",
+        "rar":  "Episch",
+        "pw":  9,
+        "emoji":  "🐘",
+        "color":  "#636e72"
+    },
+    {
+        "id":  95,
+        "name":  "Mina",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  10,
+        "emoji":  "�",
+        "color":  "#e1fb2a"
+    },
+    {
+        "id":  96,
+        "name":  "Ziggy",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  10,
+        "emoji":  "⭐",
+        "color":  "#e1fb2a"
+    },
+    {
+        "id":  97,
+        "name":  "Pierce",
+        "cls":  "Scharfschütze",
+        "rar":  "Legendär",
+        "pw":  10,
+        "emoji":  "🎯",
+        "color":  "#e1fb2a"
+    },
+    {
+        "id":  98,
+        "name":  "Gigi",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  10,
+        "emoji":  "💃",
+        "color":  "#e1fb2a"
+    },
+    {
+        "id":  99,
+        "name":  "Glowy",
+        "cls":  "Heiler",
+        "rar":  "Mythisch",
+        "pw":  10,
+        "emoji":  "�",
+        "color":  "#e1fb2a"
+    },
+    {
+        "id":  100,
+        "name":  "Sirius",
+        "cls":  "Kämpfer",
+        "rar":  "Ultra Legendär",
+        "pw":  10,
+        "emoji":  "🐺",
+        "color":  "#e1fb2a"
+    },
+    {
+        "id":  101,
+        "name":  "Najia",
+        "cls":  "Assassine",
+        "rar":  "Mythisch",
+        "pw":  10,
+        "emoji":  "�",
+        "color":  "#e1fb2a"
+    },
+    {
+        "id":  102,
+        "name":  "Damian",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  10,
+        "emoji":  "�",
+        "color":  "#e1fb2a"
+    },
+    {
+        "id":  103,
+        "name":  "Starr Nova",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  10,
+        "emoji":  "🌟",
+        "color":  "#e1fb2a"
+    },
+    {
+        "id":  104,
+        "name":  "Bolt",
+        "cls":  "Kämpfer",
+        "rar":  "Episch",
+        "pw":  10,
+        "emoji":  "⚡",
+        "color":  "#e1fb2a"
+    },
+    {
+        "id":  105,
+        "name":  "Nori",
+        "cls":  "Heiler",
+        "rar":  "Legendär",
+        "pw":  10,
+        "emoji":  "🍣",
+        "color":  "#e1fb2a"
+    },
+    {
+        "id":  106,
+        "name":  "Wendy",
+        "cls":  "Kämpfer",
+        "rar":  "Mythisch",
+        "pw":  10,
+        "emoji":  "🧚",
+        "color":  "#e1fb2a"
+    }
+]

@@ -1,251 +1,2272 @@
-﻿[{ "id":1, "name":"Bisasam", "type":"Pflanze/Gift", "hp":45, "atk":49, "emoji":"🌱", "color":"#00b894" },
-        { "id":2, "name":"Bisaknosp", "type":"Pflanze/Gift", "hp":60, "atk":62, "emoji":"🌿", "color":"#00b894" },
-        { "id":3, "name":"Bisaflor", "type":"Pflanze/Gift", "hp":100, "atk":82, "emoji":"🌿", "color":"#27ae60" },
-        { "id":4, "name":"Glumanda", "type":"Feuer", "hp":39, "atk":52, "emoji":"🔥", "color":"#ff7675" },
-        { "id":5, "name":"Glutexo", "type":"Feuer", "hp":58, "atk":64, "emoji":"🔥", "color":"#e17055" },
-        { "id":6, "name":"Glurak", "type":"Feuer/Flug", "hp":120, "atk":84, "emoji":"🔥", "color":"#e74c3c" },
-        { "id":7, "name":"Schiggy", "type":"Wasser", "hp":44, "atk":48, "emoji":"💧", "color":"#74b9ff" },
-        { "id":8, "name":"Schillok", "type":"Wasser", "hp":59, "atk":63, "emoji":"💧", "color":"#0984e3" },
-        { "id":9, "name":"Turtok", "type":"Wasser", "hp":109, "atk":83, "emoji":"💧", "color":"#3498db" },
-        { "id":10, "name":"Raupy", "type":"Käfer", "hp":45, "atk":30, "emoji":"🐛", "color":"#27ae60" },
-        { "id":11, "name":"Safcon", "type":"Käfer", "hp":50, "atk":20, "emoji":"🐛", "color":"#27ae60" },
-        { "id":12, "name":"Smettbo", "type":"Käfer/Flug", "hp":60, "atk":45, "emoji":"🦋", "color":"#a29bfe" },
-        { "id":13, "name":"Hornliu", "type":"Käfer/Gift", "hp":40, "atk":35, "emoji":"🐛", "color":"#6c5ce7" },
-        { "id":14, "name":"Kokuna", "type":"Käfer/Gift", "hp":45, "atk":25, "emoji":"🐛", "color":"#f1c40f" },
-        { "id":15, "name":"Bibor", "type":"Käfer/Gift", "hp":65, "atk":90, "emoji":"🐝", "color":"#f1c40f" },
-        { "id":16, "name":"Taubsi", "type":"Normal/Flug", "hp":40, "atk":45, "emoji":"🐦", "color":"#d35400" },
-        { "id":17, "name":"Tauboga", "type":"Normal/Flug", "hp":63, "atk":60, "emoji":"🐦", "color":"#d35400" },
-        { "id":18, "name":"Tauboss", "type":"Normal/Flug", "hp":83, "atk":80, "emoji":"🦅", "color":"#d35400" },
-        { "id":19, "name":"Rattfratz", "type":"Normal", "hp":30, "atk":56, "emoji":"🐀", "color":"#636e72" },
-        { "id":20, "name":"Rattikarl", "type":"Normal", "hp":55, "atk":81, "emoji":"🐀", "color":"#636e72" },
-        { "id":21, "name":"Habitak", "type":"Normal/Flug", "hp":40, "atk":60, "emoji":"🐦", "color":"#795548" },
-        { "id":22, "name":"Ibitak", "type":"Normal/Flug", "hp":65, "atk":90, "emoji":"🦅", "color":"#795548" },
-        { "id":23, "name":"Rettan", "type":"Gift", "hp":35, "atk":60, "emoji":"🐍", "color":"#6c5ce7" },
-        { "id":24, "name":"Arbok", "type":"Gift", "hp":60, "atk":95, "emoji":"🐍", "color":"#6c5ce7" },
-        { "id":25, "name":"Pikachu", "type":"Elektro", "hp":60, "atk":55, "emoji":"⚡", "color":"#f1c40f" },
-        { "id":26, "name":"Raichu", "type":"Elektro", "hp":60, "atk":90, "emoji":"⚡", "color":"#f39c12" },
-        { "id":27, "name":"Sandan", "type":"Boden", "hp":50, "atk":75, "emoji":"🦔", "color":"#d35400" },
-        { "id":28, "name":"Sandamer", "type":"Boden", "hp":75, "atk":100, "emoji":"🦔", "color":"#d35400" },
-        { "id":29, "name":"Nidoran♀", "type":"Gift", "hp":55, "atk":47, "emoji":"🦔", "color":"#00cec9" },
-        { "id":30, "name":"Nidorina", "type":"Gift", "hp":70, "atk":62, "emoji":"🦔", "color":"#00cec9" },
-        { "id":31, "name":"Nidoqueen", "type":"Gift/Boden", "hp":90, "atk":92, "emoji":"👑", "color":"#00b894" },
-        { "id":32, "name":"Nidoran♂", "type":"Gift", "hp":46, "atk":57, "emoji":"🦔", "color":"#6c5ce7" },
-        { "id":33, "name":"Nidorino", "type":"Gift", "hp":61, "atk":72, "emoji":"🦔", "color":"#6c5ce7" },
-        { "id":34, "name":"Nidoking", "type":"Gift/Boden", "hp":81, "atk":102, "emoji":"👑", "color":"#6c5ce7" },
-        { "id":35, "name":"Piepi", "type":"Fee", "hp":70, "atk":45, "emoji":"🌙", "color":"#fd79a8" },
-        { "id":36, "name":"Pixi", "type":"Fee", "hp":95, "atk":70, "emoji":"🌙", "color":"#fd79a8" },
-        { "id":37, "name":"Vulpix", "type":"Feuer", "hp":38, "atk":41, "emoji":"🦊", "color":"#e17055" },
-        { "id":38, "name":"Vulnona", "type":"Feuer", "hp":73, "atk":76, "emoji":"🦊", "color":"#e17055" },
-        { "id":39, "name":"Pummeluff", "type":"Fee", "hp":115, "atk":45, "emoji":"🎤", "color":"#fd79a8" },
-        { "id":40, "name":"Knuddeluff", "type":"Fee", "hp":140, "atk":70, "emoji":"🎤", "color":"#fd79a8" },
-        { "id":41, "name":"Zubat", "type":"Gift/Flug", "hp":40, "atk":45, "emoji":"🦇", "color":"#6c5ce7" },
-        { "id":42, "name":"Golbat", "type":"Gift/Flug", "hp":75, "atk":80, "emoji":"🦇", "color":"#6c5ce7" },
-        { "id":43, "name":"Myrapla", "type":"Pflanze/Gift", "hp":45, "atk":50, "emoji":"🌿", "color":"#27ae60" },
-        { "id":44, "name":"Duflor", "type":"Pflanze/Gift", "hp":60, "atk":65, "emoji":"🌸", "color":"#27ae60" },
-        { "id":45, "name":"Giflor", "type":"Pflanze/Gift", "hp":75, "atk":80, "emoji":"🌺", "color":"#e74c3c" },
-        { "id":46, "name":"Paras", "type":"Käfer/Pflanze", "hp":35, "atk":70, "emoji":"🍄", "color":"#e74c3c" },
-        { "id":47, "name":"Parasek", "type":"Käfer/Pflanze", "hp":60, "atk":95, "emoji":"🍄", "color":"#e74c3c" },
-        { "id":48, "name":"Bluzuk", "type":"Käfer/Gift", "hp":60, "atk":55, "emoji":"🐛", "color":"#6c5ce7" },
-        { "id":49, "name":"Omot", "type":"Käfer/Gift", "hp":70, "atk":65, "emoji":"🦋", "color":"#6c5ce7" },
-        { "id":50, "name":"Digda", "type":"Boden", "hp":10, "atk":55, "emoji":"🕳️", "color":"#d35400" },
-        { "id":51, "name":"Digdri", "type":"Boden", "hp":35, "atk":100, "emoji":"🕳️", "color":"#d35400" },
-        { "id":52, "name":"Mauzi", "type":"Normal", "hp":40, "atk":45, "emoji":"🐱", "color":"#f1c40f" },
-        { "id":53, "name":"Snobilikat", "type":"Normal", "hp":65, "atk":70, "emoji":"🐱", "color":"#f1c40f" },
-        { "id":54, "name":"Enton", "type":"Wasser", "hp":50, "atk":52, "emoji":"🦆", "color":"#fdcb6e" },
-        { "id":55, "name":"Entoron", "type":"Wasser", "hp":80, "atk":82, "emoji":"🦆", "color":"#3498db" },
-        { "id":56, "name":"Menki", "type":"Kampf", "hp":40, "atk":80, "emoji":"🐒", "color":"#d35400" },
-        { "id":57, "name":"Rasaff", "type":"Kampf", "hp":65, "atk":105, "emoji":"🐒", "color":"#d35400" },
-        { "id":58, "name":"Fukano", "type":"Feuer", "hp":55, "atk":70, "emoji":"🐕", "color":"#e17055" },
-        { "id":59, "name":"Arkani", "type":"Feuer", "hp":90, "atk":110, "emoji":"🐕", "color":"#e74c3c" },
-        { "id":60, "name":"Quapsel", "type":"Wasser", "hp":40, "atk":50, "emoji":"💧", "color":"#74b9ff" },
-        { "id":61, "name":"Quaputzi", "type":"Wasser", "hp":65, "atk":65, "emoji":"💧", "color":"#0984e3" },
-        { "id":62, "name":"Quappo", "type":"Wasser/Kampf", "hp":90, "atk":95, "emoji":"💧", "color":"#2980b9" },
-        { "id":63, "name":"Abra", "type":"Psycho", "hp":25, "atk":20, "emoji":"🧠", "color":"#fdcb6e" },
-        { "id":64, "name":"Kadabra", "type":"Psycho", "hp":40, "atk":35, "emoji":"🧠", "color":"#a29bfe" },
-        { "id":65, "name":"Simsala", "type":"Psycho", "hp":55, "atk":50, "emoji":"🥄", "color":"#a29bfe" },
-        { "id":66, "name":"Machollo", "type":"Kampf", "hp":70, "atk":80, "emoji":"💪", "color":"#636e72" },
-        { "id":67, "name":"Maschock", "type":"Kampf", "hp":80, "atk":100, "emoji":"💪", "color":"#636e72" },
-        { "id":68, "name":"Machomei", "type":"Kampf", "hp":90, "atk":130, "emoji":"💪", "color":"#636e72" },
-        { "id":69, "name":"Knofensa", "type":"Pflanze/Gift", "hp":50, "atk":75, "emoji":"🌱", "color":"#27ae60" },
-        { "id":70, "name":"Ultrigaria", "type":"Pflanze/Gift", "hp":65, "atk":90, "emoji":"🌿", "color":"#27ae60" },
-        { "id":71, "name":"Sarzenia", "type":"Pflanze/Gift", "hp":80, "atk":105, "emoji":"🌿", "color":"#27ae60" },
-        { "id":72, "name":"Tentacha", "type":"Wasser/Gift", "hp":40, "atk":40, "emoji":"🐙", "color":"#74b9ff" },
-        { "id":73, "name":"Tentoxa", "type":"Wasser/Gift", "hp":80, "atk":70, "emoji":"🐙", "color":"#0984e3" },
-        { "id":74, "name":"Kleinstein", "type":"Gestein/Boden", "hp":40, "atk":80, "emoji":"🪨", "color":"#795548" },
-        { "id":75, "name":"Georok", "type":"Gestein/Boden", "hp":55, "atk":95, "emoji":"🪨", "color":"#795548" },
-        { "id":76, "name":"Geowaz", "type":"Gestein/Boden", "hp":80, "atk":120, "emoji":"🪨", "color":"#795548" },
-        { "id":77, "name":"Ponita", "type":"Feuer", "hp":50, "atk":85, "emoji":"🐴", "color":"#e74c3c" },
-        { "id":78, "name":"Gallopa", "type":"Feuer", "hp":65, "atk":100, "emoji":"🐴", "color":"#e74c3c" },
-        { "id":79, "name":"Flegmon", "type":"Wasser/Psycho", "hp":90, "atk":65, "emoji":"🐚", "color":"#fd79a8" },
-        { "id":80, "name":"Lahmus", "type":"Wasser/Psycho", "hp":95, "atk":75, "emoji":"🐚", "color":"#fd79a8" },
-        { "id":81, "name":"Magnetilo", "type":"Elektro", "hp":25, "atk":35, "emoji":"🧲", "color":"#636e72" },
-        { "id":82, "name":"Magneton", "type":"Elektro/Stahl", "hp":50, "atk":60, "emoji":"🧲", "color":"#636e72" },
-        { "id":83, "name":"Porenta", "type":"Normal", "hp":52, "atk":90, "emoji":"🦆", "color":"#d35400" },
-        { "id":84, "name":"Dodu", "type":"Normal/Flug", "hp":35, "atk":85, "emoji":"🐦", "color":"#d35400" },
-        { "id":85, "name":"Dodri", "type":"Normal/Flug", "hp":60, "atk":110, "emoji":"🐦", "color":"#d35400" },
-        { "id":86, "name":"Jurob", "type":"Wasser", "hp":65, "atk":45, "emoji":"🦭", "color":"#dfe6e9" },
-        { "id":87, "name":"Jugong", "type":"Wasser/Eis", "hp":90, "atk":70, "emoji":"🦭", "color":"#dfe6e9" },
-        { "id":88, "name":"Sleima", "type":"Gift", "hp":80, "atk":80, "emoji":"💜", "color":"#6c5ce7" },
-        { "id":89, "name":"Sleimok", "type":"Gift", "hp":105, "atk":105, "emoji":"💜", "color":"#6c5ce7" },
-        { "id":90, "name":"Muschas", "type":"Wasser", "hp":30, "atk":65, "emoji":"🐚", "color":"#636e72" },
-        { "id":91, "name":"Austos", "type":"Wasser/Eis", "hp":50, "atk":95, "emoji":"🐚", "color":"#636e72" },
-        { "id":92, "name":"Nebulak", "type":"Geist/Gift", "hp":30, "atk":35, "emoji":"👻", "color":"#8e44ad" },
-        { "id":93, "name":"Alpollo", "type":"Geist/Gift", "hp":45, "atk":50, "emoji":"👻", "color":"#8e44ad" },
-        { "id":94, "name":"Gengar", "type":"Geist/Gift", "hp":60, "atk":65, "emoji":"👻", "color":"#8e44ad" },
-        { "id":95, "name":"Onix", "type":"Gestein/Boden", "hp":35, "atk":45, "emoji":"🐍", "color":"#636e72" },
-        { "id":96, "name":"Traumato", "type":"Psycho", "hp":60, "atk":48, "emoji":"💤", "color":"#fdcb6e" },
-        { "id":97, "name":"Hypno", "type":"Psycho", "hp":85, "atk":73, "emoji":"💤", "color":"#fdcb6e" },
-        { "id":98, "name":"Krabby", "type":"Wasser", "hp":30, "atk":105, "emoji":"🦀", "color":"#e74c3c" },
-        { "id":99, "name":"Kingler", "type":"Wasser", "hp":55, "atk":130, "emoji":"🦀", "color":"#e74c3c" },
-        { "id":100, "name":"Voltobal", "type":"Elektro", "hp":40, "atk":30, "emoji":"⚡", "color":"#e74c3c" },
-        { "id":101, "name":"Lektrobal", "type":"Elektro", "hp":60, "atk":50, "emoji":"💣", "color":"#e74c3c" },
-        { "id":102, "name":"Owei", "type":"Pflanze/Psycho", "hp":60, "atk":40, "emoji":"🥚", "color":"#fd79a8" },
-        { "id":103, "name":"Kokowei", "type":"Pflanze/Psycho", "hp":95, "atk":95, "emoji":"🌴", "color":"#27ae60" },
-        { "id":104, "name":"Tragosso", "type":"Boden", "hp":50, "atk":50, "emoji":"🦴", "color":"#d35400" },
-        { "id":105, "name":"Knogga", "type":"Boden", "hp":60, "atk":80, "emoji":"🦴", "color":"#d35400" },
-        { "id":106, "name":"Kicklee", "type":"Kampf", "hp":50, "atk":120, "emoji":"🦵", "color":"#795548" },
-        { "id":107, "name":"Nockchan", "type":"Kampf", "hp":50, "atk":105, "emoji":"🥊", "color":"#795548" },
-        { "id":108, "name":"Schlurp", "type":"Normal", "hp":90, "atk":55, "emoji":"👅", "color":"#fd79a8" },
-        { "id":109, "name":"Smogon", "type":"Gift", "hp":40, "atk":65, "emoji":"💨", "color":"#636e72" },
-        { "id":110, "name":"Smogmog", "type":"Gift", "hp":65, "atk":90, "emoji":"💨", "color":"#636e72" },
-        { "id":111, "name":"Rihorn", "type":"Boden/Gestein", "hp":80, "atk":85, "emoji":"🦏", "color":"#636e72" },
-        { "id":112, "name":"Rizeros", "type":"Boden/Gestein", "hp":105, "atk":130, "emoji":"🦏", "color":"#636e72" },
-        { "id":113, "name":"Chaneira", "type":"Normal", "hp":250, "atk":5, "emoji":"💗", "color":"#fd79a8" },
-        { "id":114, "name":"Tangela", "type":"Pflanze", "hp":65, "atk":55, "emoji":"🌿", "color":"#2980b9" },
-        { "id":115, "name":"Kangama", "type":"Normal", "hp":105, "atk":95, "emoji":"🦘", "color":"#795548" },
-        { "id":116, "name":"Seeper", "type":"Wasser", "hp":30, "atk":40, "emoji":"🐴", "color":"#74b9ff" },
-        { "id":117, "name":"Seemon", "type":"Wasser", "hp":55, "atk":65, "emoji":"🐴", "color":"#0984e3" },
-        { "id":118, "name":"Goldini", "type":"Wasser", "hp":45, "atk":67, "emoji":"🐟", "color":"#e74c3c" },
-        { "id":119, "name":"Golking", "type":"Wasser", "hp":80, "atk":92, "emoji":"🐟", "color":"#e74c3c" },
-        { "id":120, "name":"Sterndu", "type":"Wasser", "hp":30, "atk":45, "emoji":"⭐", "color":"#795548" },
-        { "id":121, "name":"Starmie", "type":"Wasser/Psycho", "hp":60, "atk":75, "emoji":"⭐", "color":"#6c5ce7" },
-        { "id":122, "name":"Pantimos", "type":"Psycho", "hp":40, "atk":45, "emoji":"🤹", "color":"#e91e63" },
-        { "id":123, "name":"Sichlor", "type":"Käfer", "hp":70, "atk":110, "emoji":"🦗", "color":"#27ae60" },
-        { "id":124, "name":"Rossana", "type":"Eis/Psycho", "hp":65, "atk":50, "emoji":"💋", "color":"#e74c3c" },
-        { "id":125, "name":"Elektek", "type":"Elektro", "hp":65, "atk":83, "emoji":"⚡", "color":"#f1c40f" },
-        { "id":126, "name":"Magmar", "type":"Feuer", "hp":65, "atk":95, "emoji":"🔥", "color":"#e74c3c" },
-        { "id":127, "name":"Pinsir", "type":"Käfer", "hp":65, "atk":125, "emoji":"🦗", "color":"#795548" },
-        { "id":128, "name":"Tauros", "type":"Normal", "hp":75, "atk":100, "emoji":"🐂", "color":"#d35400" },
-        { "id":129, "name":"Karpador", "type":"Wasser", "hp":20, "atk":10, "emoji":"🐟", "color":"#e74c3c" },
-        { "id":130, "name":"Garados", "type":"Wasser/Flug", "hp":95, "atk":125, "emoji":"🌊", "color":"#0984e3" },
-        { "id":131, "name":"Lapras", "type":"Wasser/Eis", "hp":130, "atk":85, "emoji":"🐢", "color":"#00cec9" },
-        { "id":132, "name":"Ditto", "type":"Normal", "hp":48, "atk":48, "emoji":"🟣", "color":"#a29bfe" },
-        { "id":133, "name":"Evoli", "type":"Normal", "hp":55, "atk":55, "emoji":"🦊", "color":"#a0522d" },
-        { "id":134, "name":"Aquana", "type":"Wasser", "hp":130, "atk":65, "emoji":"💧", "color":"#0984e3" },
-        { "id":135, "name":"Blitza", "type":"Elektro", "hp":65, "atk":65, "emoji":"⚡", "color":"#f1c40f" },
-        { "id":136, "name":"Flamara", "type":"Feuer", "hp":65, "atk":130, "emoji":"🔥", "color":"#e74c3c" },
-        { "id":137, "name":"Porygon", "type":"Normal", "hp":65, "atk":60, "emoji":"💻", "color":"#e91e63" },
-        { "id":138, "name":"Amonitas", "type":"Gestein", "hp":35, "atk":40, "emoji":"🐚", "color":"#74b9ff" },
-        { "id":139, "name":"Amoroso", "type":"Gestein", "hp":70, "atk":60, "emoji":"🐚", "color":"#74b9ff" },
-        { "id":140, "name":"Kabuto", "type":"Gestein", "hp":30, "atk":80, "emoji":"🪨", "color":"#795548" },
-        { "id":141, "name":"Kabutops", "type":"Gestein", "hp":60, "atk":115, "emoji":"🪨", "color":"#795548" },
-        { "id":142, "name":"Aerodactyl", "type":"Gestein/Flug", "hp":80, "atk":105, "emoji":"🦅", "color":"#636e72" },
-        { "id":143, "name":"Relaxo", "type":"Normal", "hp":160, "atk":110, "emoji":"😴", "color":"#2c3e50" },
-        { "id":144, "name":"Arktos", "type":"Eis/Flug", "hp":90, "atk":85, "emoji":"❄️", "color":"#74b9ff" },
-        { "id":145, "name":"Zapdos", "type":"Elektro/Flug", "hp":90, "atk":90, "emoji":"⚡", "color":"#fdcb6e" },
-        { "id":146, "name":"Lavados", "type":"Feuer/Flug", "hp":90, "atk":100, "emoji":"🔥", "color":"#e17055" },
-        { "id":147, "name":"Dratini", "type":"Drache", "hp":41, "atk":64, "emoji":"🐉", "color":"#74b9ff" },
-        { "id":148, "name":"Dragonir", "type":"Drache", "hp":61, "atk":84, "emoji":"🐉", "color":"#3498db" },
-        { "id":149, "name":"Dragoran", "type":"Drache/Flug", "hp":91, "atk":134, "emoji":"🐉", "color":"#f39c12" },
-        { "id":150, "name":"Mewtu", "type":"Psycho", "hp":106, "atk":110, "emoji":"🔮", "color":"#9b59b6" },
-        { "id":151, "name":"Mew", "type":"Psycho", "hp":100, "atk":100, "emoji":"✨", "color":"#e91e63" },
-        { "id":152, "name":"Endivie", "type":"Pflanze", "hp":45, "atk":49, "emoji":"🌱", "color":"#27ae60" },
-        { "id":153, "name":"Lorblatt", "type":"Pflanze", "hp":60, "atk":62, "emoji":"🌿", "color":"#27ae60" },
-        { "id":154, "name":"Meganie", "type":"Pflanze", "hp":80, "atk":82, "emoji":"🌸", "color":"#27ae60" },
-        { "id":155, "name":"Feurigel", "type":"Feuer", "hp":39, "atk":52, "emoji":"🔥", "color":"#e74c3c" },
-        { "id":156, "name":"Igelavar", "type":"Feuer", "hp":58, "atk":64, "emoji":"🔥", "color":"#e17055" },
-        { "id":157, "name":"Tornupto", "type":"Feuer", "hp":78, "atk":84, "emoji":"🔥", "color":"#e74c3c" },
-        { "id":158, "name":"Karnimani", "type":"Wasser", "hp":50, "atk":65, "emoji":"🐊", "color":"#0984e3" },
-        { "id":159, "name":"Tyracroc", "type":"Wasser", "hp":65, "atk":80, "emoji":"🐊", "color":"#0984e3" },
-        { "id":160, "name":"Impergator", "type":"Wasser", "hp":85, "atk":105, "emoji":"🐊", "color":"#0984e3" },
-        { "id":161, "name":"Wiesor", "type":"Normal", "hp":35, "atk":46, "emoji":"🦝", "color":"#795548" },
-        { "id":162, "name":"Wiesenior", "type":"Normal", "hp":75, "atk":76, "emoji":"🦝", "color":"#795548" },
-        { "id":163, "name":"Hoothoot", "type":"Normal/Flug", "hp":60, "atk":30, "emoji":"🦉", "color":"#795548" },
-        { "id":164, "name":"Noctuh", "type":"Normal/Flug", "hp":100, "atk":50, "emoji":"🦉", "color":"#795548" },
-        { "id":165, "name":"Ledyba", "type":"Käfer/Flug", "hp":40, "atk":20, "emoji":"🐞", "color":"#e74c3c" },
-        { "id":166, "name":"Ledian", "type":"Käfer/Flug", "hp":55, "atk":35, "emoji":"🐞", "color":"#e74c3c" },
-        { "id":167, "name":"Webarak", "type":"Käfer/Gift", "hp":40, "atk":60, "emoji":"🕷️", "color":"#27ae60" },
-        { "id":168, "name":"Ariados", "type":"Käfer/Gift", "hp":70, "atk":90, "emoji":"🕷️", "color":"#e74c3c" },
-        { "id":169, "name":"Iksbat", "type":"Gift/Flug", "hp":85, "atk":90, "emoji":"🦇", "color":"#6c5ce7" },
-        { "id":170, "name":"Lampi", "type":"Wasser/Elektro", "hp":75, "atk":38, "emoji":"💡", "color":"#74b9ff" },
-        { "id":171, "name":"Lanturn", "type":"Wasser/Elektro", "hp":125, "atk":58, "emoji":"💡", "color":"#0984e3" },
-        { "id":172, "name":"Pichu", "type":"Elektro", "hp":20, "atk":40, "emoji":"⚡", "color":"#f1c40f" },
-        { "id":173, "name":"Pii", "type":"Fee", "hp":50, "atk":25, "emoji":"⭐", "color":"#fd79a8" },
-        { "id":174, "name":"Fluffeluff", "type":"Fee", "hp":90, "atk":30, "emoji":"🎤", "color":"#fd79a8" },
-        { "id":175, "name":"Togepi", "type":"Fee", "hp":35, "atk":20, "emoji":"🥚", "color":"#dfe6e9" },
-        { "id":176, "name":"Togetic", "type":"Fee", "hp":55, "atk":40, "emoji":"🕊️", "color":"#dfe6e9" },
-        { "id":177, "name":"Natu", "type":"Psycho/Flug", "hp":40, "atk":50, "emoji":"🐦", "color":"#27ae60" },
-        { "id":178, "name":"Xatu", "type":"Psycho/Flug", "hp":65, "atk":75, "emoji":"🐦", "color":"#27ae60" },
-        { "id":179, "name":"Voltilamm", "type":"Elektro", "hp":55, "atk":40, "emoji":"🐑", "color":"#f1c40f" },
-        { "id":180, "name":"Waaty", "type":"Elektro", "hp":70, "atk":55, "emoji":"🐑", "color":"#fd79a8" },
-        { "id":181, "name":"Ampharos", "type":"Elektro", "hp":90, "atk":75, "emoji":"⚡", "color":"#f1c40f" },
-        { "id":182, "name":"Blubella", "type":"Pflanze", "hp":75, "atk":80, "emoji":"🌺", "color":"#27ae60" },
-        { "id":183, "name":"Marill", "type":"Wasser", "hp":70, "atk":20, "emoji":"💧", "color":"#74b9ff" },
-        { "id":184, "name":"Azumarill", "type":"Wasser", "hp":100, "atk":50, "emoji":"💧", "color":"#3498db" },
-        { "id":185, "name":"Mogelbaum", "type":"Gestein", "hp":70, "atk":100, "emoji":"🌳", "color":"#27ae60" },
-        { "id":186, "name":"Quaxo", "type":"Wasser", "hp":90, "atk":75, "emoji":"🐸", "color":"#27ae60" },
-        { "id":187, "name":"Hoppspross", "type":"Pflanze/Flug", "hp":35, "atk":35, "emoji":"🌱", "color":"#27ae60" },
-        { "id":188, "name":"Hubelupf", "type":"Pflanze/Flug", "hp":55, "atk":45, "emoji":"🌸", "color":"#27ae60" },
-        { "id":189, "name":"Papungha", "type":"Pflanze/Flug", "hp":75, "atk":55, "emoji":"🌸", "color":"#74b9ff" },
-        { "id":190, "name":"Griffel", "type":"Normal", "hp":55, "atk":60, "emoji":"🐒", "color":"#6c5ce7" },
-        { "id":191, "name":"Sonnkern", "type":"Pflanze", "hp":30, "atk":30, "emoji":"🌻", "color":"#f1c40f" },
-        { "id":192, "name":"Sonnflora", "type":"Pflanze", "hp":75, "atk":75, "emoji":"🌻", "color":"#f1c40f" },
-        { "id":193, "name":"Yanma", "type":"Käfer/Flug", "hp":65, "atk":65, "emoji":"🪰", "color":"#27ae60" },
-        { "id":194, "name":"Felino", "type":"Wasser/Boden", "hp":55, "atk":45, "emoji":"💧", "color":"#74b9ff" },
-        { "id":195, "name":"Morlord", "type":"Wasser/Boden", "hp":95, "atk":75, "emoji":"💧", "color":"#3498db" },
-        { "id":196, "name":"Psiana", "type":"Psycho", "hp":65, "atk":65, "emoji":"☀️", "color":"#a29bfe" },
-        { "id":197, "name":"Nachtara", "type":"Unlicht", "hp":95, "atk":65, "emoji":"🌙", "color":"#2c3e50" },
-        { "id":198, "name":"Kramurx", "type":"Unlicht/Flug", "hp":60, "atk":85, "emoji":"🐦", "color":"#2c3e50" },
-        { "id":199, "name":"Laschoking", "type":"Wasser/Psycho", "hp":95, "atk":75, "emoji":"👑", "color":"#fd79a8" },
-        { "id":200, "name":"Traunfugil", "type":"Geist", "hp":60, "atk":60, "emoji":"👻", "color":"#6c5ce7" },
-        { "id":201, "name":"Icognito", "type":"Psycho", "hp":48, "atk":72, "emoji":"🔤", "color":"#2c3e50" },
-        { "id":202, "name":"Woingenau", "type":"Psycho", "hp":190, "atk":33, "emoji":"💙", "color":"#74b9ff" },
-        { "id":203, "name":"Girafarig", "type":"Normal/Psycho", "hp":70, "atk":80, "emoji":"🦒", "color":"#f1c40f" },
-        { "id":204, "name":"Tannza", "type":"Käfer", "hp":50, "atk":65, "emoji":"🌲", "color":"#636e72" },
-        { "id":205, "name":"Forstellka", "type":"Käfer/Stahl", "hp":75, "atk":90, "emoji":"🌲", "color":"#636e72" },
-        { "id":206, "name":"Dummisel", "type":"Normal", "hp":100, "atk":70, "emoji":"🐍", "color":"#f1c40f" },
-        { "id":207, "name":"Skorgla", "type":"Boden/Flug", "hp":65, "atk":75, "emoji":"🦂", "color":"#6c5ce7" },
-        { "id":208, "name":"Stahlos", "type":"Stahl/Boden", "hp":75, "atk":85, "emoji":"⛓️", "color":"#636e72" },
-        { "id":209, "name":"Snubbull", "type":"Fee", "hp":60, "atk":80, "emoji":"🐕", "color":"#fd79a8" },
-        { "id":210, "name":"Granbull", "type":"Fee", "hp":90, "atk":120, "emoji":"🐕", "color":"#6c5ce7" },
-        { "id":211, "name":"Baldorfish", "type":"Wasser/Gift", "hp":65, "atk":95, "emoji":"🐡", "color":"#0984e3" },
-        { "id":212, "name":"Scherox", "type":"Käfer/Stahl", "hp":70, "atk":130, "emoji":"✂️", "color":"#c0392b" },
-        { "id":213, "name":"Pottrott", "type":"Käfer", "hp":20, "atk":10, "emoji":"🐛", "color":"#f1c40f" },
-        { "id":214, "name":"Skaraborn", "type":"Käfer/Kampf", "hp":80, "atk":125, "emoji":"🪲", "color":"#2980b9" },
-        { "id":215, "name":"Sniebel", "type":"Unlicht/Eis", "hp":55, "atk":95, "emoji":"❄️", "color":"#2c3e50" },
-        { "id":216, "name":"Teddiursa", "type":"Normal", "hp":60, "atk":80, "emoji":"🧸", "color":"#d35400" },
-        { "id":217, "name":"Ursaring", "type":"Normal", "hp":90, "atk":130, "emoji":"🐻", "color":"#795548" },
-        { "id":218, "name":"Schneckmag", "type":"Feuer", "hp":40, "atk":40, "emoji":"🐌", "color":"#e74c3c" },
-        { "id":219, "name":"Magcargo", "type":"Feuer/Gestein", "hp":60, "atk":50, "emoji":"🐌", "color":"#e74c3c" },
-        { "id":220, "name":"Quiekel", "type":"Eis/Boden", "hp":50, "atk":50, "emoji":"🐷", "color":"#d35400" },
-        { "id":221, "name":"Keifel", "type":"Eis/Boden", "hp":100, "atk":100, "emoji":"🐷", "color":"#795548" },
-        { "id":222, "name":"Corasonn", "type":"Wasser/Gestein", "hp":65, "atk":55, "emoji":"🪸", "color":"#fd79a8" },
-        { "id":223, "name":"Remoraid", "type":"Wasser", "hp":35, "atk":65, "emoji":"🐟", "color":"#74b9ff" },
-        { "id":224, "name":"Octillery", "type":"Wasser", "hp":75, "atk":105, "emoji":"🐙", "color":"#e74c3c" },
-        { "id":225, "name":"Botogel", "type":"Eis/Flug", "hp":45, "atk":55, "emoji":"🐧", "color":"#e74c3c" },
-        { "id":226, "name":"Mantax", "type":"Wasser/Flug", "hp":85, "atk":40, "emoji":"🐟", "color":"#0984e3" },
-        { "id":227, "name":"Panzaeron", "type":"Stahl/Flug", "hp":65, "atk":80, "emoji":"🦅", "color":"#636e72" },
-        { "id":228, "name":"Hunduster", "type":"Unlicht/Feuer", "hp":45, "atk":60, "emoji":"🐕", "color":"#2c3e50" },
-        { "id":229, "name":"Hundemon", "type":"Unlicht/Feuer", "hp":75, "atk":90, "emoji":"🐕‍🦺", "color":"#2c3e50" },
-        { "id":230, "name":"Seedraking", "type":"Wasser/Drache", "hp":75, "atk":95, "emoji":"🐴", "color":"#0984e3" },
-        { "id":231, "name":"Phanpy", "type":"Boden", "hp":90, "atk":60, "emoji":"🐘", "color":"#74b9ff" },
-        { "id":232, "name":"Donphan", "type":"Boden", "hp":90, "atk":120, "emoji":"🐘", "color":"#636e72" },
-        { "id":233, "name":"Porygon2", "type":"Normal", "hp":85, "atk":80, "emoji":"💻", "color":"#e74c3c" },
-        { "id":234, "name":"Damhirplex", "type":"Normal", "hp":73, "atk":95, "emoji":"🦌", "color":"#795548" },
-        { "id":235, "name":"Farbeagle", "type":"Normal", "hp":55, "atk":20, "emoji":"🎨", "color":"#dfe6e9" },
-        { "id":236, "name":"Rabauz", "type":"Kampf", "hp":35, "atk":35, "emoji":"👶", "color":"#795548" },
-        { "id":237, "name":"Kapoera", "type":"Kampf", "hp":50, "atk":95, "emoji":"🤸", "color":"#795548" },
-        { "id":238, "name":"Kussilla", "type":"Eis", "hp":45, "atk":30, "emoji":"💋", "color":"#fd79a8" },
-        { "id":239, "name":"Elekid", "type":"Elektro", "hp":45, "atk":63, "emoji":"⚡", "color":"#f1c40f" },
-        { "id":240, "name":"Magby", "type":"Feuer", "hp":45, "atk":75, "emoji":"🔥", "color":"#e74c3c" },
-        { "id":241, "name":"Miltank", "type":"Normal", "hp":95, "atk":80, "emoji":"🐄", "color":"#fd79a8" },
-        { "id":242, "name":"Heiteira", "type":"Normal", "hp":255, "atk":10, "emoji":"💗", "color":"#fd79a8" },
-        { "id":243, "name":"Raikou", "type":"Elektro", "hp":90, "atk":85, "emoji":"⚡", "color":"#f1c40f" },
-        { "id":244, "name":"Entei", "type":"Feuer", "hp":115, "atk":115, "emoji":"🔥", "color":"#d35400" },
-        { "id":245, "name":"Suicune", "type":"Wasser", "hp":100, "atk":75, "emoji":"💎", "color":"#00cec9" },
-        { "id":246, "name":"Larvitar", "type":"Gestein/Boden", "hp":50, "atk":64, "emoji":"🦎", "color":"#27ae60" },
-        { "id":247, "name":"Pupitar", "type":"Gestein/Boden", "hp":70, "atk":84, "emoji":"🦎", "color":"#636e72" },
-        { "id":248, "name":"Despotar", "type":"Gestein/Unlicht", "hp":100, "atk":134, "emoji":"🦖", "color":"#27ae60" },
-        { "id":249, "name":"Lugia", "type":"Psycho/Flug", "hp":106, "atk":90, "emoji":"🌊", "color":"#dfe6e9" },
-        { "id":250, "name":"Ho-Oh", "type":"Feuer/Flug", "hp":106, "atk":130, "emoji":"🌈", "color":"#e74c3c" },
-        { "id":251, "name":"Celebi", "type":"Pflanze/Psycho", "hp":100, "atk":100, "emoji":"🌳", "color":"#27ae60" }]
+﻿[
+    {
+        "id":  1,
+        "name":  "Bisasam",
+        "type":  "Pflanze/Gift",
+        "hp":  45,
+        "atk":  49,
+        "emoji":  "🌱",
+        "color":  "#00b894"
+    },
+    {
+        "id":  2,
+        "name":  "Bisaknosp",
+        "type":  "Pflanze/Gift",
+        "hp":  60,
+        "atk":  62,
+        "emoji":  "🌿",
+        "color":  "#00b894"
+    },
+    {
+        "id":  3,
+        "name":  "Bisaflor",
+        "type":  "Pflanze/Gift",
+        "hp":  100,
+        "atk":  82,
+        "emoji":  "🌿",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  4,
+        "name":  "Glumanda",
+        "type":  "Feuer",
+        "hp":  39,
+        "atk":  52,
+        "emoji":  "🔥",
+        "color":  "#ff7675"
+    },
+    {
+        "id":  5,
+        "name":  "Glutexo",
+        "type":  "Feuer",
+        "hp":  58,
+        "atk":  64,
+        "emoji":  "🔥",
+        "color":  "#e17055"
+    },
+    {
+        "id":  6,
+        "name":  "Glurak",
+        "type":  "Feuer/Flug",
+        "hp":  120,
+        "atk":  84,
+        "emoji":  "🔥",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  7,
+        "name":  "Schiggy",
+        "type":  "Wasser",
+        "hp":  44,
+        "atk":  48,
+        "emoji":  "💧",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  8,
+        "name":  "Schillok",
+        "type":  "Wasser",
+        "hp":  59,
+        "atk":  63,
+        "emoji":  "💧",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  9,
+        "name":  "Turtok",
+        "type":  "Wasser",
+        "hp":  109,
+        "atk":  83,
+        "emoji":  "💧",
+        "color":  "#3498db"
+    },
+    {
+        "id":  10,
+        "name":  "Raupy",
+        "type":  "Käfer",
+        "hp":  45,
+        "atk":  30,
+        "emoji":  "🐛",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  11,
+        "name":  "Safcon",
+        "type":  "Käfer",
+        "hp":  50,
+        "atk":  20,
+        "emoji":  "🐛",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  12,
+        "name":  "Smettbo",
+        "type":  "Käfer/Flug",
+        "hp":  60,
+        "atk":  45,
+        "emoji":  "🦋",
+        "color":  "#a29bfe"
+    },
+    {
+        "id":  13,
+        "name":  "Hornliu",
+        "type":  "Käfer/Gift",
+        "hp":  40,
+        "atk":  35,
+        "emoji":  "🐛",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  14,
+        "name":  "Kokuna",
+        "type":  "Käfer/Gift",
+        "hp":  45,
+        "atk":  25,
+        "emoji":  "🐛",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  15,
+        "name":  "Bibor",
+        "type":  "Käfer/Gift",
+        "hp":  65,
+        "atk":  90,
+        "emoji":  "🐝",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  16,
+        "name":  "Taubsi",
+        "type":  "Normal/Flug",
+        "hp":  40,
+        "atk":  45,
+        "emoji":  "🐦",
+        "color":  "#d35400"
+    },
+    {
+        "id":  17,
+        "name":  "Tauboga",
+        "type":  "Normal/Flug",
+        "hp":  63,
+        "atk":  60,
+        "emoji":  "🐦",
+        "color":  "#d35400"
+    },
+    {
+        "id":  18,
+        "name":  "Tauboss",
+        "type":  "Normal/Flug",
+        "hp":  83,
+        "atk":  80,
+        "emoji":  "🦅",
+        "color":  "#d35400"
+    },
+    {
+        "id":  19,
+        "name":  "Rattfratz",
+        "type":  "Normal",
+        "hp":  30,
+        "atk":  56,
+        "emoji":  "🐀",
+        "color":  "#636e72"
+    },
+    {
+        "id":  20,
+        "name":  "Rattikarl",
+        "type":  "Normal",
+        "hp":  55,
+        "atk":  81,
+        "emoji":  "🐀",
+        "color":  "#636e72"
+    },
+    {
+        "id":  21,
+        "name":  "Habitak",
+        "type":  "Normal/Flug",
+        "hp":  40,
+        "atk":  60,
+        "emoji":  "🐦",
+        "color":  "#795548"
+    },
+    {
+        "id":  22,
+        "name":  "Ibitak",
+        "type":  "Normal/Flug",
+        "hp":  65,
+        "atk":  90,
+        "emoji":  "🦅",
+        "color":  "#795548"
+    },
+    {
+        "id":  23,
+        "name":  "Rettan",
+        "type":  "Gift",
+        "hp":  35,
+        "atk":  60,
+        "emoji":  "🐍",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  24,
+        "name":  "Arbok",
+        "type":  "Gift",
+        "hp":  60,
+        "atk":  95,
+        "emoji":  "🐍",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  25,
+        "name":  "Pikachu",
+        "type":  "Elektro",
+        "hp":  60,
+        "atk":  55,
+        "emoji":  "⚡",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  26,
+        "name":  "Raichu",
+        "type":  "Elektro",
+        "hp":  60,
+        "atk":  90,
+        "emoji":  "⚡",
+        "color":  "#f39c12"
+    },
+    {
+        "id":  27,
+        "name":  "Sandan",
+        "type":  "Boden",
+        "hp":  50,
+        "atk":  75,
+        "emoji":  "🦔",
+        "color":  "#d35400"
+    },
+    {
+        "id":  28,
+        "name":  "Sandamer",
+        "type":  "Boden",
+        "hp":  75,
+        "atk":  100,
+        "emoji":  "🦔",
+        "color":  "#d35400"
+    },
+    {
+        "id":  29,
+        "name":  "Nidoran♀",
+        "type":  "Gift",
+        "hp":  55,
+        "atk":  47,
+        "emoji":  "🦔",
+        "color":  "#00cec9"
+    },
+    {
+        "id":  30,
+        "name":  "Nidorina",
+        "type":  "Gift",
+        "hp":  70,
+        "atk":  62,
+        "emoji":  "🦔",
+        "color":  "#00cec9"
+    },
+    {
+        "id":  31,
+        "name":  "Nidoqueen",
+        "type":  "Gift/Boden",
+        "hp":  90,
+        "atk":  92,
+        "emoji":  "👑",
+        "color":  "#00b894"
+    },
+    {
+        "id":  32,
+        "name":  "Nidoran♂",
+        "type":  "Gift",
+        "hp":  46,
+        "atk":  57,
+        "emoji":  "🦔",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  33,
+        "name":  "Nidorino",
+        "type":  "Gift",
+        "hp":  61,
+        "atk":  72,
+        "emoji":  "🦔",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  34,
+        "name":  "Nidoking",
+        "type":  "Gift/Boden",
+        "hp":  81,
+        "atk":  102,
+        "emoji":  "👑",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  35,
+        "name":  "Piepi",
+        "type":  "Fee",
+        "hp":  70,
+        "atk":  45,
+        "emoji":  "🌙",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  36,
+        "name":  "Pixi",
+        "type":  "Fee",
+        "hp":  95,
+        "atk":  70,
+        "emoji":  "🌙",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  37,
+        "name":  "Vulpix",
+        "type":  "Feuer",
+        "hp":  38,
+        "atk":  41,
+        "emoji":  "🦊",
+        "color":  "#e17055"
+    },
+    {
+        "id":  38,
+        "name":  "Vulnona",
+        "type":  "Feuer",
+        "hp":  73,
+        "atk":  76,
+        "emoji":  "🦊",
+        "color":  "#e17055"
+    },
+    {
+        "id":  39,
+        "name":  "Pummeluff",
+        "type":  "Fee",
+        "hp":  115,
+        "atk":  45,
+        "emoji":  "🎤",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  40,
+        "name":  "Knuddeluff",
+        "type":  "Fee",
+        "hp":  140,
+        "atk":  70,
+        "emoji":  "🎤",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  41,
+        "name":  "Zubat",
+        "type":  "Gift/Flug",
+        "hp":  40,
+        "atk":  45,
+        "emoji":  "🦇",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  42,
+        "name":  "Golbat",
+        "type":  "Gift/Flug",
+        "hp":  75,
+        "atk":  80,
+        "emoji":  "🦇",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  43,
+        "name":  "Myrapla",
+        "type":  "Pflanze/Gift",
+        "hp":  45,
+        "atk":  50,
+        "emoji":  "🌿",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  44,
+        "name":  "Duflor",
+        "type":  "Pflanze/Gift",
+        "hp":  60,
+        "atk":  65,
+        "emoji":  "🌸",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  45,
+        "name":  "Giflor",
+        "type":  "Pflanze/Gift",
+        "hp":  75,
+        "atk":  80,
+        "emoji":  "🌺",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  46,
+        "name":  "Paras",
+        "type":  "Käfer/Pflanze",
+        "hp":  35,
+        "atk":  70,
+        "emoji":  "🍄",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  47,
+        "name":  "Parasek",
+        "type":  "Käfer/Pflanze",
+        "hp":  60,
+        "atk":  95,
+        "emoji":  "🍄",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  48,
+        "name":  "Bluzuk",
+        "type":  "Käfer/Gift",
+        "hp":  60,
+        "atk":  55,
+        "emoji":  "🐛",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  49,
+        "name":  "Omot",
+        "type":  "Käfer/Gift",
+        "hp":  70,
+        "atk":  65,
+        "emoji":  "🦋",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  50,
+        "name":  "Digda",
+        "type":  "Boden",
+        "hp":  10,
+        "atk":  55,
+        "emoji":  "🕳️",
+        "color":  "#d35400"
+    },
+    {
+        "id":  51,
+        "name":  "Digdri",
+        "type":  "Boden",
+        "hp":  35,
+        "atk":  100,
+        "emoji":  "🕳️",
+        "color":  "#d35400"
+    },
+    {
+        "id":  52,
+        "name":  "Mauzi",
+        "type":  "Normal",
+        "hp":  40,
+        "atk":  45,
+        "emoji":  "🐱",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  53,
+        "name":  "Snobilikat",
+        "type":  "Normal",
+        "hp":  65,
+        "atk":  70,
+        "emoji":  "🐱",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  54,
+        "name":  "Enton",
+        "type":  "Wasser",
+        "hp":  50,
+        "atk":  52,
+        "emoji":  "🦆",
+        "color":  "#fdcb6e"
+    },
+    {
+        "id":  55,
+        "name":  "Entoron",
+        "type":  "Wasser",
+        "hp":  80,
+        "atk":  82,
+        "emoji":  "🦆",
+        "color":  "#3498db"
+    },
+    {
+        "id":  56,
+        "name":  "Menki",
+        "type":  "Kampf",
+        "hp":  40,
+        "atk":  80,
+        "emoji":  "🐒",
+        "color":  "#d35400"
+    },
+    {
+        "id":  57,
+        "name":  "Rasaff",
+        "type":  "Kampf",
+        "hp":  65,
+        "atk":  105,
+        "emoji":  "🐒",
+        "color":  "#d35400"
+    },
+    {
+        "id":  58,
+        "name":  "Fukano",
+        "type":  "Feuer",
+        "hp":  55,
+        "atk":  70,
+        "emoji":  "🐕",
+        "color":  "#e17055"
+    },
+    {
+        "id":  59,
+        "name":  "Arkani",
+        "type":  "Feuer",
+        "hp":  90,
+        "atk":  110,
+        "emoji":  "🐕",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  60,
+        "name":  "Quapsel",
+        "type":  "Wasser",
+        "hp":  40,
+        "atk":  50,
+        "emoji":  "💧",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  61,
+        "name":  "Quaputzi",
+        "type":  "Wasser",
+        "hp":  65,
+        "atk":  65,
+        "emoji":  "💧",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  62,
+        "name":  "Quappo",
+        "type":  "Wasser/Kampf",
+        "hp":  90,
+        "atk":  95,
+        "emoji":  "💧",
+        "color":  "#2980b9"
+    },
+    {
+        "id":  63,
+        "name":  "Abra",
+        "type":  "Psycho",
+        "hp":  25,
+        "atk":  20,
+        "emoji":  "🧠",
+        "color":  "#fdcb6e"
+    },
+    {
+        "id":  64,
+        "name":  "Kadabra",
+        "type":  "Psycho",
+        "hp":  40,
+        "atk":  35,
+        "emoji":  "🧠",
+        "color":  "#a29bfe"
+    },
+    {
+        "id":  65,
+        "name":  "Simsala",
+        "type":  "Psycho",
+        "hp":  55,
+        "atk":  50,
+        "emoji":  "🥄",
+        "color":  "#a29bfe"
+    },
+    {
+        "id":  66,
+        "name":  "Machollo",
+        "type":  "Kampf",
+        "hp":  70,
+        "atk":  80,
+        "emoji":  "💪",
+        "color":  "#636e72"
+    },
+    {
+        "id":  67,
+        "name":  "Maschock",
+        "type":  "Kampf",
+        "hp":  80,
+        "atk":  100,
+        "emoji":  "💪",
+        "color":  "#636e72"
+    },
+    {
+        "id":  68,
+        "name":  "Machomei",
+        "type":  "Kampf",
+        "hp":  90,
+        "atk":  130,
+        "emoji":  "💪",
+        "color":  "#636e72"
+    },
+    {
+        "id":  69,
+        "name":  "Knofensa",
+        "type":  "Pflanze/Gift",
+        "hp":  50,
+        "atk":  75,
+        "emoji":  "🌱",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  70,
+        "name":  "Ultrigaria",
+        "type":  "Pflanze/Gift",
+        "hp":  65,
+        "atk":  90,
+        "emoji":  "🌿",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  71,
+        "name":  "Sarzenia",
+        "type":  "Pflanze/Gift",
+        "hp":  80,
+        "atk":  105,
+        "emoji":  "🌿",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  72,
+        "name":  "Tentacha",
+        "type":  "Wasser/Gift",
+        "hp":  40,
+        "atk":  40,
+        "emoji":  "🐙",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  73,
+        "name":  "Tentoxa",
+        "type":  "Wasser/Gift",
+        "hp":  80,
+        "atk":  70,
+        "emoji":  "🐙",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  74,
+        "name":  "Kleinstein",
+        "type":  "Gestein/Boden",
+        "hp":  40,
+        "atk":  80,
+        "emoji":  "🪨",
+        "color":  "#795548"
+    },
+    {
+        "id":  75,
+        "name":  "Georok",
+        "type":  "Gestein/Boden",
+        "hp":  55,
+        "atk":  95,
+        "emoji":  "🪨",
+        "color":  "#795548"
+    },
+    {
+        "id":  76,
+        "name":  "Geowaz",
+        "type":  "Gestein/Boden",
+        "hp":  80,
+        "atk":  120,
+        "emoji":  "🪨",
+        "color":  "#795548"
+    },
+    {
+        "id":  77,
+        "name":  "Ponita",
+        "type":  "Feuer",
+        "hp":  50,
+        "atk":  85,
+        "emoji":  "🐴",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  78,
+        "name":  "Gallopa",
+        "type":  "Feuer",
+        "hp":  65,
+        "atk":  100,
+        "emoji":  "🐴",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  79,
+        "name":  "Flegmon",
+        "type":  "Wasser/Psycho",
+        "hp":  90,
+        "atk":  65,
+        "emoji":  "🐚",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  80,
+        "name":  "Lahmus",
+        "type":  "Wasser/Psycho",
+        "hp":  95,
+        "atk":  75,
+        "emoji":  "🐚",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  81,
+        "name":  "Magnetilo",
+        "type":  "Elektro",
+        "hp":  25,
+        "atk":  35,
+        "emoji":  "🧲",
+        "color":  "#636e72"
+    },
+    {
+        "id":  82,
+        "name":  "Magneton",
+        "type":  "Elektro/Stahl",
+        "hp":  50,
+        "atk":  60,
+        "emoji":  "🧲",
+        "color":  "#636e72"
+    },
+    {
+        "id":  83,
+        "name":  "Porenta",
+        "type":  "Normal",
+        "hp":  52,
+        "atk":  90,
+        "emoji":  "🦆",
+        "color":  "#d35400"
+    },
+    {
+        "id":  84,
+        "name":  "Dodu",
+        "type":  "Normal/Flug",
+        "hp":  35,
+        "atk":  85,
+        "emoji":  "🐦",
+        "color":  "#d35400"
+    },
+    {
+        "id":  85,
+        "name":  "Dodri",
+        "type":  "Normal/Flug",
+        "hp":  60,
+        "atk":  110,
+        "emoji":  "🐦",
+        "color":  "#d35400"
+    },
+    {
+        "id":  86,
+        "name":  "Jurob",
+        "type":  "Wasser",
+        "hp":  65,
+        "atk":  45,
+        "emoji":  "🦭",
+        "color":  "#dfe6e9"
+    },
+    {
+        "id":  87,
+        "name":  "Jugong",
+        "type":  "Wasser/Eis",
+        "hp":  90,
+        "atk":  70,
+        "emoji":  "🦭",
+        "color":  "#dfe6e9"
+    },
+    {
+        "id":  88,
+        "name":  "Sleima",
+        "type":  "Gift",
+        "hp":  80,
+        "atk":  80,
+        "emoji":  "💜",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  89,
+        "name":  "Sleimok",
+        "type":  "Gift",
+        "hp":  105,
+        "atk":  105,
+        "emoji":  "💜",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  90,
+        "name":  "Muschas",
+        "type":  "Wasser",
+        "hp":  30,
+        "atk":  65,
+        "emoji":  "🐚",
+        "color":  "#636e72"
+    },
+    {
+        "id":  91,
+        "name":  "Austos",
+        "type":  "Wasser/Eis",
+        "hp":  50,
+        "atk":  95,
+        "emoji":  "🐚",
+        "color":  "#636e72"
+    },
+    {
+        "id":  92,
+        "name":  "Nebulak",
+        "type":  "Geist/Gift",
+        "hp":  30,
+        "atk":  35,
+        "emoji":  "👻",
+        "color":  "#8e44ad"
+    },
+    {
+        "id":  93,
+        "name":  "Alpollo",
+        "type":  "Geist/Gift",
+        "hp":  45,
+        "atk":  50,
+        "emoji":  "👻",
+        "color":  "#8e44ad"
+    },
+    {
+        "id":  94,
+        "name":  "Gengar",
+        "type":  "Geist/Gift",
+        "hp":  60,
+        "atk":  65,
+        "emoji":  "👻",
+        "color":  "#8e44ad"
+    },
+    {
+        "id":  95,
+        "name":  "Onix",
+        "type":  "Gestein/Boden",
+        "hp":  35,
+        "atk":  45,
+        "emoji":  "🐍",
+        "color":  "#636e72"
+    },
+    {
+        "id":  96,
+        "name":  "Traumato",
+        "type":  "Psycho",
+        "hp":  60,
+        "atk":  48,
+        "emoji":  "💤",
+        "color":  "#fdcb6e"
+    },
+    {
+        "id":  97,
+        "name":  "Hypno",
+        "type":  "Psycho",
+        "hp":  85,
+        "atk":  73,
+        "emoji":  "💤",
+        "color":  "#fdcb6e"
+    },
+    {
+        "id":  98,
+        "name":  "Krabby",
+        "type":  "Wasser",
+        "hp":  30,
+        "atk":  105,
+        "emoji":  "🦀",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  99,
+        "name":  "Kingler",
+        "type":  "Wasser",
+        "hp":  55,
+        "atk":  130,
+        "emoji":  "🦀",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  100,
+        "name":  "Voltobal",
+        "type":  "Elektro",
+        "hp":  40,
+        "atk":  30,
+        "emoji":  "⚡",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  101,
+        "name":  "Lektrobal",
+        "type":  "Elektro",
+        "hp":  60,
+        "atk":  50,
+        "emoji":  "💣",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  102,
+        "name":  "Owei",
+        "type":  "Pflanze/Psycho",
+        "hp":  60,
+        "atk":  40,
+        "emoji":  "🥚",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  103,
+        "name":  "Kokowei",
+        "type":  "Pflanze/Psycho",
+        "hp":  95,
+        "atk":  95,
+        "emoji":  "🌴",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  104,
+        "name":  "Tragosso",
+        "type":  "Boden",
+        "hp":  50,
+        "atk":  50,
+        "emoji":  "🦴",
+        "color":  "#d35400"
+    },
+    {
+        "id":  105,
+        "name":  "Knogga",
+        "type":  "Boden",
+        "hp":  60,
+        "atk":  80,
+        "emoji":  "🦴",
+        "color":  "#d35400"
+    },
+    {
+        "id":  106,
+        "name":  "Kicklee",
+        "type":  "Kampf",
+        "hp":  50,
+        "atk":  120,
+        "emoji":  "🦵",
+        "color":  "#795548"
+    },
+    {
+        "id":  107,
+        "name":  "Nockchan",
+        "type":  "Kampf",
+        "hp":  50,
+        "atk":  105,
+        "emoji":  "🥊",
+        "color":  "#795548"
+    },
+    {
+        "id":  108,
+        "name":  "Schlurp",
+        "type":  "Normal",
+        "hp":  90,
+        "atk":  55,
+        "emoji":  "👅",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  109,
+        "name":  "Smogon",
+        "type":  "Gift",
+        "hp":  40,
+        "atk":  65,
+        "emoji":  "💨",
+        "color":  "#636e72"
+    },
+    {
+        "id":  110,
+        "name":  "Smogmog",
+        "type":  "Gift",
+        "hp":  65,
+        "atk":  90,
+        "emoji":  "💨",
+        "color":  "#636e72"
+    },
+    {
+        "id":  111,
+        "name":  "Rihorn",
+        "type":  "Boden/Gestein",
+        "hp":  80,
+        "atk":  85,
+        "emoji":  "🦏",
+        "color":  "#636e72"
+    },
+    {
+        "id":  112,
+        "name":  "Rizeros",
+        "type":  "Boden/Gestein",
+        "hp":  105,
+        "atk":  130,
+        "emoji":  "🦏",
+        "color":  "#636e72"
+    },
+    {
+        "id":  113,
+        "name":  "Chaneira",
+        "type":  "Normal",
+        "hp":  250,
+        "atk":  5,
+        "emoji":  "💗",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  114,
+        "name":  "Tangela",
+        "type":  "Pflanze",
+        "hp":  65,
+        "atk":  55,
+        "emoji":  "🌿",
+        "color":  "#2980b9"
+    },
+    {
+        "id":  115,
+        "name":  "Kangama",
+        "type":  "Normal",
+        "hp":  105,
+        "atk":  95,
+        "emoji":  "🦘",
+        "color":  "#795548"
+    },
+    {
+        "id":  116,
+        "name":  "Seeper",
+        "type":  "Wasser",
+        "hp":  30,
+        "atk":  40,
+        "emoji":  "🐴",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  117,
+        "name":  "Seemon",
+        "type":  "Wasser",
+        "hp":  55,
+        "atk":  65,
+        "emoji":  "🐴",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  118,
+        "name":  "Goldini",
+        "type":  "Wasser",
+        "hp":  45,
+        "atk":  67,
+        "emoji":  "🐟",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  119,
+        "name":  "Golking",
+        "type":  "Wasser",
+        "hp":  80,
+        "atk":  92,
+        "emoji":  "🐟",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  120,
+        "name":  "Sterndu",
+        "type":  "Wasser",
+        "hp":  30,
+        "atk":  45,
+        "emoji":  "⭐",
+        "color":  "#795548"
+    },
+    {
+        "id":  121,
+        "name":  "Starmie",
+        "type":  "Wasser/Psycho",
+        "hp":  60,
+        "atk":  75,
+        "emoji":  "⭐",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  122,
+        "name":  "Pantimos",
+        "type":  "Psycho",
+        "hp":  40,
+        "atk":  45,
+        "emoji":  "🤹",
+        "color":  "#e91e63"
+    },
+    {
+        "id":  123,
+        "name":  "Sichlor",
+        "type":  "Käfer",
+        "hp":  70,
+        "atk":  110,
+        "emoji":  "🦗",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  124,
+        "name":  "Rossana",
+        "type":  "Eis/Psycho",
+        "hp":  65,
+        "atk":  50,
+        "emoji":  "💋",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  125,
+        "name":  "Elektek",
+        "type":  "Elektro",
+        "hp":  65,
+        "atk":  83,
+        "emoji":  "⚡",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  126,
+        "name":  "Magmar",
+        "type":  "Feuer",
+        "hp":  65,
+        "atk":  95,
+        "emoji":  "🔥",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  127,
+        "name":  "Pinsir",
+        "type":  "Käfer",
+        "hp":  65,
+        "atk":  125,
+        "emoji":  "🦗",
+        "color":  "#795548"
+    },
+    {
+        "id":  128,
+        "name":  "Tauros",
+        "type":  "Normal",
+        "hp":  75,
+        "atk":  100,
+        "emoji":  "🐂",
+        "color":  "#d35400"
+    },
+    {
+        "id":  129,
+        "name":  "Karpador",
+        "type":  "Wasser",
+        "hp":  20,
+        "atk":  10,
+        "emoji":  "🐟",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  130,
+        "name":  "Garados",
+        "type":  "Wasser/Flug",
+        "hp":  95,
+        "atk":  125,
+        "emoji":  "🌊",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  131,
+        "name":  "Lapras",
+        "type":  "Wasser/Eis",
+        "hp":  130,
+        "atk":  85,
+        "emoji":  "🐢",
+        "color":  "#00cec9"
+    },
+    {
+        "id":  132,
+        "name":  "Ditto",
+        "type":  "Normal",
+        "hp":  48,
+        "atk":  48,
+        "emoji":  "🟣",
+        "color":  "#a29bfe"
+    },
+    {
+        "id":  133,
+        "name":  "Evoli",
+        "type":  "Normal",
+        "hp":  55,
+        "atk":  55,
+        "emoji":  "🦊",
+        "color":  "#a0522d"
+    },
+    {
+        "id":  134,
+        "name":  "Aquana",
+        "type":  "Wasser",
+        "hp":  130,
+        "atk":  65,
+        "emoji":  "💧",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  135,
+        "name":  "Blitza",
+        "type":  "Elektro",
+        "hp":  65,
+        "atk":  65,
+        "emoji":  "⚡",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  136,
+        "name":  "Flamara",
+        "type":  "Feuer",
+        "hp":  65,
+        "atk":  130,
+        "emoji":  "🔥",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  137,
+        "name":  "Porygon",
+        "type":  "Normal",
+        "hp":  65,
+        "atk":  60,
+        "emoji":  "💻",
+        "color":  "#e91e63"
+    },
+    {
+        "id":  138,
+        "name":  "Amonitas",
+        "type":  "Gestein",
+        "hp":  35,
+        "atk":  40,
+        "emoji":  "🐚",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  139,
+        "name":  "Amoroso",
+        "type":  "Gestein",
+        "hp":  70,
+        "atk":  60,
+        "emoji":  "🐚",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  140,
+        "name":  "Kabuto",
+        "type":  "Gestein",
+        "hp":  30,
+        "atk":  80,
+        "emoji":  "🪨",
+        "color":  "#795548"
+    },
+    {
+        "id":  141,
+        "name":  "Kabutops",
+        "type":  "Gestein",
+        "hp":  60,
+        "atk":  115,
+        "emoji":  "🪨",
+        "color":  "#795548"
+    },
+    {
+        "id":  142,
+        "name":  "Aerodactyl",
+        "type":  "Gestein/Flug",
+        "hp":  80,
+        "atk":  105,
+        "emoji":  "🦅",
+        "color":  "#636e72"
+    },
+    {
+        "id":  143,
+        "name":  "Relaxo",
+        "type":  "Normal",
+        "hp":  160,
+        "atk":  110,
+        "emoji":  "😴",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  144,
+        "name":  "Arktos",
+        "type":  "Eis/Flug",
+        "hp":  90,
+        "atk":  85,
+        "emoji":  "❄️",
+        "color":  "#74b9ff",
+        "legendary":  true
+    },
+    {
+        "id":  145,
+        "name":  "Zapdos",
+        "type":  "Elektro/Flug",
+        "hp":  90,
+        "atk":  90,
+        "emoji":  "⚡",
+        "color":  "#fdcb6e",
+        "legendary":  true
+    },
+    {
+        "id":  146,
+        "name":  "Lavados",
+        "type":  "Feuer/Flug",
+        "hp":  90,
+        "atk":  100,
+        "emoji":  "🔥",
+        "color":  "#e17055",
+        "legendary":  true
+    },
+    {
+        "id":  147,
+        "name":  "Dratini",
+        "type":  "Drache",
+        "hp":  41,
+        "atk":  64,
+        "emoji":  "🐉",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  148,
+        "name":  "Dragonir",
+        "type":  "Drache",
+        "hp":  61,
+        "atk":  84,
+        "emoji":  "🐉",
+        "color":  "#3498db"
+    },
+    {
+        "id":  149,
+        "name":  "Dragoran",
+        "type":  "Drache/Flug",
+        "hp":  91,
+        "atk":  134,
+        "emoji":  "🐉",
+        "color":  "#f39c12"
+    },
+    {
+        "id":  150,
+        "name":  "Mewtu",
+        "type":  "Psycho",
+        "hp":  106,
+        "atk":  110,
+        "emoji":  "🔮",
+        "color":  "#9b59b6",
+        "legendary":  true
+    },
+    {
+        "id":  151,
+        "name":  "Mew",
+        "type":  "Psycho",
+        "hp":  100,
+        "atk":  100,
+        "emoji":  "✨",
+        "color":  "#e91e63",
+        "legendary":  true
+    },
+    {
+        "id":  152,
+        "name":  "Endivie",
+        "type":  "Pflanze",
+        "hp":  45,
+        "atk":  49,
+        "emoji":  "🌱",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  153,
+        "name":  "Lorblatt",
+        "type":  "Pflanze",
+        "hp":  60,
+        "atk":  62,
+        "emoji":  "🌿",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  154,
+        "name":  "Meganie",
+        "type":  "Pflanze",
+        "hp":  80,
+        "atk":  82,
+        "emoji":  "🌸",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  155,
+        "name":  "Feurigel",
+        "type":  "Feuer",
+        "hp":  39,
+        "atk":  52,
+        "emoji":  "🔥",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  156,
+        "name":  "Igelavar",
+        "type":  "Feuer",
+        "hp":  58,
+        "atk":  64,
+        "emoji":  "🔥",
+        "color":  "#e17055"
+    },
+    {
+        "id":  157,
+        "name":  "Tornupto",
+        "type":  "Feuer",
+        "hp":  78,
+        "atk":  84,
+        "emoji":  "🔥",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  158,
+        "name":  "Karnimani",
+        "type":  "Wasser",
+        "hp":  50,
+        "atk":  65,
+        "emoji":  "🐊",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  159,
+        "name":  "Tyracroc",
+        "type":  "Wasser",
+        "hp":  65,
+        "atk":  80,
+        "emoji":  "🐊",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  160,
+        "name":  "Impergator",
+        "type":  "Wasser",
+        "hp":  85,
+        "atk":  105,
+        "emoji":  "🐊",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  161,
+        "name":  "Wiesor",
+        "type":  "Normal",
+        "hp":  35,
+        "atk":  46,
+        "emoji":  "🦝",
+        "color":  "#795548"
+    },
+    {
+        "id":  162,
+        "name":  "Wiesenior",
+        "type":  "Normal",
+        "hp":  75,
+        "atk":  76,
+        "emoji":  "🦝",
+        "color":  "#795548"
+    },
+    {
+        "id":  163,
+        "name":  "Hoothoot",
+        "type":  "Normal/Flug",
+        "hp":  60,
+        "atk":  30,
+        "emoji":  "🦉",
+        "color":  "#795548"
+    },
+    {
+        "id":  164,
+        "name":  "Noctuh",
+        "type":  "Normal/Flug",
+        "hp":  100,
+        "atk":  50,
+        "emoji":  "🦉",
+        "color":  "#795548"
+    },
+    {
+        "id":  165,
+        "name":  "Ledyba",
+        "type":  "Käfer/Flug",
+        "hp":  40,
+        "atk":  20,
+        "emoji":  "🐞",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  166,
+        "name":  "Ledian",
+        "type":  "Käfer/Flug",
+        "hp":  55,
+        "atk":  35,
+        "emoji":  "🐞",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  167,
+        "name":  "Webarak",
+        "type":  "Käfer/Gift",
+        "hp":  40,
+        "atk":  60,
+        "emoji":  "🕷️",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  168,
+        "name":  "Ariados",
+        "type":  "Käfer/Gift",
+        "hp":  70,
+        "atk":  90,
+        "emoji":  "🕷️",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  169,
+        "name":  "Iksbat",
+        "type":  "Gift/Flug",
+        "hp":  85,
+        "atk":  90,
+        "emoji":  "🦇",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  170,
+        "name":  "Lampi",
+        "type":  "Wasser/Elektro",
+        "hp":  75,
+        "atk":  38,
+        "emoji":  "💡",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  171,
+        "name":  "Lanturn",
+        "type":  "Wasser/Elektro",
+        "hp":  125,
+        "atk":  58,
+        "emoji":  "💡",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  172,
+        "name":  "Pichu",
+        "type":  "Elektro",
+        "hp":  20,
+        "atk":  40,
+        "emoji":  "⚡",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  173,
+        "name":  "Pii",
+        "type":  "Fee",
+        "hp":  50,
+        "atk":  25,
+        "emoji":  "⭐",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  174,
+        "name":  "Fluffeluff",
+        "type":  "Fee",
+        "hp":  90,
+        "atk":  30,
+        "emoji":  "🎤",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  175,
+        "name":  "Togepi",
+        "type":  "Fee",
+        "hp":  35,
+        "atk":  20,
+        "emoji":  "🥚",
+        "color":  "#dfe6e9"
+    },
+    {
+        "id":  176,
+        "name":  "Togetic",
+        "type":  "Fee",
+        "hp":  55,
+        "atk":  40,
+        "emoji":  "🕊️",
+        "color":  "#dfe6e9"
+    },
+    {
+        "id":  177,
+        "name":  "Natu",
+        "type":  "Psycho/Flug",
+        "hp":  40,
+        "atk":  50,
+        "emoji":  "🐦",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  178,
+        "name":  "Xatu",
+        "type":  "Psycho/Flug",
+        "hp":  65,
+        "atk":  75,
+        "emoji":  "🐦",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  179,
+        "name":  "Voltilamm",
+        "type":  "Elektro",
+        "hp":  55,
+        "atk":  40,
+        "emoji":  "🐑",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  180,
+        "name":  "Waaty",
+        "type":  "Elektro",
+        "hp":  70,
+        "atk":  55,
+        "emoji":  "🐑",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  181,
+        "name":  "Ampharos",
+        "type":  "Elektro",
+        "hp":  90,
+        "atk":  75,
+        "emoji":  "⚡",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  182,
+        "name":  "Blubella",
+        "type":  "Pflanze",
+        "hp":  75,
+        "atk":  80,
+        "emoji":  "🌺",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  183,
+        "name":  "Marill",
+        "type":  "Wasser",
+        "hp":  70,
+        "atk":  20,
+        "emoji":  "💧",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  184,
+        "name":  "Azumarill",
+        "type":  "Wasser",
+        "hp":  100,
+        "atk":  50,
+        "emoji":  "💧",
+        "color":  "#3498db"
+    },
+    {
+        "id":  185,
+        "name":  "Mogelbaum",
+        "type":  "Gestein",
+        "hp":  70,
+        "atk":  100,
+        "emoji":  "🌳",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  186,
+        "name":  "Quaxo",
+        "type":  "Wasser",
+        "hp":  90,
+        "atk":  75,
+        "emoji":  "🐸",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  187,
+        "name":  "Hoppspross",
+        "type":  "Pflanze/Flug",
+        "hp":  35,
+        "atk":  35,
+        "emoji":  "🌱",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  188,
+        "name":  "Hubelupf",
+        "type":  "Pflanze/Flug",
+        "hp":  55,
+        "atk":  45,
+        "emoji":  "🌸",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  189,
+        "name":  "Papungha",
+        "type":  "Pflanze/Flug",
+        "hp":  75,
+        "atk":  55,
+        "emoji":  "🌸",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  190,
+        "name":  "Griffel",
+        "type":  "Normal",
+        "hp":  55,
+        "atk":  60,
+        "emoji":  "🐒",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  191,
+        "name":  "Sonnkern",
+        "type":  "Pflanze",
+        "hp":  30,
+        "atk":  30,
+        "emoji":  "🌻",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  192,
+        "name":  "Sonnflora",
+        "type":  "Pflanze",
+        "hp":  75,
+        "atk":  75,
+        "emoji":  "🌻",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  193,
+        "name":  "Yanma",
+        "type":  "Käfer/Flug",
+        "hp":  65,
+        "atk":  65,
+        "emoji":  "🪰",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  194,
+        "name":  "Felino",
+        "type":  "Wasser/Boden",
+        "hp":  55,
+        "atk":  45,
+        "emoji":  "💧",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  195,
+        "name":  "Morlord",
+        "type":  "Wasser/Boden",
+        "hp":  95,
+        "atk":  75,
+        "emoji":  "💧",
+        "color":  "#3498db"
+    },
+    {
+        "id":  196,
+        "name":  "Psiana",
+        "type":  "Psycho",
+        "hp":  65,
+        "atk":  65,
+        "emoji":  "☀️",
+        "color":  "#a29bfe"
+    },
+    {
+        "id":  197,
+        "name":  "Nachtara",
+        "type":  "Unlicht",
+        "hp":  95,
+        "atk":  65,
+        "emoji":  "🌙",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  198,
+        "name":  "Kramurx",
+        "type":  "Unlicht/Flug",
+        "hp":  60,
+        "atk":  85,
+        "emoji":  "🐦",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  199,
+        "name":  "Laschoking",
+        "type":  "Wasser/Psycho",
+        "hp":  95,
+        "atk":  75,
+        "emoji":  "👑",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  200,
+        "name":  "Traunfugil",
+        "type":  "Geist",
+        "hp":  60,
+        "atk":  60,
+        "emoji":  "👻",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  201,
+        "name":  "Icognito",
+        "type":  "Psycho",
+        "hp":  48,
+        "atk":  72,
+        "emoji":  "🔤",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  202,
+        "name":  "Woingenau",
+        "type":  "Psycho",
+        "hp":  190,
+        "atk":  33,
+        "emoji":  "💙",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  203,
+        "name":  "Girafarig",
+        "type":  "Normal/Psycho",
+        "hp":  70,
+        "atk":  80,
+        "emoji":  "🦒",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  204,
+        "name":  "Tannza",
+        "type":  "Käfer",
+        "hp":  50,
+        "atk":  65,
+        "emoji":  "🌲",
+        "color":  "#636e72"
+    },
+    {
+        "id":  205,
+        "name":  "Forstellka",
+        "type":  "Käfer/Stahl",
+        "hp":  75,
+        "atk":  90,
+        "emoji":  "🌲",
+        "color":  "#636e72"
+    },
+    {
+        "id":  206,
+        "name":  "Dummisel",
+        "type":  "Normal",
+        "hp":  100,
+        "atk":  70,
+        "emoji":  "🐍",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  207,
+        "name":  "Skorgla",
+        "type":  "Boden/Flug",
+        "hp":  65,
+        "atk":  75,
+        "emoji":  "🦂",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  208,
+        "name":  "Stahlos",
+        "type":  "Stahl/Boden",
+        "hp":  75,
+        "atk":  85,
+        "emoji":  "⛓️",
+        "color":  "#636e72"
+    },
+    {
+        "id":  209,
+        "name":  "Snubbull",
+        "type":  "Fee",
+        "hp":  60,
+        "atk":  80,
+        "emoji":  "🐕",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  210,
+        "name":  "Granbull",
+        "type":  "Fee",
+        "hp":  90,
+        "atk":  120,
+        "emoji":  "🐕",
+        "color":  "#6c5ce7"
+    },
+    {
+        "id":  211,
+        "name":  "Baldorfish",
+        "type":  "Wasser/Gift",
+        "hp":  65,
+        "atk":  95,
+        "emoji":  "🐡",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  212,
+        "name":  "Scherox",
+        "type":  "Käfer/Stahl",
+        "hp":  70,
+        "atk":  130,
+        "emoji":  "✂️",
+        "color":  "#c0392b"
+    },
+    {
+        "id":  213,
+        "name":  "Pottrott",
+        "type":  "Käfer",
+        "hp":  20,
+        "atk":  10,
+        "emoji":  "🐛",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  214,
+        "name":  "Skaraborn",
+        "type":  "Käfer/Kampf",
+        "hp":  80,
+        "atk":  125,
+        "emoji":  "🪲",
+        "color":  "#2980b9"
+    },
+    {
+        "id":  215,
+        "name":  "Sniebel",
+        "type":  "Unlicht/Eis",
+        "hp":  55,
+        "atk":  95,
+        "emoji":  "❄️",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  216,
+        "name":  "Teddiursa",
+        "type":  "Normal",
+        "hp":  60,
+        "atk":  80,
+        "emoji":  "🧸",
+        "color":  "#d35400"
+    },
+    {
+        "id":  217,
+        "name":  "Ursaring",
+        "type":  "Normal",
+        "hp":  90,
+        "atk":  130,
+        "emoji":  "🐻",
+        "color":  "#795548"
+    },
+    {
+        "id":  218,
+        "name":  "Schneckmag",
+        "type":  "Feuer",
+        "hp":  40,
+        "atk":  40,
+        "emoji":  "🐌",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  219,
+        "name":  "Magcargo",
+        "type":  "Feuer/Gestein",
+        "hp":  60,
+        "atk":  50,
+        "emoji":  "🐌",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  220,
+        "name":  "Quiekel",
+        "type":  "Eis/Boden",
+        "hp":  50,
+        "atk":  50,
+        "emoji":  "🐷",
+        "color":  "#d35400"
+    },
+    {
+        "id":  221,
+        "name":  "Keifel",
+        "type":  "Eis/Boden",
+        "hp":  100,
+        "atk":  100,
+        "emoji":  "🐷",
+        "color":  "#795548"
+    },
+    {
+        "id":  222,
+        "name":  "Corasonn",
+        "type":  "Wasser/Gestein",
+        "hp":  65,
+        "atk":  55,
+        "emoji":  "🪸",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  223,
+        "name":  "Remoraid",
+        "type":  "Wasser",
+        "hp":  35,
+        "atk":  65,
+        "emoji":  "🐟",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  224,
+        "name":  "Octillery",
+        "type":  "Wasser",
+        "hp":  75,
+        "atk":  105,
+        "emoji":  "🐙",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  225,
+        "name":  "Botogel",
+        "type":  "Eis/Flug",
+        "hp":  45,
+        "atk":  55,
+        "emoji":  "🐧",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  226,
+        "name":  "Mantax",
+        "type":  "Wasser/Flug",
+        "hp":  85,
+        "atk":  40,
+        "emoji":  "🐟",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  227,
+        "name":  "Panzaeron",
+        "type":  "Stahl/Flug",
+        "hp":  65,
+        "atk":  80,
+        "emoji":  "🦅",
+        "color":  "#636e72"
+    },
+    {
+        "id":  228,
+        "name":  "Hunduster",
+        "type":  "Unlicht/Feuer",
+        "hp":  45,
+        "atk":  60,
+        "emoji":  "🐕",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  229,
+        "name":  "Hundemon",
+        "type":  "Unlicht/Feuer",
+        "hp":  75,
+        "atk":  90,
+        "emoji":  "🐕‍🦺",
+        "color":  "#2c3e50"
+    },
+    {
+        "id":  230,
+        "name":  "Seedraking",
+        "type":  "Wasser/Drache",
+        "hp":  75,
+        "atk":  95,
+        "emoji":  "🐴",
+        "color":  "#0984e3"
+    },
+    {
+        "id":  231,
+        "name":  "Phanpy",
+        "type":  "Boden",
+        "hp":  90,
+        "atk":  60,
+        "emoji":  "🐘",
+        "color":  "#74b9ff"
+    },
+    {
+        "id":  232,
+        "name":  "Donphan",
+        "type":  "Boden",
+        "hp":  90,
+        "atk":  120,
+        "emoji":  "🐘",
+        "color":  "#636e72"
+    },
+    {
+        "id":  233,
+        "name":  "Porygon2",
+        "type":  "Normal",
+        "hp":  85,
+        "atk":  80,
+        "emoji":  "💻",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  234,
+        "name":  "Damhirplex",
+        "type":  "Normal",
+        "hp":  73,
+        "atk":  95,
+        "emoji":  "🦌",
+        "color":  "#795548"
+    },
+    {
+        "id":  235,
+        "name":  "Farbeagle",
+        "type":  "Normal",
+        "hp":  55,
+        "atk":  20,
+        "emoji":  "🎨",
+        "color":  "#dfe6e9"
+    },
+    {
+        "id":  236,
+        "name":  "Rabauz",
+        "type":  "Kampf",
+        "hp":  35,
+        "atk":  35,
+        "emoji":  "👶",
+        "color":  "#795548"
+    },
+    {
+        "id":  237,
+        "name":  "Kapoera",
+        "type":  "Kampf",
+        "hp":  50,
+        "atk":  95,
+        "emoji":  "🤸",
+        "color":  "#795548"
+    },
+    {
+        "id":  238,
+        "name":  "Kussilla",
+        "type":  "Eis",
+        "hp":  45,
+        "atk":  30,
+        "emoji":  "💋",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  239,
+        "name":  "Elekid",
+        "type":  "Elektro",
+        "hp":  45,
+        "atk":  63,
+        "emoji":  "⚡",
+        "color":  "#f1c40f"
+    },
+    {
+        "id":  240,
+        "name":  "Magby",
+        "type":  "Feuer",
+        "hp":  45,
+        "atk":  75,
+        "emoji":  "🔥",
+        "color":  "#e74c3c"
+    },
+    {
+        "id":  241,
+        "name":  "Miltank",
+        "type":  "Normal",
+        "hp":  95,
+        "atk":  80,
+        "emoji":  "🐄",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  242,
+        "name":  "Heiteira",
+        "type":  "Normal",
+        "hp":  255,
+        "atk":  10,
+        "emoji":  "💗",
+        "color":  "#fd79a8"
+    },
+    {
+        "id":  243,
+        "name":  "Raikou",
+        "type":  "Elektro",
+        "hp":  90,
+        "atk":  85,
+        "emoji":  "⚡",
+        "color":  "#f1c40f",
+        "legendary":  true
+    },
+    {
+        "id":  244,
+        "name":  "Entei",
+        "type":  "Feuer",
+        "hp":  115,
+        "atk":  115,
+        "emoji":  "🔥",
+        "color":  "#d35400",
+        "legendary":  true
+    },
+    {
+        "id":  245,
+        "name":  "Suicune",
+        "type":  "Wasser",
+        "hp":  100,
+        "atk":  75,
+        "emoji":  "💎",
+        "color":  "#00cec9",
+        "legendary":  true
+    },
+    {
+        "id":  246,
+        "name":  "Larvitar",
+        "type":  "Gestein/Boden",
+        "hp":  50,
+        "atk":  64,
+        "emoji":  "🦎",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  247,
+        "name":  "Pupitar",
+        "type":  "Gestein/Boden",
+        "hp":  70,
+        "atk":  84,
+        "emoji":  "🦎",
+        "color":  "#636e72"
+    },
+    {
+        "id":  248,
+        "name":  "Despotar",
+        "type":  "Gestein/Unlicht",
+        "hp":  100,
+        "atk":  134,
+        "emoji":  "🦖",
+        "color":  "#27ae60"
+    },
+    {
+        "id":  249,
+        "name":  "Lugia",
+        "type":  "Psycho/Flug",
+        "hp":  106,
+        "atk":  90,
+        "emoji":  "🌊",
+        "color":  "#dfe6e9",
+        "legendary":  true
+    },
+    {
+        "id":  250,
+        "name":  "Ho-Oh",
+        "type":  "Feuer/Flug",
+        "hp":  106,
+        "atk":  130,
+        "emoji":  "🌈",
+        "color":  "#e74c3c",
+        "legendary":  true
+    },
+    {
+        "id":  251,
+        "name":  "Celebi",
+        "type":  "Pflanze/Psycho",
+        "hp":  100,
+        "atk":  100,
+        "emoji":  "🌳",
+        "color":  "#27ae60",
+        "legendary":  true
+    }
+]

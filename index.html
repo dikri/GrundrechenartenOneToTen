@@ -2054,6 +2054,26 @@
             if (collection.minecraft.length !== before) changed = true;
         }
         if (changed) localStorage.setItem('leo_collection', JSON.stringify(collection));
+
+        // Gesammelte Karten mit aktuellen Daten aus den JSONs abgleichen
+        // (Seltenheiten, Stats etc. können sich geändert haben)
+        let dataUpdated = false;
+        Object.keys(ALL_THEMES).forEach(theme => {
+            const db = getCardDB(theme);
+            if (!db.length || !collection[theme]?.length) return;
+            const dbMap = {};
+            db.forEach(c => { dbMap[c.name] = c; });
+            collection[theme].forEach(card => {
+                const fresh = dbMap[card.name];
+                if (!fresh) return;
+                // Alle Felder aus der DB übernehmen, isNew behalten
+                const isNew = card.isNew;
+                Object.keys(fresh).forEach(k => { card[k] = fresh[k]; });
+                if (isNew) card.isNew = true;
+                dataUpdated = true;
+            });
+        });
+        if (dataUpdated) localStorage.setItem('leo_collection', JSON.stringify(collection));
     }
 
     function getTotalCards() {

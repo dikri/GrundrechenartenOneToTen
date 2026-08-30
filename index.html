@@ -1739,9 +1739,19 @@
         localStorage.setItem('leo_player_name', name);
         document.getElementById('name-dialog').classList.remove('active');
         updateNameDisplay();
-        // First time? Show theme selection
+        // First time? Show theme selection once themes are loaded
         if (!localStorage.getItem('leo_active_themes')) {
-            setTimeout(showThemeSelector, 500);
+            if (themesLoaded) {
+                setTimeout(showThemeSelector, 300);
+            } else {
+                // Themes still loading – wait for them, then show
+                const waitForThemes = setInterval(() => {
+                    if (themesLoaded) {
+                        clearInterval(waitForThemes);
+                        showThemeSelector();
+                    }
+                }, 200);
+            }
         }
     }
 
@@ -2262,11 +2272,14 @@
         } else if (card.theme === 'minecraft') {
             const mcImgUrl = `https://minecraft.wiki/w/Special:FilePath/${card.img}.png`;
             imageHTML = `<img src="${mcImgUrl}" alt="${card.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-emoji>${card.emoji}</span>'">`;
-        } else if (card.theme === 'autos') {
-            const autoImgUrl = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(card.wiki)}&prop=pageimages&piprop=thumbnail&pithumbsize=400&format=json&origin=*`;
-            imageHTML = `<img class="wiki-auto-img" data-wiki="${card.wiki}" src="" alt="${card.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-emoji>${card.emoji}</span>'">`;
-        } else if (card.theme === 'tiere') {
-            imageHTML = `<img class="wiki-auto-img" data-wiki="${card.wiki}" src="" alt="${card.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-emoji>${card.emoji}</span>'">`;
+        } else if (card.theme === 'autos' || card.theme === 'tiere') {
+            // Placeholder mit Emoji, Wikipedia-Bild wird async nachgeladen
+            const imgId = `wiki-img-${card.theme}-${card.id || Math.random().toString(36).substr(2,5)}`;
+            imageHTML = `<span class="card-emoji" id="${imgId}">${card.emoji}</span>`;
+            // Async: Wikipedia-Bild nachladen
+            if (card.wiki) {
+                setTimeout(() => loadSingleWikiImage(imgId, card.wiki, card.emoji), 50);
+            }
         } else if (card.theme === 'mario') {
             if (card.img) {
                 imageHTML = `<img src="${card.img}" alt="${card.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-emoji>${card.emoji}</span>'">`;
@@ -2437,6 +2450,10 @@
     // ===== QUIZ STARTEN =====
     function startQuiz() {
         if (selectedTime === 0) return;
+        // Testmodus nur aktiv bei 1-Min-Taste
+        if (selectedTime !== 1 && testModeActive) {
+            testModeActive = false;
+        }
         timeRemaining = selectedTime * 60;
         correctStreak = 0;
         totalCorrect = 0;
@@ -2615,7 +2632,6 @@
         const cardEl = document.getElementById('reward-card');
 
         renderCard(card, cardEl);
-        loadWikiImages();
         cardEl.classList.remove('fly-away');
         cardEl.style.animation = 'none';
         void cardEl.offsetHeight;
@@ -2704,24 +2720,34 @@
 
     // Auto-load Wikipedia images for cards with wiki field
     const wikiImageCache = {};
-    function loadWikiImages() {
-        document.querySelectorAll('.wiki-auto-img').forEach(async img => {
-            const wiki = img.dataset.wiki;
-            if (!wiki || img.src) return;
-            if (wikiImageCache[wiki]) { img.src = wikiImageCache[wiki]; return; }
-            try {
-                const resp = await fetch(`https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(wiki)}&prop=pageimages&piprop=thumbnail&pithumbsize=400&format=json&origin=*`);
-                const data = await resp.json();
-                const pages = data.query.pages;
-                const page = Object.values(pages)[0];
-                if (page?.thumbnail?.source) {
-                    wikiImageCache[wiki] = page.thumbnail.source;
-                    img.src = page.thumbnail.source;
-                } else {
-                    img.onerror?.();
-                }
-            } catch { img.onerror?.(); }
-        });
+    async function loadSingleWikiImage(elementId, wikiTitle, fallbackEmoji) {
+        if (!wikiTitle) return;
+        // Check cache first
+        if (wikiImageCache[wikiTitle]) {
+            replaceWithImg(elementId, wikiImageCache[wikiTitle]);
+            return;
+        }
+        try {
+            const resp = await fetch(`https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(wikiTitle)}&prop=pageimages&piprop=thumbnail&pithumbsize=400&format=json&origin=*`);
+            const data = await resp.json();
+            const page = Object.values(data.query.pages)[0];
+            if (page?.thumbnail?.source) {
+                wikiImageCache[wikiTitle] = page.thumbnail.source;
+                replaceWithImg(elementId, page.thumbnail.source);
+            }
+        } catch (e) { /* Emoji fallback stays */ }
+    }
+
+    function replaceWithImg(elementId, src) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        const img = document.createElement('img');
+        img.src = src;
+        img.loading = 'lazy';
+        img.style.maxWidth = '85%';
+        img.style.maxHeight = '85%';
+        img.style.filter = 'drop-shadow(0 4px 12px rgba(0,0,0,0.5))';
+        el.parentElement.replaceChild(img, el);
     }
 
     // ===== ALBUM =====
@@ -2776,7 +2802,6 @@
             wrapper.onclick = () => showCardDetail(card);
             grid.appendChild(wrapper);
         });
-        loadWikiImages();
     }
 
     function showCardDetail(card) {

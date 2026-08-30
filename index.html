@@ -2631,6 +2631,7 @@
                 document.getElementById('feedback').className = 'feedback wrong-fb';
                 document.getElementById('attempts-info').textContent = 'Versuch 2 von 2';
                 document.getElementById('attempts-info').className = 'attempts-info danger';
+                totalWrong++;
                 input.value = '';
                 setTimeout(() => { input.className = 'answer-input'; input.focus(); }, 600);
             } else {

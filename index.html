@@ -302,7 +302,25 @@
         .help-toggle:hover { background: rgba(255,255,255,0.15); }
 
         /* Aufgaben-Auswahl Redesign */
-        .mode-section { margin-bottom: 12px; }
+        .mode-section { margin-bottom: 10px; }
+        .mode-section:last-child { margin-bottom: 0; }
+
+        .mode-group {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 16px;
+            padding: 12px 14px 10px;
+            margin-bottom: 14px;
+        }
+
+        .mode-group-title {
+            font-size: 0.9em;
+            font-weight: 800;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 10px;
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
 
         .mode-section-label {
             font-size: 0.8em;
@@ -341,6 +359,11 @@
         }
 
         .mode-btn-sm:active { transform: scale(0.95); }
+
+        .mode-btn-mixed {
+            border-style: dashed;
+            font-size: 0.8em;
+        }
 
         .bg-scene {
             position: absolute;
@@ -911,6 +934,7 @@
         .rarity-uncommon .card-rarity-bar { background: #27ae60; }
         .rarity-rare .card-rarity-bar { background: linear-gradient(90deg, #2980b9, #6dd5fa); }
         .rarity-epic .card-rarity-bar { background: linear-gradient(90deg, #8e44ad, #fd79a8); }
+        .rarity-mythic .card-rarity-bar { background: linear-gradient(90deg, #e74c3c, #fe5e72, #ff8a5c); animation: mythicGlow 1.8s ease infinite; }
         .rarity-legendary .card-rarity-bar { background: linear-gradient(90deg, #f39c12, #e74c3c, #f39c12); animation: legendaryGlow 1.5s ease infinite; }
         .rarity-ultra-legendary .card-rarity-bar { background: linear-gradient(90deg, #e1fb2a, #ff6b6b, #6c5ce7, #e1fb2a); animation: ultraGlow 1s ease infinite; }
 
@@ -923,6 +947,11 @@
             0%,100% { box-shadow: 0 0 15px #e1fb2a; }
             33% { box-shadow: 0 0 30px #ff6b6b, 0 0 60px #e1fb2a; }
             66% { box-shadow: 0 0 30px #6c5ce7, 0 0 60px #e1fb2a; }
+        }
+
+        @keyframes mythicGlow {
+            0%,100% { box-shadow: 0 0 10px #e74c3c; }
+            50% { box-shadow: 0 0 20px #fe5e72, 0 0 40px #e74c3c; }
         }
 
         .card-rarity-badge {
@@ -942,12 +971,18 @@
         .rarity-uncommon .card-rarity-badge { background: rgba(39,174,96,0.8); }
         .rarity-rare .card-rarity-badge { background: rgba(41,128,185,0.8); }
         .rarity-epic .card-rarity-badge { background: rgba(142,68,173,0.8); }
+        .rarity-mythic .card-rarity-badge { background: linear-gradient(135deg, #e74c3c, #fe5e72); animation: mythicBadgePulse 2s ease infinite; }
         .rarity-legendary .card-rarity-badge { background: linear-gradient(135deg, #f39c12, #e74c3c); }
         .rarity-ultra-legendary .card-rarity-badge { background: linear-gradient(135deg, #e1fb2a, #ff6b6b, #6c5ce7); animation: ultraBadgePulse 1.2s ease infinite; }
 
         @keyframes ultraBadgePulse {
             0%,100% { transform: scale(1); }
             50% { transform: scale(1.08); }
+        }
+
+        @keyframes mythicBadgePulse {
+            0%,100% { transform: scale(1); box-shadow: 0 0 4px rgba(231,76,60,0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 10px rgba(254,94,114,0.6); }
         }
 
         .card-image-area {
@@ -1374,37 +1409,41 @@
             <div class="time-select">
                 <label>Was möchtest du heute üben?</label>
 
-                <div class="mode-section">
-                    <div class="mode-section-label">➕ Plus</div>
-                    <div class="mode-row">
-                        <button class="mode-btn-sm" data-mode="add10">1–10</button>
-                        <button class="mode-btn-sm" data-mode="add20">1–20</button>
-                        <button class="mode-btn-sm" data-mode="add100">1–100</button>
+                <div class="mode-group">
+                    <div class="mode-group-title">➕ ➖ Plus & Minus</div>
+                    <div class="mode-section">
+                        <div class="mode-section-label">➕ Plus</div>
+                        <div class="mode-row">
+                            <button class="mode-btn-sm" data-mode="add10">bis 10</button>
+                            <button class="mode-btn-sm" data-mode="add20">bis 20</button>
+                            <button class="mode-btn-sm" data-mode="add100">bis 100</button>
+                        </div>
+                    </div>
+
+                    <div class="mode-section">
+                        <div class="mode-section-label">➖ Minus</div>
+                        <div class="mode-row">
+                            <button class="mode-btn-sm" data-mode="sub10">bis 10</button>
+                            <button class="mode-btn-sm" data-mode="sub20">bis 20</button>
+                            <button class="mode-btn-sm" data-mode="sub100">bis 100</button>
+                        </div>
+                    </div>
+
+                    <div class="mode-section">
+                        <div class="mode-row">
+                            <button class="mode-btn-sm mode-btn-mixed" data-mode="addsub">🔀 Plus & Minus gemischt</button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="mode-section">
-                    <div class="mode-section-label">➖ Minus</div>
-                    <div class="mode-row">
-                        <button class="mode-btn-sm" data-mode="sub10">1–10</button>
-                        <button class="mode-btn-sm" data-mode="sub20">1–20</button>
-                        <button class="mode-btn-sm" data-mode="sub100">1–100</button>
-                    </div>
-                </div>
-
-                <div class="mode-section">
-                    <div class="mode-section-label">🔀 Gemischt</div>
-                    <div class="mode-row">
-                        <button class="mode-btn-sm" data-mode="addsub">➕➖ Plus & Minus</button>
-                    </div>
-                </div>
-
-                <div class="mode-section">
-                    <div class="mode-section-label">✖️ Mal & Geteilt</div>
-                    <div class="mode-row">
-                        <button class="mode-btn-sm selected" data-mode="multiply">✖️ Mal</button>
-                        <button class="mode-btn-sm" data-mode="divide">➗ Geteilt</button>
-                        <button class="mode-btn-sm" data-mode="muldiv">🔀 Mixed</button>
+                <div class="mode-group">
+                    <div class="mode-group-title">✖️ ➗ Mal & Geteilt</div>
+                    <div class="mode-section">
+                        <div class="mode-row">
+                            <button class="mode-btn-sm selected" data-mode="multiply">✖️ Mal</button>
+                            <button class="mode-btn-sm" data-mode="divide">➗ Geteilt</button>
+                            <button class="mode-btn-sm mode-btn-mixed" data-mode="muldiv">🔀 Gemischt</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2234,16 +2273,16 @@
             const r = card.rar;
             if (r === 'Ultra Legendär') return 'ultra-legendary';
             if (r === 'Legendär') return 'legendary';
-            if (r === 'Mythisch') return 'epic';
-            if (r === 'Episch') return 'rare';
-            if (r === 'Selten') return 'uncommon';
+            if (r === 'Mythisch') return 'mythic';
+            if (r === 'Episch') return 'epic';
+            if (r === 'Selten') return 'rare';
             if (r === 'Starter') return 'common';
             return 'uncommon';
         }
     }
 
     function getRarityLabel(r) {
-        return { common:'Gewöhnlich', uncommon:'Ungewöhnlich', rare:'Selten', epic:'Episch', legendary:'Legendär', 'ultra-legendary':'Ultra Legendär' }[r] || r;
+        return { common:'Gewöhnlich', uncommon:'Ungewöhnlich', rare:'Selten', epic:'Episch', mythic:'Mythisch', legendary:'Legendär', 'ultra-legendary':'Ultra Legendär' }[r] || r;
     }
 
     function getRandomTheme() {
@@ -2572,6 +2611,7 @@
 
         document.getElementById('question').textContent = `${currentA} ${currentOp} ${currentB} = ?`;
         document.getElementById('answer-input').value = '';
+        document.getElementById('answer-input').disabled = false;
         document.getElementById('answer-input').className = 'answer-input';
         document.getElementById('feedback').textContent = '';
         document.getElementById('feedback').className = 'feedback';
@@ -2594,6 +2634,7 @@
         if (userAnswer === currentAnswer) {
             // RICHTIG!
             isProcessing = true;
+            input.disabled = true;
             input.className = 'answer-input correct';
             const msg = getCorrectMessage();
             document.getElementById('feedback').textContent = msg;
@@ -2637,6 +2678,7 @@
             } else {
                 // Keine Versuche mehr
                 isProcessing = true;
+                input.disabled = true;
                 input.className = 'answer-input wrong';
                 document.getElementById('feedback').textContent = `Schade!`;
                 document.getElementById('feedback').className = 'feedback wrong-fb';

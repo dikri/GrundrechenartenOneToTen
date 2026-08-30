@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leo-einmaleins-v3';
+const CACHE_NAME = 'leo-einmaleins-v4';
 const ASSETS = [
   './',
   './index.html',

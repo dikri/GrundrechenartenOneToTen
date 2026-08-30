@@ -1,7 +1,7 @@
 {
-  "name": "Leos kleines Einmaleins",
-  "short_name": "Einmaleins",
-  "description": "Lerne das kleine Einmaleins und sammle coole Pokémon & Brawl Stars Karten!",
+  "name": "Mathe Trainer – Grundrechenarten mit Sammelkarten",
+  "short_name": "Mathe Trainer",
+  "description": "Mathe-Lernapp für Grundschulkinder mit Sammelkarten aus Pokémon, Brawl Stars, Minecraft, Autos, Tieren und Super Mario als Belohnung.",
   "start_url": "./index.html",
   "display": "standalone",
   "orientation": "portrait",

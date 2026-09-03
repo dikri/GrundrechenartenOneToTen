@@ -2502,10 +2502,8 @@
     function speakResult(a, b, result) {
         if (!soundEnabled) return;
         if (!('speechSynthesis' in window)) return;
-        window.speechSynthesis.cancel();
-        let text;
         const opWords = { '÷': 'geteilt durch', '×': 'mal', '+': 'plus', '−': 'minus' };
-        text = `${numberWords[a]} ${opWords[currentOp] || 'mal'} ${numberWords[b]} ist ${numberWords[result]}!`;
+        const text = `${numberWords[a] || a} ${opWords[currentOp] || 'mal'} ${numberWords[b] || b} ist ${numberWords[result] || result}!`;
         const utter = new SpeechSynthesisUtterance(text);
         utter.lang = 'de-DE';
         utter.rate = 0.95;
@@ -2513,7 +2511,7 @@
         // Beste deutsche Stimme finden (natürliche Online-Stimmen bevorzugen)
         const voice = pickBestGermanVoice();
         if (voice) utter.voice = voice;
-        window.speechSynthesis.speak(utter);
+        speakSafe(utter);
     }
 
     function pickBestGermanVoice() {
@@ -2542,6 +2540,32 @@
             _voicesLoaded = true;
             window.speechSynthesis.getVoices();
         };
+    }
+
+    // Sicheres Sprechen: umgeht den bekannten Windows-Chrome/Edge-Bug, bei dem
+    // die Sprachausgabe nach ~15s "einfriert" (Stottern / abgehackt).
+    let _speechKeepAlive = null;
+    function speakSafe(utter) {
+        if (!('speechSynthesis' in window)) return;
+        const synth = window.speechSynthesis;
+        synth.cancel();
+        // Keepalive stoppen wenn fertig oder Fehler
+        const stopKeepAlive = () => {
+            if (_speechKeepAlive) { clearInterval(_speechKeepAlive); _speechKeepAlive = null; }
+        };
+        utter.addEventListener('end', stopKeepAlive);
+        utter.addEventListener('error', stopKeepAlive);
+        // cancel() braucht bei manchen Browsern einen Tick, bevor speak() greift
+        setTimeout(() => {
+            synth.speak(utter);
+            stopKeepAlive();
+            // Pause/Resume-Trick hält die Engine am Laufen (verhindert Einfrieren)
+            _speechKeepAlive = setInterval(() => {
+                if (!synth.speaking) { stopKeepAlive(); return; }
+                synth.pause();
+                synth.resume();
+            }, 8000);
+        }, 60);
     }
 
     // ===== SIX SEVEN MEME =====
@@ -2700,8 +2724,17 @@
             if (correctStreak >= needed) {
                 correctStreak = 0;
                 document.getElementById('streak-counter').textContent = `⭐ 0/${needed}`;
-                // Längere Anzeige: 3.5s, dann Karte
-                setTimeout(() => awardCard(), 3500);
+                // Längere Anzeige: 3.5s, dann Karte – abgesichert, damit das Spiel nie hängen bleibt
+                setTimeout(() => {
+                    try {
+                        awardCard();
+                    } catch (e) {
+                        console.error('awardCard fehlgeschlagen:', e);
+                        // Fallback: Overlay verstecken und direkt weiter
+                        document.getElementById('card-reward-screen').classList.remove('active');
+                        if (quizActive) generateQuestion();
+                    }
+                }, 3500);
             } else {
                 // Richtige Antwort 4 Sekunden anzeigen (Stimme liest vor)
                 setTimeout(() => { if (quizActive) generateQuestion(); }, 4000);
@@ -2779,17 +2812,22 @@
         const screen = document.getElementById('card-reward-screen');
         const cardEl = document.getElementById('reward-card');
 
-        renderCard(card, cardEl);
-        cardEl.classList.remove('fly-away');
-        cardEl.style.animation = 'none';
-        void cardEl.offsetHeight;
-        // Eine durchgehende Animation: reinfliegen → kurz sichtbar → ins Album fliegen
-        cardEl.style.animation = 'cardReveal 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
-        screen.classList.add('active');
+        // Rendern/Animation abgesichert – ein Fehler darf das Weiterspielen nicht blockieren
+        try {
+            renderCard(card, cardEl);
+            cardEl.classList.remove('fly-away');
+            cardEl.style.animation = 'none';
+            void cardEl.offsetHeight;
+            // Eine durchgehende Animation: reinfliegen → kurz sichtbar → ins Album fliegen
+            cardEl.style.animation = 'cardReveal 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards';
+            screen.classList.add('active');
+            createConfetti();
+        } catch (e) {
+            console.error('showCardReward Render-Fehler:', e);
+        }
 
-        createConfetti();
-
-        // Nach der Animation (1.8s) → Overlay weg, nächste Frage
+        // Nach der Animation (1.8s) → Overlay weg, nächste Frage.
+        // Der Übergang zur nächsten Frage passiert IMMER, auch wenn oben etwas schiefging.
         setTimeout(() => {
             screen.classList.remove('active');
             if (quizActive) generateQuestion();
@@ -2988,7 +3026,6 @@
 
     function speakCard(card) {
         if (!soundEnabled || !('speechSynthesis' in window)) return;
-        window.speechSynthesis.cancel();
         const rarity = getRarityLabel(getRarity(card, card.theme));
         let text;
         if (card.theme === 'pokemon') {
@@ -3016,7 +3053,7 @@
         utter.pitch = 1.1;
         const voice = pickBestGermanVoice();
         if (voice) utter.voice = voice;
-        window.speechSynthesis.speak(utter);
+        speakSafe(utter);
     }
 
     function closeCardDetail() {

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'leo-einmaleins-v4';
+const CACHE_NAME = 'leo-einmaleins-v5';
 const ASSETS = [
   './',
   './index.html',
@@ -9,6 +9,7 @@ const ASSETS = [
   './data/autos.json',
   './data/tiere.json',
   './data/mario.json',
+  './data/fussball.json',
   './bg.jpg',
   'https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap'
 ];

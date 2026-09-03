@@ -1066,8 +1066,6 @@
             60% { opacity: 1; }
             100% { opacity: 0; }
         }
-            to { text-shadow: 0 0 30px var(--accent), 0 0 60px var(--accent-glow); }
-        }
 
         /* ===== TIME UP SCREEN ===== */
         #timeup-screen h2 {
@@ -1342,6 +1340,17 @@
             ) !important;
         }
 
+        /* ===== FUSSBALL CARD STYLE ===== */
+        .fussball-card .card-image-area {
+            background: radial-gradient(ellipse at center, rgba(46,204,113,0.12) 0%, transparent 70%);
+        }
+
+        .fussball-card .card-fact {
+            font-size: 0.72em;
+            opacity: 0.75;
+            margin-top: 2px;
+        }
+
         /* Kleine Karten im Album - Silhouetten anpassen */
         .album-card-wrapper .svg-silhouette {
             width: 65%;
@@ -1466,8 +1475,9 @@
             <div class="disclaimer">
                 Diese App ist ein kostenloses Lernprogramm für Kinder und wurde mit Liebe von einem Papa gebaut.
                 Hier wird nichts verkauft, keine Daten gesammelt und keine Werbung gezeigt.
-                Alle genannten Marken (Pokémon, Brawl Stars, Minecraft) gehören ihren jeweiligen Eigentümern –
-                diese App steht in keiner Verbindung zu diesen Unternehmen und dient ausschließlich dem spielerischen Lernen. 🎓
+                Alle genannten Marken (Pokémon, Brawl Stars, Minecraft, Super Mario u.a.) sowie Namen und Bilder von realen
+                Personen, Tieren, Fahrzeugen und Fußballspielern gehören ihren jeweiligen Eigentümern und Rechteinhabern –
+                diese App steht in keiner Verbindung zu diesen Unternehmen oder Personen und dient ausschließlich dem spielerischen Lernen. 🎓
             </div>
         </div>
     </div>
@@ -1558,7 +1568,7 @@
 
             <div style="text-align:left; font-size:0.9em; color:rgba(255,255,255,0.7); line-height:1.7">
                 <h3 style="color:var(--accent); margin:15px 0 8px">🧮 Was ist das?</h3>
-                <p>Ein Mathe-Trainer für Grundschulkinder. Löse Rechenaufgaben und sammle als Belohnung coole Karten aus Pokémon, Brawl Stars und Minecraft!</p>
+                <p>Ein Mathe-Trainer für Grundschulkinder. Löse Rechenaufgaben und sammle als Belohnung coole Karten – aus Pokémon, Brawl Stars, Minecraft, Autos, Tieren, Super Mario und Fußballstars. Die Alben kannst du dir selbst aussuchen!</p>
 
                 <h3 style="color:var(--accent); margin:15px 0 8px">🎯 Aufgabenarten</h3>
                 <p><b>➕ Plus / ➖ Minus:</b> Wähle den Zahlenraum (1-10, 1-20 oder 1-100). Perfekt für Vor- und Grundschule.</p>
@@ -1605,7 +1615,8 @@
         minecraft:  { label: 'Minecraft',    emoji: '⛏️',  file: 'data/minecraft.json',  cards: [] },
         autos:      { label: 'Autos',        emoji: '🏎️',  file: 'data/autos.json',      cards: [] },
         tiere:      { label: 'Tiere',        emoji: '🐾',  file: 'data/tiere.json',      cards: [] },
-        mario:      { label: 'Super Mario',  emoji: '🍄',  file: 'data/mario.json',      cards: [] }
+        mario:      { label: 'Super Mario',  emoji: '🍄',  file: 'data/mario.json',      cards: [] },
+        fussball:   { label: 'Fußballstars', emoji: '⚽',  file: 'data/fussball.json',   cards: [] }
     };
 
     let activeThemes = JSON.parse(localStorage.getItem('leo_active_themes') || 'null') || ['pokemon','brawlstars','minecraft'];
@@ -1899,6 +1910,7 @@
     let mascotTapCount = 0;
     let mascotTapTimer = null;
     let testModeActive = false;
+    let albumPreview = false; // Entwickler-Vorschau: alle Alben gefüllt anzeigen (verändert echte Sammlung NICHT)
 
     function handleMascotTap() {
         mascotTapCount++;
@@ -1940,12 +1952,30 @@
                 document.querySelector('#start-screen .glass-panel').insertBefore(
                     resetBtn, document.querySelector('.disclaimer')
                 );
+                // Vorschau-Button: alle Alben gefüllt anzeigen
+                const previewBtn = document.createElement('button');
+                previewBtn.className = 'album-peek-btn';
+                previewBtn.id = 'dev-preview-btn';
+                previewBtn.textContent = albumPreview ? '👁️ Vorschau: AN' : '👁️ Alle Alben ansehen';
+                previewBtn.style.marginTop = '8px';
+                onTap(previewBtn, () => {
+                    albumPreview = !albumPreview;
+                    previewBtn.textContent = albumPreview ? '👁️ Vorschau: AN' : '👁️ Alle Alben ansehen';
+                    showToast(albumPreview ? '👁️ Vorschau AN – alle Karten sichtbar' : '👁️ Vorschau AUS');
+                    if (albumPreview) showAlbum();
+                });
+                document.querySelector('#start-screen .glass-panel').insertBefore(
+                    previewBtn, document.querySelector('.disclaimer')
+                );
             } else {
                 showToast('🔧 Testmodus AUS');
                 const testBtn = document.getElementById('test-mode-btn');
                 if (testBtn) testBtn.remove();
                 const resetBtn = document.getElementById('dev-reset-btn');
                 if (resetBtn) resetBtn.remove();
+                const previewBtn = document.getElementById('dev-preview-btn');
+                if (previewBtn) previewBtn.remove();
+                albumPreview = false; // Vorschau beim Verlassen des Testmodus immer aus
                 // Auswahl zurücksetzen
                 document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
                 document.getElementById('start-btn').disabled = true;
@@ -2269,6 +2299,16 @@
             if (r === 'Held' || r === 'Prinzessin') return 'rare';
             if (r === 'Helfer') return 'uncommon';
             return 'common';
+        } else if (theme === 'fussball') {
+            // Die absoluten Weltstars = legendär
+            const legends = ['Lionel Messi','Cristiano Ronaldo','Kylian Mbappé','Erling Haaland','Neymar','Robert Lewandowski','Kevin De Bruyne','Mohamed Salah','Harry Kane','Luka Modrić','Jude Bellingham','Vinícius Júnior','Jamal Musiala','Toni Kroos','Manuel Neuer','Karim Benzema'];
+            // Weltklasse-Spieler = episch
+            const worldClass = ['Antoine Griezmann','Virgil van Dijk','Sergio Ramos','Luis Suárez','Sadio Mané','Bruno Fernandes','Rodri','Pedri','Lamine Yamal','Florian Wirtz','Bukayo Saka','Phil Foden','Son Heung-min','Thibaut Courtois','Alisson','Marc-André ter Stegen','Federico Valverde','Rúben Dias','Bernardo Silva','Lautaro Martínez','Julián Álvarez','Rodrygo','Achraf Hakimi','Victor Osimhen','Cole Palmer','Declan Rice','Martin Ødegaard','Frenkie de Jong','Joshua Kimmich','Thomas Müller','Gianluigi Donnarumma','Emiliano Martínez'];
+            if (legends.includes(card.name)) return 'legendary';
+            if (worldClass.includes(card.name)) return 'epic';
+            if (card.pos === 'Torwart') return 'rare';
+            if (card.pos === 'Sturm' || card.pos === 'Mittelfeld') return 'uncommon';
+            return 'common';
         } else {
             const r = card.rar;
             if (r === 'Ultra Legendär') return 'ultra-legendary';
@@ -2371,7 +2411,7 @@
         } else if (card.theme === 'minecraft') {
             const mcImgUrl = `https://minecraft.wiki/w/Special:FilePath/${card.img}.png`;
             imageHTML = `<img src="${mcImgUrl}" alt="${card.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span class=card-emoji>${card.emoji}</span>'">`;
-        } else if (card.theme === 'autos' || card.theme === 'tiere') {
+        } else if (card.theme === 'autos' || card.theme === 'tiere' || card.theme === 'fussball') {
             // Placeholder mit Emoji, Wikipedia-Bild wird async nachgeladen
             const imgId = `wiki-img-${card.theme}-${card.id || Math.random().toString(36).substr(2,5)}`;
             imageHTML = `<span class="card-emoji" id="${imgId}">${card.emoji}</span>`;
@@ -2405,6 +2445,10 @@
             bgGrad = `linear-gradient(160deg, ${card.color}ee 0%, #1a3a1acc 50%, #0f0e17 100%)`;
             detailHTML = `<div class="card-detail">${card.group} · ${card.habitat}</div>`;
             if (showStats) statsHTML = `<div class="card-stats"><span class="card-stat">${card.emoji}</span></div>`;
+        } else if (card.theme === 'fussball') {
+            bgGrad = `linear-gradient(160deg, ${card.color}ee 0%, #0a2e1acc 50%, #0f0e17 100%)`;
+            detailHTML = `<div class="card-detail">${card.emoji} ${card.pos} · ${card.country}</div><div class="card-detail card-fact">🏟️ ${card.club}</div>`;
+            if (showStats) statsHTML = `<div class="card-stats"><span class="card-stat">${card.fact}</span></div>`;
         } else if (card.theme === 'mario') {
             bgGrad = `linear-gradient(160deg, ${card.color}ee 0%, #e74c3c44 50%, #1a1a2e 100%)`;
             detailHTML = `<div class="card-detail">${card.role} · ${card.game || ''}</div>`;
@@ -2415,7 +2459,7 @@
             if (showStats) statsHTML = `<div class="card-stats"><span class="card-stat">💪 ${card.pw}</span><span class="card-stat">✨ ${card.rar}</span></div>`;
         }
 
-        container.className = `reward-card rarity-${rarity}${card.theme === 'brawlstars' ? ' brawl-card' : ''}${card.theme === 'minecraft' ? ' mc-card' : ''}${card.theme === 'autos' ? ' auto-card' : ''}${card.theme === 'tiere' ? ' tier-card' : ''}${card.theme === 'mario' ? ' mario-card' : ''}`;
+        container.className = `reward-card rarity-${rarity}${card.theme === 'brawlstars' ? ' brawl-card' : ''}${card.theme === 'minecraft' ? ' mc-card' : ''}${card.theme === 'autos' ? ' auto-card' : ''}${card.theme === 'tiere' ? ' tier-card' : ''}${card.theme === 'mario' ? ' mario-card' : ''}${card.theme === 'fussball' ? ' fussball-card' : ''}`;
         container.style.background = bgGrad;
         container.innerHTML = `
             <div class="card-border"></div>
@@ -2886,10 +2930,13 @@
         document.querySelector(`.album-tab[data-theme="${theme}"]`).classList.add('active');
 
         const grid = document.getElementById('album-grid');
-        const cards = collection[theme] || [];
+        // Preview-Modus (Entwickler): zeige alle Karten der DB, ohne die echte Sammlung zu verändern
+        const cards = albumPreview ? getCardDB(theme).map(c => ({ ...c, theme })) : (collection[theme] || []);
         const newCount = cards.filter(c => c.isNew).length;
 
-        document.getElementById('album-counter').textContent = `${cards.length} / ${getCardDB(theme).length} Karten gesammelt${newCount > 0 ? ` · ✨ ${newCount} neu` : ''}`;
+        document.getElementById('album-counter').textContent =
+            (albumPreview ? '👁️ VORSCHAU: ' : '') +
+            `${cards.length} / ${getCardDB(theme).length} Karten gesammelt${newCount > 0 ? ` · ✨ ${newCount} neu` : ''}`;
         grid.innerHTML = '';
 
         if (cards.length === 0) {
@@ -2917,8 +2964,8 @@
     }
 
     function showCardDetail(card) {
-        // Neu-Flag entfernen
-        if (card.isNew) {
+        // Neu-Flag entfernen (nicht im Vorschau-Modus – echte Sammlung nicht anfassen)
+        if (card.isNew && !albumPreview) {
             card.isNew = false;
             localStorage.setItem('leo_collection', JSON.stringify(collection));
         }
@@ -2958,6 +3005,8 @@
             text = `${card.name}! ${card.group}, lebt in ${card.habitat || 'der Wildnis'}, ${rarity}.`;
         } else if (card.theme === 'mario') {
             text = `${card.name}! ${card.role}, aus ${card.game || 'Super Mario'}, ${rarity}.`;
+        } else if (card.theme === 'fussball') {
+            text = `${card.name}! ${card.pos} aus ${card.country}, spielt bei ${card.club}, ${rarity}. ${card.fact}.`;
         } else {
             text = `${card.name}! ${card.cls || 'Kämpfer'}, ${rarity}. Stärke ${card.pw ?? 'nicht bekannt'}.`;
         }

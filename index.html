@@ -1922,6 +1922,11 @@
 
             if (testModeActive) {
                 showToast('🔧 Testmodus AN – 1 Min, Karte nach 2 Aufgaben');
+                // Eventuell vorhandene Dev-Buttons zuerst entfernen (verhindert Duplikate)
+                ['test-mode-btn','dev-reset-btn','dev-preview-btn'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.remove();
+                });
                 // 1-Minuten-Button hinzufügen
                 const testBtn = document.createElement('button');
                 testBtn.className = 'time-btn selected';
@@ -2099,8 +2104,6 @@
     // Note: migration now runs after themes are loaded (see loadThemes().then)
     function migrateCollection() {
         let changed = false;
-        // Falls fussball noch im alten Storage existiert, entfernen
-        if (collection.fussball) { delete collection.fussball; changed = true; }
         // Pokémon: nur IDs 1-251 behalten (Gen 1+2)
         if (collection.pokemon && getCardDB('pokemon').length > 0) {
             const validPokeIds = new Set(getCardDB('pokemon').map(c => c.id));
@@ -2342,6 +2345,8 @@
 
     function getRandomCard(theme) {
         const db = getCardDB(theme);
+        // Sicherstellen, dass das Theme ein Array in der Sammlung hat (verhindert Absturz)
+        if (!collection[theme]) collection[theme] = [];
         // Nur Karten die noch NICHT in der Sammlung sind
         const collected = new Set(collection[theme].map(c => c.name));
         const available = db.filter(c => !collected.has(c.name));
@@ -2800,6 +2805,7 @@
         const card = getRandomCard(theme);
 
         card.isNew = true;
+        if (!collection[theme]) collection[theme] = [];
         collection[theme].push(card);
         localStorage.setItem('leo_collection', JSON.stringify(collection));
         cardsEarnedToday++;

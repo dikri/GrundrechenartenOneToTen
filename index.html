@@ -1922,11 +1922,6 @@
 
             if (testModeActive) {
                 showToast('🔧 Testmodus AN – 1 Min, Karte nach 2 Aufgaben');
-                // Eventuell vorhandene Dev-Buttons zuerst entfernen (verhindert Duplikate)
-                ['test-mode-btn','dev-reset-btn','dev-preview-btn'].forEach(id => {
-                    const el = document.getElementById(id);
-                    if (el) el.remove();
-                });
                 // 1-Minuten-Button hinzufügen
                 const testBtn = document.createElement('button');
                 testBtn.className = 'time-btn selected';
@@ -2129,16 +2124,21 @@
 
         // Gesammelte Karten mit aktuellen Daten aus den JSONs abgleichen
         // (Seltenheiten, Stats etc. können sich geändert haben)
+        // UND kaputte Karten (ohne gültigen Namen / nicht mehr in der DB) entfernen
         let dataUpdated = false;
         Object.keys(ALL_THEMES).forEach(theme => {
             const db = getCardDB(theme);
             if (!db.length || !collection[theme]?.length) return;
             const dbMap = {};
             db.forEach(c => { dbMap[c.name] = c; });
+            // Kaputte Karten herausfiltern: kein Name oder nicht in der aktuellen DB
+            const before = collection[theme].length;
+            collection[theme] = collection[theme].filter(card => card && card.name && dbMap[card.name]);
+            if (collection[theme].length !== before) dataUpdated = true;
+            // Verbleibende Karten mit frischen DB-Daten abgleichen
             collection[theme].forEach(card => {
                 const fresh = dbMap[card.name];
                 if (!fresh) return;
-                // Alle Felder aus der DB übernehmen, isNew behalten
                 const isNew = card.isNew;
                 Object.keys(fresh).forEach(k => { card[k] = fresh[k]; });
                 if (isNew) card.isNew = true;
